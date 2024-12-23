@@ -51,6 +51,7 @@ export default CustomButton;
 const styles = StyleSheet.create({
     container: {
         width: 300,
+        borderRadius: 8,
     },
     text: {
         textAlign: 'center',
