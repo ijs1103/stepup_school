@@ -7,10 +7,11 @@ interface ICustomButton {
     backgroundColor: string;
     borderColor?: string;
     isLoading?: boolean;
+    disabled?: boolean;
     clickHandler: () => void;
 }
 
-const CustomButton = ({ title, textColor, backgroundColor, borderColor, isLoading, clickHandler }: ICustomButton) => {
+const CustomButton = ({ title, textColor, backgroundColor, borderColor, isLoading, disabled, clickHandler }: ICustomButton) => {
 
     const animatedValue = useRef(new Animated.Value(1)).current;
 
@@ -33,7 +34,7 @@ const CustomButton = ({ title, textColor, backgroundColor, borderColor, isLoadin
             ...styles.container, transform: [{ scale: animatedValue }]
             , borderColor: borderColor || 'transparent', borderWidth: borderColor ? 1 : 0
         }}>
-            <Pressable onPress={clickHandler} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+            <Pressable style={{ opacity: disabled ? 0.5 : 1 }} onPress={clickHandler} onPressIn={handlePressIn} onPressOut={handlePressOut} disabled={disabled}>
                 {isLoading ? (
                     <ActivityIndicator color="white" />
                 ) : (

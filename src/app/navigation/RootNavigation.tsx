@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
 import WelcomeScreen from '@/screens/WelcomeScreen';
 import LaunchScreen from '@/screens/LaunchScreen';
+import SignInScreen from '@/screens/SignInScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,12 +25,6 @@ const ProfileScreen = () => {
 const SettingsScreen = () => {
   return (
     <Text>Settings</Text>
-  );
-};
-
-const SignInScreen = () => {
-  return (
-    <Text>SignIn</Text>
   );
 };
 
