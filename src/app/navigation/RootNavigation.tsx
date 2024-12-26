@@ -6,6 +6,8 @@ import { Text } from 'react-native';
 import WelcomeScreen from '@/screens/WelcomeScreen';
 import LaunchScreen from '@/screens/LaunchScreen';
 import SignInScreen from '@/screens/SignInScreen';
+import SignUpScreen from '@/screens/SignUpScreen';
+import SchoolInfoScreen from '@/screens/SchoolInfoScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,12 +30,6 @@ const SettingsScreen = () => {
   );
 };
 
-const SignUpScreen = () => {
-  return (
-    <Text>SignUp</Text>
-  );
-};
-
 const MainTabs = () => (
   <Tab.Navigator>
     <Tab.Screen name="Home" component={HomeScreen} />
@@ -47,6 +43,7 @@ type AuthStackParams = {
   Welcome: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  SchoolInfo: undefined;
 }
 
 export const AuthStack = createNativeStackNavigator<AuthStackParams>();
@@ -60,6 +57,7 @@ const AuthStackScreen = () => (
     <Stack.Screen name="Welcome" component={WelcomeScreen} />
     <Stack.Screen name="SignIn" component={SignInScreen} />
     <Stack.Screen name="SignUp" component={SignUpScreen} />
+    <Stack.Screen name="SchoolInfo" component={SchoolInfoScreen} />
   </Stack.Navigator>
 );
 
@@ -67,7 +65,7 @@ export const useAuthStackNavigation = <RouteName extends keyof AuthStackParams>(
   useNavigation<NativeStackNavigationProp<AuthStackParams, RouteName>>();
 
 export const useAuthStackRoute = <RouteName extends keyof AuthStackParams>() =>
-	useRoute<RouteProp<AuthStackParams, RouteName>>();
+  useRoute<RouteProp<AuthStackParams, RouteName>>();
 
 const RootNavigation = () => {
   const [isLoggedIn] = useState(false);

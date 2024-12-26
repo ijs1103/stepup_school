@@ -1,0 +1,1 @@
+export { SignupLabel } from './SignupScreen/SignupLabel';
