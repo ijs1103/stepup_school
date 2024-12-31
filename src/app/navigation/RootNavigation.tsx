@@ -49,7 +49,7 @@ type AuthStackParams = {
 export const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
 const AuthStackScreen = () => (
-  <Stack.Navigator initialRouteName={'Launch'}
+  <Stack.Navigator initialRouteName={'SchoolInfo'}
     screenOptions={{
       headerShown: false,
     }}>

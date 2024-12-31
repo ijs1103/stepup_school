@@ -7,7 +7,7 @@ interface AuthInfo {
   password: string;
 }
 
-interface SchoolInfo {
+export interface SchoolInfo {
   schoolCode: string;
   grade: number;
   class: number;
@@ -37,7 +37,7 @@ const initialAuthInfo: AuthInfo = {
   password: '',
 };
 
-const initialSchoolInfo: SchoolInfo = {
+export const initialSchoolInfo: SchoolInfo = {
   schoolCode: '',
   grade: 0,
   class: 0,

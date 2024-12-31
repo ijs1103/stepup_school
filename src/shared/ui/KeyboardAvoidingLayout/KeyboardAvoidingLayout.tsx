@@ -1,5 +1,5 @@
 import React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, StyleSheet } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 
 interface IKeyboardAvoidingLayout {
     children: React.ReactNode;
@@ -15,12 +15,12 @@ const KeyboardAvoidingLayout = ({ children }: IKeyboardAvoidingLayout) => {
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );
-}
+};
 
 export default KeyboardAvoidingLayout;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
+    },
 });
