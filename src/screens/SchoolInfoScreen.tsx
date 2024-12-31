@@ -11,7 +11,7 @@ import { CustomSheet } from '@/shared/ui/CustomSheet';
 import SchoolGradeInput from '@/features/auth/ui/SchoolInfoScreen/SchoolGradeInput';
 import SchoolClassInput from '@/features/auth/ui/SchoolInfoScreen/SchoolClassInput';
 
-export interface SchoolInfoNullable {
+export interface OptionalSchoolInfo {
     schoolCode: string | undefined;
     grade: number | undefined;
     class: number | undefined;
@@ -21,10 +21,9 @@ const SchoolInfoScreen = () => {
     const navigation = useAuthStackNavigation();
     const { setSchoolInfo: setSchool } = useUserSignupStore();
     const [currentInfo, setCurrentInfo] = useState<keyof SchoolInfo>('schoolCode');
-    const [schoolInfo, setSchoolInfo] = useState<SchoolInfoNullable>({ schoolCode: undefined, grade: undefined, class: undefined });
+    const [schoolInfo, setSchoolInfo] = useState<OptionalSchoolInfo>({ schoolCode: undefined, grade: undefined, class: undefined });
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
     const isValid = useMemo(() => {
-        // 모든 프로퍼티가 undefined가 아닐 때의 로직
         return Object.values(schoolInfo).every(value => value !== undefined);
     }, [schoolInfo]);
     const submitHandler = useCallback(() => {
@@ -38,7 +37,7 @@ const SchoolInfoScreen = () => {
         openBottomSheet();
     }, [openBottomSheet]);
     const resetShoolInfo = useCallback(() => {
-        setSchoolInfo(prev => ({ ...prev, [currentInfo]: typeof currentInfo === 'number' ? 0 : '' }));
+        setSchoolInfo(prev => ({ ...prev, [currentInfo]: undefined }));
     }, [currentInfo]);
     const handleBottomSheetClose = useCallback(() => {
         resetShoolInfo();

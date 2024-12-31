@@ -13,7 +13,7 @@ export interface SchoolInfo {
   class: number;
 }
 
-interface BodyInfo {
+export interface BodyInfo {
   gender: '여성' | '남성' | '';
   birthDate: string;
   height: number;

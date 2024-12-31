@@ -22,7 +22,6 @@ const SchoolGradeInput = ({ submitHandler }: Props) => {
             </View>
             <View style={styles.formContainer}>
                 <Picker
-                    mode={'dialog'}
                     style={styles.picker}
                     selectedValue={selectedGrade}
                     onValueChange={(value) =>

@@ -7,32 +7,31 @@ interface Props {
     submitHandler: (value: string | number) => void;
 }
 
-const SchoolClassInput = ({ submitHandler }: Props) => {
-    const [selectedGrade, setSelectedGrade] = useState(1);
+const HeightInput = ({ submitHandler }: Props) => {
+    const [selectedHeight, setSelectedHeight] = useState(1);
 
     const clickHandler = useCallback(() => {
-        submitHandler(selectedGrade);
-    }, [selectedGrade, submitHandler]);
+        submitHandler(selectedHeight);
+    }, [selectedHeight, submitHandler]);
 
     return (
         <View style={styles.container}>
             <View style={styles.textContainer}>
-                <Text style={styles.title}>{'학급 입력'}</Text>
-                <Text style={styles.description}>{'학급 정보를 입력해 주세요'}</Text>
+                <Text style={styles.title}>{'신장'}</Text>
+                <Text style={styles.description}>{'드래그해 신장 값을 입력해 주세요'}</Text>
             </View>
             <View style={styles.formContainer}>
                 <Picker
                     style={styles.picker}
-                    selectedValue={selectedGrade}
+                    selectedValue={selectedHeight}
                     onValueChange={(value) =>
-                        setSelectedGrade(value)
+                        setSelectedHeight(value)
                     }>
-                    {[...Array(10)].map((_, index) => {
-                        const value = index + 1;
-                        return (<Picker.Item key={value} label={value.toString()} value={value} />);
-                    })}
+                    {Array.from({ length: 101 }, (_, index) => index + 100).map(number => (
+                        <Picker.Item key={number} label={number.toString()} value={number} />
+                    ))}
                 </Picker>
-                <Text style={styles.grade}>{'반'}</Text>
+                <Text style={styles.grade}>{'cm'}</Text>
             </View>
             <View style={styles.buttonContainer}>
                 <CustomButton
@@ -45,7 +44,7 @@ const SchoolClassInput = ({ submitHandler }: Props) => {
     );
 };
 
-export default SchoolClassInput;
+export default HeightInput;
 
 const styles = StyleSheet.create({
     container: {
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     picker: {
-        width: 80,
+        width: 100,
     },
     grade: {
         fontSize: 16,

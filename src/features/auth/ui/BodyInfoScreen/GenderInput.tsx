@@ -1,51 +1,46 @@
 import { CustomButton } from '@/shared/ui/CustomButton';
 import React, { useCallback, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { TouchableImage } from '@/shared/ui/TouchableImage';
 
 interface Props {
     submitHandler: (value: string | number) => void;
 }
 
-const SchoolClassInput = ({ submitHandler }: Props) => {
-    const [selectedGrade, setSelectedGrade] = useState(1);
+const GenderInput = ({ submitHandler }: Props) => {
+    const [selectedGender, setSelectedGender] = useState<'남성' | '여성' | undefined>(undefined);
 
     const clickHandler = useCallback(() => {
-        submitHandler(selectedGrade);
-    }, [selectedGrade, submitHandler]);
+        if (selectedGender) {
+            submitHandler(selectedGender);
+        }
+    }, [selectedGender, submitHandler]);
 
     return (
         <View style={styles.container}>
             <View style={styles.textContainer}>
-                <Text style={styles.title}>{'학급 입력'}</Text>
-                <Text style={styles.description}>{'학급 정보를 입력해 주세요'}</Text>
+                <Text style={styles.title}>{'성별'}</Text>
+                <Text style={styles.description}>{'칼로리 및 보폭 계산에 필요해요'}</Text>
             </View>
             <View style={styles.formContainer}>
-                <Picker
-                    style={styles.picker}
-                    selectedValue={selectedGrade}
-                    onValueChange={(value) =>
-                        setSelectedGrade(value)
-                    }>
-                    {[...Array(10)].map((_, index) => {
-                        const value = index + 1;
-                        return (<Picker.Item key={value} label={value.toString()} value={value} />);
-                    })}
-                </Picker>
-                <Text style={styles.grade}>{'반'}</Text>
+                {selectedGender === '여성' ? <TouchableImage pressHandler={() => setSelectedGender(undefined)} source={require('../../../../../assets/female_selected.png')} />
+                    : <TouchableImage pressHandler={() => setSelectedGender('여성')} source={require('../../../../../assets/female_unselected.png')} />}
+                {selectedGender === '남성' ? <TouchableImage pressHandler={() => setSelectedGender(undefined)} source={require('../../../../../assets/male_selected.png')} /> : <TouchableImage pressHandler={() => setSelectedGender('남성')} source={require('../../../../../assets/male_unselected.png')} />}
             </View>
             <View style={styles.buttonContainer}>
                 <CustomButton
                     title={'확인'}
                     textColor={'#fff'}
                     backgroundColor={'#FB970C'}
-                    clickHandler={clickHandler} />
+                    clickHandler={clickHandler}
+                    disabled={!selectedGender}
+                />
             </View>
         </View>
     );
 };
 
-export default SchoolClassInput;
+export default GenderInput;
 
 const styles = StyleSheet.create({
     container: {
@@ -76,7 +71,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         flexDirection: 'row',
-        gap: 16,
+        gap: 32,
         alignItems: 'center',
     },
     picker: {
