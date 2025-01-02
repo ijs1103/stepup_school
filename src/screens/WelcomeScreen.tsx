@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import SmileLogo from '../../assets/smile_logo.svg'
+import SmileLogo from '../../assets/smile_logo.svg';
 import { Spacer } from '@/shared/ui/Spacer';
 import { NavBar } from '@/shared/ui/NavBar';
 import { CustomButton } from '@/shared/ui/CustomButton';

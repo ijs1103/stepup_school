@@ -71,7 +71,7 @@ const SchoolInfoScreen = () => {
                     disabled={!isValid}
                     clickHandler={submitHandler} />
             </View>
-            <CustomSheet isOpen={isBottomSheetOpen} onClose={handleBottomSheetClose} isHandleAvailable={false}>
+            <CustomSheet isOpen={isBottomSheetOpen} onClose={handleBottomSheetClose}>
                 {currentInfo === 'schoolCode' && <SchoolCodeInput submitHandler={bottomSheetSubmitHandler} />}
                 {currentInfo === 'grade' && <SchoolGradeInput submitHandler={bottomSheetSubmitHandler} />}
                 {currentInfo === 'class' && <SchoolClassInput submitHandler={bottomSheetSubmitHandler} />}

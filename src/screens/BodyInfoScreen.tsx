@@ -75,7 +75,7 @@ const BodyInfoScreen = () => {
                     disabled={!isValid}
                     clickHandler={submitHandler} />
             </View>
-            <CustomSheet isOpen={isBottomSheetOpen} onClose={handleBottomSheetClose} isHandleAvailable={false}>
+            <CustomSheet isOpen={isBottomSheetOpen} onClose={handleBottomSheetClose}>
                 {currentInfo === 'gender' && <GenderInput submitHandler={bottomSheetSubmitHandler} />}
                 {currentInfo === 'birthDate' && <BirthDateInput submitHandler={bottomSheetSubmitHandler} />}
                 {currentInfo === 'height' && <HeightInput submitHandler={bottomSheetSubmitHandler} />}

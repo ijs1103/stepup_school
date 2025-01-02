@@ -9,6 +9,8 @@ import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
 import SchoolInfoScreen from '@/screens/SchoolInfoScreen';
 import BodyInfoScreen from '@/screens/BodyInfoScreen';
+import TermsAgreementScreen from '@/screens/TermsAgreementScreen';
+import SignUpCompleteScreen from '@/screens/SignUpCompleteScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,12 +48,14 @@ type AuthStackParams = {
   SignUp: undefined;
   SchoolInfo: undefined;
   BodyInfo: undefined;
+  TermsAgreement: undefined;
+  SignUpComplete: undefined;
 }
 
 export const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
 const AuthStackScreen = () => (
-  <Stack.Navigator initialRouteName={'SchoolInfo'}
+  <Stack.Navigator initialRouteName={'SignUpComplete'}
     screenOptions={{
       headerShown: false,
     }}>
@@ -61,6 +65,8 @@ const AuthStackScreen = () => (
     <Stack.Screen name="SignUp" component={SignUpScreen} />
     <Stack.Screen name="SchoolInfo" component={SchoolInfoScreen} />
     <Stack.Screen name="BodyInfo" component={BodyInfoScreen} />
+    <Stack.Screen name="TermsAgreement" component={TermsAgreementScreen} />
+    <Stack.Screen name="SignUpComplete" component={SignUpCompleteScreen} />
   </Stack.Navigator>
 );
 
