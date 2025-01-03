@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         paddingHorizontal: 10,
+        alignItems: 'center',
     },
     textInput: {
         width: 300,

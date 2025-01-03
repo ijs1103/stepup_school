@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 500,
         color: '#19181B',
+        lineHeight: 24,
     },
     allCheckBoxContainer: {
         flexDirection: 'row',

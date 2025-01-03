@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 24,
     color: '#423836',
+    lineHeight: 28,
   },
   nickname: {
     fontWeight: 900,
@@ -57,9 +58,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     color: '#423836',
+    lineHeight: 20,
   },
   submitButtonContainer: {
     gap: 5,
+    paddingBottom: 16,
   },
   label: {
     textAlign: 'center',

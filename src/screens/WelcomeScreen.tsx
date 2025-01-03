@@ -19,8 +19,7 @@ const WelcomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.subcontainer}>
-        <View>
-          <Spacer size={90} />
+        <View style={styles.topcontainer}>
           <Text style={styles.title}>{'스텝업 스쿨에\n오신것을 환영해요!'}</Text>
           <Spacer size={36} />
           <SmileLogo width={177} height={177} />
@@ -48,14 +47,19 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   subcontainer: {
+    paddingTop: 90,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  topcontainer: {
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
     color: '#423836',
     textAlign: 'center',
+    lineHeight: 30,
   },
   label: {
     fontSize: 12,
