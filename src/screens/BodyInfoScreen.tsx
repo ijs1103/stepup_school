@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         justifyContent: 'space-between',
-        paddingTop: 90,
+        paddingTop: 60,
         paddingHorizontal: 34,
     },
     title: {
@@ -109,5 +109,6 @@ const styles = StyleSheet.create({
     },
     submitButtonContainer: {
         alignItems: 'center',
+        paddingBottom: 16,
     },
 });

@@ -299,14 +299,14 @@ const AuthStacks = () => (
     screenOptions={{
       headerShown: false,
     }}>
-    <AuthStack.Screen name="Launch" component={LaunchScreen} />
-    <AuthStack.Screen name="Welcome" component={WelcomeScreen} />
-    <AuthStack.Screen name="SignIn" component={SignInScreen} />
-    <AuthStack.Screen name="SignUp" component={SignUpScreen} />
-    <AuthStack.Screen name="SchoolInfo" component={SchoolInfoScreen} />
-    <AuthStack.Screen name="BodyInfo" component={BodyInfoScreen} />
-    <AuthStack.Screen name="TermsAgreement" component={TermsAgreementScreen} />
-    <AuthStack.Screen name="SignUpComplete" component={SignUpCompleteScreen} />
+    <AuthStack.Screen name={'Launch'} component={LaunchScreen} />
+    <AuthStack.Screen name={'Welcome'} component={WelcomeScreen} />
+    <AuthStack.Screen name={'SignIn'} component={SignInScreen} />
+    <AuthStack.Screen name={'SignUp'} component={SignUpScreen} />
+    <AuthStack.Screen name={'SchoolInfo'} component={SchoolInfoScreen} />
+    <AuthStack.Screen name={'BodyInfo'} component={BodyInfoScreen} />
+    <AuthStack.Screen name={'TermsAgreement'} component={TermsAgreementScreen} />
+    <AuthStack.Screen name={'SignUpComplete'} component={SignUpCompleteScreen} />
   </AuthStack.Navigator>
 );
 

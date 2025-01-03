@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 import SmileLogo from '../../assets/smile_logo_small.svg';
 import { Spacer } from '@/shared/ui/Spacer';
 import { SignupLabel } from '@/features/auth/ui';
@@ -32,7 +32,8 @@ const SignUpScreen = () => {
     return (
         <KeyboardAvoidingLayout>
             <View style={styles.container}>
-                <View>
+                <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+                    <Spacer size={90} />
                     <SmileLogo />
                     <Spacer size={16} />
                     <Text style={styles.title}>
@@ -97,7 +98,7 @@ const SignUpScreen = () => {
                             inputRef={passwordRef}
                         />
                     </View>
-                </View>
+                </ScrollView>
                 <View style={styles.buttonContainer}>
                     <CustomButton title={'다음'} textColor={'#fff'} backgroundColor={'#FB970C'} disabled={!isValid} clickHandler={handleSubmit(onValid)} />
                 </View>
@@ -113,7 +114,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingHorizontal: 34,
-        justifyContent: 'space-between',
+        paddingBottom: 16,
+    },
+    scrollView: {
+        flex: 1,
+        marginBottom: 16,
     },
     title: {
         fontSize: 20,
@@ -126,5 +131,6 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         alignItems: 'center',
+        paddingBottom: 16,
     },
 });
