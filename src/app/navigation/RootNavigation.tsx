@@ -32,6 +32,7 @@ const HomeStacks = () => (
   <HomeStack.Navigator initialRouteName={'Launch'}
     screenOptions={{
       headerShown: false,
+      gestureEnabled: false,
     }}>
     <HomeStack.Screen name={'Launch'} component={LaunchScreen} />
     <HomeStack.Screen name={'Home'} component={HomeScreen} />
@@ -111,6 +112,7 @@ const RecordStacks = () => (
   <RecordStack.Navigator initialRouteName={'Record'}
     screenOptions={{
       headerShown: false,
+      gestureEnabled: false,
     }}>
     <RecordStack.Screen name={'Record'} component={RecordScreen} />
     <RecordStack.Screen name={'WeeklyRecord'} component={WeeklyRecordScreen} />
@@ -153,6 +155,7 @@ const MapStacks = () => (
   <MapStack.Navigator initialRouteName={'Map'}
     screenOptions={{
       headerShown: false,
+      gestureEnabled: false,
     }}>
     <MapStack.Screen name={'Map'} component={MapScreen} />
     <MapStack.Screen name={'MyFootsteps'} component={MyFootstepsScreen} />
@@ -191,6 +194,7 @@ const CommunityStacks = () => (
   <CommunityStack.Navigator initialRouteName={'Community'}
     screenOptions={{
       headerShown: false,
+      gestureEnabled: false,
     }}>
     <CommunityStack.Screen name={'Community'} component={CommunityScreen} />
     <CommunityStack.Screen name={'MyClass'} component={MyClassScreen} />
@@ -247,6 +251,7 @@ const DonationStacks = () => (
   <DonationStack.Navigator initialRouteName={'Challenge'}
     screenOptions={{
       headerShown: false,
+      gestureEnabled: false,
     }}>
     <DonationStack.Screen name={'Challenge'} component={ChallengeScreen} />
     <DonationStack.Screen name={'ChallengeDetail'} component={ChallengeDetailScreen} />
