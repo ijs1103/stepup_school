@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import SmileLogo from '../../assets/smile_logo.svg';
 import { Spacer } from '@/shared/ui/Spacer';
-import { NavBar } from '@/shared/ui/NavBar';
 import { CustomButton } from '@/shared/ui/CustomButton';
 import { useAuthStackNavigation } from '@/app/navigation/RootNavigation';
 
@@ -19,7 +18,6 @@ const WelcomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <NavBar backButtonIcon={'ArrowBackGray'} />
       <View style={styles.subcontainer}>
         <View>
           <Spacer size={90} />
@@ -47,6 +45,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingBottom: 16,
   },
   subcontainer: {
     flex: 1,
