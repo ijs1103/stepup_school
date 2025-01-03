@@ -33,10 +33,20 @@ const usePermissions = () => {
       photoLibrary = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
     } else if (Platform.OS === 'android') {
       try {
-        locationAlways = (await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-        )) as PermissionStatus;
+        // 위치 권한 요청
+        const fineLocation = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
 
+        if (fineLocation === RESULTS.GRANTED) {
+          locationAlways = (await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+          )) as PermissionStatus;
+        } else {
+          locationAlways = fineLocation as PermissionStatus;
+        }
+
+        // 알림 권한 요청
         if (Platform.Version >= 33) {
           notifications = (await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
@@ -45,9 +55,21 @@ const usePermissions = () => {
           notifications = 'granted' as PermissionStatus;
         }
 
-        photoLibrary = (await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        )) as PermissionStatus;
+        // 사진 라이브러리 권한 요청
+        if (Platform.Version >= 33) {
+          photoLibrary = (await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+          )) as PermissionStatus;
+          if (photoLibrary !== RESULTS.GRANTED) {
+            photoLibrary = (await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+            )) as PermissionStatus;
+          }
+        } else {
+          photoLibrary = (await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          )) as PermissionStatus;
+        }
       } catch (err) {
         console.warn(err);
       }
