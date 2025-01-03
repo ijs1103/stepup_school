@@ -4,18 +4,17 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
 import WelcomeScreen from '@/screens/WelcomeScreen';
-import LaunchScreen from '@/screens/LaunchScreen';
 import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
 import SchoolInfoScreen from '@/screens/SchoolInfoScreen';
 import BodyInfoScreen from '@/screens/BodyInfoScreen';
 import TermsAgreementScreen from '@/screens/TermsAgreementScreen';
 import SignUpCompleteScreen from '@/screens/SignUpCompleteScreen';
+import HomeScreen from '@/screens/HomeScreen';
 
 const Tab = createBottomTabNavigator();
 
 type HomeStackParams = {
-  Launch: undefined;
   Home: undefined;
   PedometerSettings: undefined;
   SettingsMain: undefined;
@@ -29,12 +28,11 @@ type HomeStackParams = {
 export const HomeStack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStacks = () => (
-  <HomeStack.Navigator initialRouteName={'Launch'}
+  <HomeStack.Navigator initialRouteName={'Home'}
     screenOptions={{
       headerShown: false,
       gestureEnabled: false,
     }}>
-    <HomeStack.Screen name={'Launch'} component={LaunchScreen} />
     <HomeStack.Screen name={'Home'} component={HomeScreen} />
     <HomeStack.Screen name={'PedometerSettings'} component={PedometerSettingsScreen} />
     <HomeStack.Screen name={'SettingsMain'} component={SettingsMainScreen} />
@@ -51,12 +49,6 @@ export const useHomeStackNavigation = <RouteName extends keyof HomeStackParams>(
 
 export const useHomeStackRoute = <RouteName extends keyof HomeStackParams>() =>
   useRoute<RouteProp<HomeStackParams, RouteName>>();
-
-const HomeScreen = () => {
-  return (
-    <Text>Home</Text>
-  );
-};
 
 const PedometerSettingsScreen = () => {
   return (
@@ -300,12 +292,11 @@ type AuthStackParams = {
 export const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
 const AuthStacks = () => (
-  <AuthStack.Navigator initialRouteName={'Launch'}
+  <AuthStack.Navigator initialRouteName={'Welcome'}
     screenOptions={{
       headerShown: false,
       gestureEnabled: false,
     }}>
-    <AuthStack.Screen name={'Launch'} component={LaunchScreen} />
     <AuthStack.Screen name={'Welcome'} component={WelcomeScreen} />
     <AuthStack.Screen name={'SignIn'} component={SignInScreen} />
     <AuthStack.Screen name={'SignUp'} component={SignUpScreen} />
@@ -323,7 +314,7 @@ export const useAuthStackRoute = <RouteName extends keyof AuthStackParams>() =>
   useRoute<RouteProp<AuthStackParams, RouteName>>();
 
 const RootNavigation = () => {
-  const [isLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(true);
 
   return (
     <NavigationContainer>
