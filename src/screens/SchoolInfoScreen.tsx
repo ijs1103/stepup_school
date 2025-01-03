@@ -6,13 +6,13 @@ import { useUserSignupStore, SchoolInfo } from '@/entities/user/model/stores';
 import { useAuthStackNavigation } from '@/app/navigation/RootNavigation';
 import { Spacer } from '@/shared/ui/Spacer';
 import InfoInputButton from '@/shared/ui/InfoInputButton/InfoInputButton';
-import SchoolCodeInput from '@/features/auth/ui/SchoolInfoScreen/SchoolCodeInput';
+import SchoolNameInput from '@/features/auth/ui/SchoolInfoScreen/SchoolNameInput';
 import { CustomSheet } from '@/shared/ui/CustomSheet';
 import SchoolGradeInput from '@/features/auth/ui/SchoolInfoScreen/SchoolGradeInput';
 import SchoolClassInput from '@/features/auth/ui/SchoolInfoScreen/SchoolClassInput';
 
 export interface OptionalSchoolInfo {
-    schoolCode: string | undefined;
+    name: string | undefined;
     grade: number | undefined;
     class: number | undefined;
 }
@@ -20,8 +20,8 @@ export interface OptionalSchoolInfo {
 const SchoolInfoScreen = () => {
     const navigation = useAuthStackNavigation();
     const { setSchoolInfo: setSchool } = useUserSignupStore();
-    const [currentInfo, setCurrentInfo] = useState<keyof SchoolInfo>('schoolCode');
-    const [schoolInfo, setSchoolInfo] = useState<OptionalSchoolInfo>({ schoolCode: undefined, grade: undefined, class: undefined });
+    const [currentInfo, setCurrentInfo] = useState<keyof SchoolInfo>('name');
+    const [schoolInfo, setSchoolInfo] = useState<OptionalSchoolInfo>({ name: undefined, grade: undefined, class: undefined });
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
     const isValid = useMemo(() => {
         return Object.values(schoolInfo).every(value => value !== undefined);
@@ -58,7 +58,7 @@ const SchoolInfoScreen = () => {
                 <Text style={styles.subTitle}>{'학교 정보를 정확하게 입력해 주세요'}</Text>
                 <Spacer size={38} />
                 <View style={styles.infoInputButtonContainer}>
-                    <InfoInputButton title={'학교 코드'} info={schoolInfo.schoolCode} pressHandler={() => pressHandler('schoolCode')} />
+                    <InfoInputButton title={'학교 이름'} info={schoolInfo.name} pressHandler={() => pressHandler('name')} />
                     <InfoInputButton title={'학년'} info={schoolInfo.grade} pressHandler={() => pressHandler('grade')} />
                     <InfoInputButton title={'학급'} info={schoolInfo.class} pressHandler={() => pressHandler('class')} />
                 </View>
@@ -72,7 +72,7 @@ const SchoolInfoScreen = () => {
                     clickHandler={submitHandler} />
             </View>
             <CustomSheet isOpen={isBottomSheetOpen} onClose={handleBottomSheetClose}>
-                {currentInfo === 'schoolCode' && <SchoolCodeInput submitHandler={bottomSheetSubmitHandler} />}
+                {currentInfo === 'name' && <SchoolNameInput submitHandler={bottomSheetSubmitHandler} />}
                 {currentInfo === 'grade' && <SchoolGradeInput submitHandler={bottomSheetSubmitHandler} />}
                 {currentInfo === 'class' && <SchoolClassInput submitHandler={bottomSheetSubmitHandler} />}
             </CustomSheet>

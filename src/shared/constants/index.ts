@@ -4,7 +4,6 @@ const REGEX = {
   EMAIL: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
   PASSWORD:
     /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?])(?=.{8,16}$)[A-Za-z!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]{8,16}$/,
-  CODE: /^[a-zA-Z0-9]{6,}$/,
 } as const;
 
 const FORM_ERROR_MESSAGE = {
@@ -14,7 +13,6 @@ const FORM_ERROR_MESSAGE = {
   NICKNAME: '별명은 한글 2~10자까지 입력.',
   REQUIRED: '해당란을 입력해주세요.',
   PASSWORD_CHECK: '비밀번호가 일치하지 않습니다.',
-  CODE: '6자 이상이어야 합니다.',
 } as const;
 
 export {REGEX, FORM_ERROR_MESSAGE};

@@ -8,7 +8,7 @@ interface AuthInfo {
 }
 
 export interface SchoolInfo {
-  schoolCode: string;
+  name: string;
   grade: number;
   class: number;
 }
@@ -38,7 +38,7 @@ const initialAuthInfo: AuthInfo = {
 };
 
 export const initialSchoolInfo: SchoolInfo = {
-  schoolCode: '',
+  name: '',
   grade: 0,
   class: 0,
 };

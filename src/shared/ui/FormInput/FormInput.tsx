@@ -4,7 +4,7 @@ import { Control, Controller } from 'react-hook-form';
 import { View, Text, KeyboardTypeOptions, TextInput, StyleSheet, Animated } from 'react-native';
 
 interface Props {
-    name: 'NAME' | 'NICKNAME' | 'EMAIL' | 'PASSWORD' | 'CODE';
+    name: 'NAME' | 'NICKNAME' | 'EMAIL' | 'PASSWORD';
     errorMessage?: string;
     textInputConf: ITextInputConfig;
     control: Control<any>;

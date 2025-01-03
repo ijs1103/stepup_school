@@ -1,35 +1,42 @@
-import { CustomButton } from '@/shared/ui/CustomButton';
-import { FormInput } from '@/shared/ui/FormInput';
-import React, { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useCallback, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { CustomButton } from '@/shared/ui/CustomButton';
+import { Picker } from '@react-native-picker/picker';
 
-interface IForm {
-    CODE: string;
-}
+const schoolArray = ['부천중학교', '상도중학교', '성남초등학교'];
 
 interface Props {
     submitHandler: (value: string | number) => void;
 }
 
-const SchoolCodeInput = ({ submitHandler }: Props) => {
-    const { control, handleSubmit, formState: { isValid } } = useForm<IForm>({ mode: 'onChange' });
+const SchoolNameInput = ({ submitHandler }: Props) => {
+    const [selectedSchoolName, setSelectedSchoolName] = useState('');
 
-    const onValid = useCallback(({ CODE }: IForm) => {
-        submitHandler(CODE);
-    }, [submitHandler]);
+    const clickHandler = useCallback(() => {
+        submitHandler(selectedSchoolName);
+    }, [selectedSchoolName, submitHandler]);
+
+    const isValid = useCallback(() => {
+        return selectedSchoolName !== '';
+    }, [selectedSchoolName]);
 
     return (
         <View style={styles.container}>
             <View style={styles.textContainer}>
-                <Text style={styles.title}>{'학교 코드'}</Text>
-                <Text style={styles.description}>{'영문자/숫자로 이루어진 학교 고유 코드'}</Text>
+                <Text style={styles.title}>{'학교 이름'}</Text>
+                <Text style={styles.description}>{'학교 이름'}</Text>
             </View>
             <View style={styles.formContainer}>
-                <FormInput
-                    name={'CODE'}
-                    textInputConf={{ placeholder: '6자 이상' }}
-                    control={control} />
+                <Picker
+                    style={styles.picker}
+                    selectedValue={selectedSchoolName}
+                    onValueChange={(value) =>
+                        setSelectedSchoolName(value)
+                    }>
+                    {schoolArray.map(value => (
+                        <Picker.Item key={value} label={value} value={value} />
+                    ))}
+                </Picker>
             </View>
             <View style={styles.buttonContainer}>
                 <CustomButton
@@ -37,13 +44,13 @@ const SchoolCodeInput = ({ submitHandler }: Props) => {
                     textColor={'#fff'}
                     backgroundColor={'#FB970C'}
                     disabled={!isValid}
-                    clickHandler={handleSubmit(onValid)} />
+                    clickHandler={clickHandler} />
             </View>
         </View>
     );
 };
 
-export default SchoolCodeInput;
+export default SchoolNameInput;
 
 const styles = StyleSheet.create({
     container: {
@@ -78,5 +85,8 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginBottom: 10,
+    },
+    picker: {
+
     },
 });
