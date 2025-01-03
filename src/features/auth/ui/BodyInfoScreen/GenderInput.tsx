@@ -23,9 +23,10 @@ const GenderInput = ({ submitHandler }: Props) => {
                 <Text style={styles.description}>{'칼로리 및 보폭 계산에 필요해요'}</Text>
             </View>
             <View style={styles.formContainer}>
-                {selectedGender === '여성' ? <TouchableImage pressHandler={() => setSelectedGender(undefined)} source={require('../../../../../assets/female_selected.png')} />
-                    : <TouchableImage pressHandler={() => setSelectedGender('여성')} source={require('../../../../../assets/female_unselected.png')} />}
-                {selectedGender === '남성' ? <TouchableImage pressHandler={() => setSelectedGender(undefined)} source={require('../../../../../assets/male_selected.png')} /> : <TouchableImage pressHandler={() => setSelectedGender('남성')} source={require('../../../../../assets/male_unselected.png')} />}
+                {selectedGender === '여성' ?
+                    <View style={styles.genderContainer}><TouchableImage pressHandler={() => setSelectedGender(undefined)} source={require('../../../../../assets/female_selected.png')} /><Text style={styles.selectedText}>{'여성'}</Text></View>
+                    : <View style={styles.genderContainer}><TouchableImage pressHandler={() => setSelectedGender('여성')} source={require('../../../../../assets/female_unselected.png')} /><Text style={styles.unselectedText}>{'여성'}</Text></View>}
+                {selectedGender === '남성' ? <View style={styles.genderContainer}><TouchableImage pressHandler={() => setSelectedGender(undefined)} source={require('../../../../../assets/male_selected.png')} /><Text style={styles.selectedText}>{'남성'}</Text></View> : <View style={styles.genderContainer}><TouchableImage pressHandler={() => setSelectedGender('남성')} source={require('../../../../../assets/male_unselected.png')} /><Text style={styles.unselectedText}>{'남성'}</Text></View>}
             </View>
             <View style={styles.buttonContainer}>
                 <CustomButton
@@ -59,6 +60,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexShrink: 0,
         width: '100%',
+    },
+    genderContainer: {
+        alignItems: 'center',
+        gap: 6,
+    },
+    selectedText: {
+        fontSize: 12,
+        color: '#FB970C',
+    },
+    unselectedText: {
+        fontSize: 12,
+        color: '#979797',
     },
     title: {
         fontSize: 20,

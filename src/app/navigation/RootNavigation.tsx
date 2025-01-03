@@ -298,6 +298,7 @@ const AuthStacks = () => (
   <AuthStack.Navigator initialRouteName={'Launch'}
     screenOptions={{
       headerShown: false,
+      gestureEnabled: false,
     }}>
     <AuthStack.Screen name={'Launch'} component={LaunchScreen} />
     <AuthStack.Screen name={'Welcome'} component={WelcomeScreen} />
