@@ -7,28 +7,28 @@ import {Platform} from 'react-native';
 import {readRecords} from 'react-native-health-connect';
 import {getKoreaEndTime} from '@/shared/lib/date/getKoreaEndtime';
 
-interface WeekOptions {
+interface Props {
   startDate: string;
   endDate?: string;
 }
 
-export interface WeeklyStepCountData {
+export interface StepCountData {
   [key: string]: number;
 }
 
 interface Result {
-  weeklyStepCountData: WeeklyStepCountData | undefined;
-  WeeklyActivityStats: ActivityStats;
+  stepCountData: StepCountData | undefined;
+  activityStats: ActivityStats;
   errorMessage: string;
 }
 
-export const useWeeklyActivityStats = ({
+export const useActivityStats = ({
   startDate,
   endDate = new Date().toISOString(),
-}: WeekOptions): Result => {
+}: Props): Result => {
   const {userData} = useAuthStore();
-  const [weeklyStepCountData, setWeeklyStepCountData] = useState<
-    WeeklyStepCountData | undefined
+  const [stepCountData, setStepCountData] = useState<
+  StepCountData | undefined
   >(undefined);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
@@ -36,11 +36,11 @@ export const useWeeklyActivityStats = ({
     startDate,
     endDate,
   };
-  const getWeeklySteps = async () => {
+  const getSteps = async () => {
     if (Platform.OS === 'ios') {
       AppleHealthKit.getDailyStepCountSamples(options, (err, results) => {
         if (err) {
-          setErrorMessage(`주간 걸음수 데이터 가져오기 오류: ${err}`);
+          setErrorMessage(`특정기간 걸음수 데이터 가져오기 오류: ${err}`);
           return;
         }
 
@@ -48,9 +48,9 @@ export const useWeeklyActivityStats = ({
           results.reduce((sum, item) => sum + item.value, 0),
         );
         setTotalSteps(totalStepsCount);
-        console.log('주간 총 걸음 수:', Math.round(totalStepsCount));
+        console.log('총 걸음 수:', Math.round(totalStepsCount));
 
-        const weeklySteps = results.reduce<Record<string, number>>(
+        const steps = results.reduce<Record<string, number>>(
           (acc, item) => {
             const date = new Date(item.startDate);
             const formattedDate = `${
@@ -81,12 +81,11 @@ export const useWeeklyActivityStats = ({
           return aDay - bDay;
         };
 
-        // 정렬된 weeklySteps 객체 생성
-        const sortedWeeklySteps = Object.fromEntries(
-          Object.entries(weeklySteps).sort(([a], [b]) => sortByDate(a, b)),
+        const sortedSteps = Object.fromEntries(
+          Object.entries(steps).sort(([a], [b]) => sortByDate(a, b)),
         );
-        console.log('일별 걸음 수:', sortedWeeklySteps);
-        setWeeklyStepCountData(sortedWeeklySteps);
+        console.log('걸음 수:', sortedSteps);
+        setStepCountData(sortedSteps);
       });
     } else {
       try {
@@ -97,22 +96,22 @@ export const useWeeklyActivityStats = ({
             endTime: getKoreaEndTime(),
           },
         });
-        console.log('일별 걸음 수:', results);
+        console.log('걸음 수:', results);
         // setWeeklyStepCountData(weeklySteps);
       } catch (error) {
         console.log(error);
-        setErrorMessage(`주간 걸음수 데이터 가져오기 오류: ${error}`);
+        setErrorMessage(`특정기간 걸음수 데이터 가져오기 오류: ${error}`);
       }
     }
   };
 
   useEffect(() => {
-    getWeeklySteps();
+    getSteps();
   }, []);
 
   return {
-    weeklyStepCountData,
-    WeeklyActivityStats: userData
+    stepCountData,
+    activityStats: userData
       ? calculateStats(userData.gender, totalSteps)
       : {
           distance: 0,

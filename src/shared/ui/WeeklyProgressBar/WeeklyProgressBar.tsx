@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { WeeklyStepCountData } from '@/features/walking/\bmodel/useWeeklyActivityStats';
+import { WeeklyStepCountData } from '@/features/walking/model/useActivityStats';
 import { DAYS_OF_WEEK } from '@/shared/constants';
 import { mapToRange } from '@/shared/lib/statistics/mapToRange';
 import { padArray } from '@/shared/lib/statistics/padArray';

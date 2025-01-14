@@ -23,19 +23,23 @@ const DailyBurnedCaloriesView = ({ food, targetActivityData }: Props) => {
                 <Text style={styles.foodCalorieText}>{`약 ${food.calories}kcal`}</Text>
             </View>
             <View style={styles.burnedCalorie}>
-                <CarIcon />
-                <Text style={styles.burnedCalorieText}>
-                    {targetActivityData.targetCalories}
-                    <Text style={styles.unitText}>{' Kcal'}</Text>
-                </Text>
+                <View>
+                    <CarIcon />
+                    <Text style={styles.burnedCalorieText}>
+                        {targetActivityData.targetCalories}
+                        <Text style={styles.unitText}>{' Kcal'}</Text>
+                    </Text>
+                </View>
                 <Text style={styles.targetCalorieText}>{`앞으로\n${targetActivityData.leftCalories}Kcal`}</Text>
             </View>
             <View style={styles.walkedDistance}>
-                <CarIcon />
-                <Text style={styles.burnedCalorieText}>
-                    {targetActivityData.targetDistance}
-                    <Text style={styles.unitText}>{' km'}</Text>
-                </Text>
+                <View>
+                    <CarIcon />
+                    <Text style={styles.burnedCalorieText}>
+                        {targetActivityData.targetDistance}
+                        <Text style={styles.unitText}>{' km'}</Text>
+                    </Text>
+                </View>
                 <Text style={styles.targetCalorieText}>{`앞으로\n${targetActivityData.leftDistance}km`}</Text>
             </View>
         </View>
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 4,
         borderTopColor: '#968C7E',
         paddingHorizontal: 8,
+        justifyContent: 'space-between',
     },
     burnedCalorieText: {
         marginTop: 6,
@@ -112,5 +117,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 4,
         borderTopColor: '#968C7E',
         paddingHorizontal: 8,
+        justifyContent: 'space-between',
     },
 });

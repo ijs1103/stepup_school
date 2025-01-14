@@ -15,10 +15,11 @@ import useHealthKitSetup from '@/features/walking/\bmodel/useHealthKitSetup';
 import { useDailyActivityStats } from '@/features/walking/\bmodel/useDailyActivityStats';
 import Toast from 'react-native-toast-message';
 import { matchFoodByCalories, matchTargetActivityData } from '@/features/walking/lib/utils';
-import { useWeeklyActivityStats } from '@/features/walking/\bmodel/useWeeklyActivityStats';
+import { useActivityStats } from '@/features/walking/model/useActivityStats';
 import { getThisWeekMonday } from '@/shared/lib/date/getThisWeekMonday';
 import useHealthConnectSetup from '@/features/walking/\bmodel/useHealthConnectSetup';
 import { useTargetStepCountStore } from '@/entities/user/model/stores/useTargetStepCountStore';
+import useErrorToast from '@/shared/lib/hooks/useErrorToast';
 
 const HomeScreen = () => {
     const navigation = useHomeStackNavigation();
@@ -27,8 +28,10 @@ const HomeScreen = () => {
     const { hasPermissions: hasHealthKitPermissions, hasRequestedPermissions: hasRequestedHealthKitPermissions } = useHealthKitSetup();
     const { hasPermissions: hasHealthConnectPermissions, hasRequestedPermissions: hasRequestedHealthConnectPermissions } = useHealthConnectSetup();
     const { data, refetch, isRefetching, errorMessage: dailyErrorMessage } = useDailyActivityStats();
-    const { weeklyStepCountData, errorMessage: weeklyErrorMessage } = useWeeklyActivityStats({ startDate: getThisWeekMonday() });
+    const { stepCountData, errorMessage: weeklyErrorMessage } = useActivityStats({ startDate: getThisWeekMonday() });
     const { targetStepCount } = useTargetStepCountStore();
+    useErrorToast(dailyErrorMessage);
+    useErrorToast(weeklyErrorMessage);
 
     const myInfoHandler = useCallback(() => {
         logout();
@@ -91,26 +94,6 @@ const HomeScreen = () => {
         }
     }, [hasHealthConnectPermissions, permissions, hasRequestedHealthConnectPermissions, hasRequestedPermissions]);
 
-    useEffect(() => {
-        (dailyErrorMessage !== '') && Toast.show({
-            type: 'error',
-            text1: dailyErrorMessage,
-            position: 'top',
-            autoHide: true,
-            visibilityTime: 2000,
-        });
-    }, [dailyErrorMessage]);
-
-    useEffect(() => {
-        (weeklyErrorMessage !== '') && Toast.show({
-            type: 'error',
-            text1: weeklyErrorMessage,
-            position: 'top',
-            autoHide: true,
-            visibilityTime: 2000,
-        });
-    }, [weeklyErrorMessage]);
-
     return (
         <ScrollView
             style={styles.container}
@@ -139,7 +122,7 @@ const HomeScreen = () => {
             <Spacer size={48} />
             <View style={styles.weeklyStatisticsContainer}>
                 <Divider />
-                <WeeklyStatisticsView data={weeklyStepCountData} />
+                <WeeklyStatisticsView data={stepCountData} />
             </View>
             <Spacer size={16} />
         </ScrollView >
@@ -164,7 +147,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
     },
     caloriesViewContainer: {
-        paddingHorizontal: 24,
+        paddingHorizontal: 16,
     },
     weeklyStatisticsContainer: {
         paddingHorizontal: 38,
