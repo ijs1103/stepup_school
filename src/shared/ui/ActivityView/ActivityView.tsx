@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
     },
     data: {
         fontSize: 16,
-        fontWeight: 500,
+        fontWeight: '500',
     },
     label: {
         fontSize: 10,
-        fontWeight: 500,
+        fontWeight: '500',
     },
 });

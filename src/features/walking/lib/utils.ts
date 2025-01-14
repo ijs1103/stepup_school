@@ -1,5 +1,5 @@
 import {FOOD_ITEM_LIST, FoodItem} from '@/shared/constants';
-import { ActivityStats } from '../\bmodel/useDailyActivityStats';
+import {ActivityStats} from '../\bmodel/useDailyActivityStats';
 
 export const matchFoodByCalories = (calories: number): FoodItem => {
   const sortedFoods = [...FOOD_ITEM_LIST].sort(
@@ -22,17 +22,43 @@ export interface TargetActivityData {
 
 export const matchTargetActivityData = (
   gender: boolean,
-  targetStepCount: number,
+  targetStepCount: number | string,
   burnedCalories: number,
   walkedDistance: number,
 ): TargetActivityData => {
+  const validTargetStepCount = Number(String(targetStepCount).replace(',', ''));
+  const validBurnedCalories = Number(burnedCalories);
+  const validWalkedDistance = Number(walkedDistance);
+
+  if (
+    isNaN(validTargetStepCount) ||
+    isNaN(validBurnedCalories) ||
+    isNaN(validWalkedDistance)
+  ) {
+    console.error('Invalid input values');
+    return {
+      targetCalories: 0,
+      leftCalories: 0,
+      targetDistance: 0,
+      leftDistance: 0,
+    };
+  }
+
   const targetCalories = Number(
-    ((gender ? 0.055 : 0.045) * targetStepCount).toFixed(1),
+    ((gender ? 0.055 : 0.045) * validTargetStepCount).toFixed(1),
   );
-  const leftCalories = Number((targetCalories - burnedCalories).toFixed(1));
+
+  const leftCalories = Number(
+    (targetCalories - validBurnedCalories).toFixed(1),
+  );
+
   const targetDistance =
-    Math.round(((gender ? 0.77 : 0.67) * targetStepCount) / 100) / 100;
-  const leftDistance = Number((targetDistance - walkedDistance).toFixed(2));
+    Math.round(((gender ? 7.7 : 6.7) * validTargetStepCount) / 100) / 100;
+
+  const leftDistance = Number(
+    (targetDistance - validWalkedDistance).toFixed(2),
+  );
+
   return {
     targetCalories,
     leftCalories,

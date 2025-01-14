@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     dayText: {
         color: '#C7BBAB',
         fontSize: 10,
-        fontWeight: 300,
+        fontWeight: '300',
         textAlign: 'center',
     },
 });

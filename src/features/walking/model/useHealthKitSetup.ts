@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {AppState, AppStateStatus} from 'react-native';
+import {AppState, AppStateStatus, Platform} from 'react-native';
 import AppleHealthKit, {HealthKitPermissions} from 'react-native-health';
 
 const useHealthKitSetup = () => {
@@ -29,6 +29,10 @@ const useHealthKitSetup = () => {
   }, []);
 
   useEffect(() => {
+    if (Platform.OS !== 'ios') {
+      return;
+    }
+
     AppleHealthKit.initHealthKit(healthKitPermissions, (err: string) => {
       if (err) {
         setErrorMessage('HealthKit이 에러발생으로 초기화되지 않았습니다.');
@@ -56,6 +60,14 @@ const useHealthKitSetup = () => {
       subscription.remove();
     };
   }, [checkPermissions]);
+
+  if (Platform.OS !== 'ios') {
+    return {
+      hasPermissions: false,
+      errorMessage: '',
+      hasRequestedPermissions: false,
+    };
+  }
 
   return {
     hasPermissions,

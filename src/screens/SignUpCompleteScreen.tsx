@@ -98,18 +98,18 @@ const styles = StyleSheet.create({
   },
   nicknameContainer: {
     textAlign: 'center',
-    fontWeight: 500,
+    fontWeight: '500',
     fontSize: 24,
     color: '#423836',
     lineHeight: 28,
   },
   nickname: {
-    fontWeight: 900,
+    fontWeight: '900',
     fontSize: 24,
     color: '#FC661A',
   },
   subtitle: {
-    fontWeight: 500,
+    fontWeight: '500',
     fontSize: 16,
     textAlign: 'center',
     color: '#423836',
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
-    fontWeight: 300,
+    fontWeight: '300',
     fontSize: 12,
     color: '#19181B',
   },

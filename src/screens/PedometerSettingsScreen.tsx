@@ -57,12 +57,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     label: {
-        fontWeight: 500,
+        fontWeight: '500',
         lineHeight: 28,
     },
     stepText: {
         color: '#F77E5B',
-        fontWeight: 500,
+        fontWeight: '500',
         lineHeight: 28,
     },
 });

@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react';
+import {Platform} from 'react-native';
 import AppleHealthKit, {HealthInputOptions} from 'react-native-health';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
 import {getTodayStartDate} from '@/shared/lib/date/getTodayStartDate';
+import {readRecords} from 'react-native-health-connect';
+import {getKoreaEndTime} from '@/shared/lib/date/getKoreaEndtime';
 
 interface HealthValue {
   value: number;
@@ -37,24 +40,58 @@ export const useDailyActivityStats = (): Result => {
     startDate: getTodayStartDate(),
   } as HealthInputOptions;
 
-  const getDailySteps = (isRefetch: boolean = false) => {
+  const getDailySteps = async (isRefetch: boolean = false) => {
     if (isRefetch) {
       setIsRefetching(true);
     }
-    AppleHealthKit.getStepCount(
-      options,
-      (err: string | null, results: HealthValue) => {
-        if (err) {
-          setErrorMessage(`일간 걸음수 데이터 가져오기 오류: ${err}`);
-        } else {
-          console.log('걸음수데이터: ', results);
-          setDailyStepCount(results.value);
-        }
+    if (Platform.OS === 'ios') {
+      return new Promise<number>((resolve, reject) => {
+        AppleHealthKit.getStepCount(
+          options,
+          (err: string | null, results: HealthValue) => {
+            if (err) {
+              setErrorMessage(`일간 걸음수 데이터 가져오기 오류: ${err}`);
+              reject(err);
+            } else {
+              console.log('걸음수데이터: ', results);
+              setDailyStepCount(results.value);
+              resolve(results.value);
+            }
+            if (isRefetch) {
+              setIsRefetching(false);
+            }
+          },
+        );
+      });
+    } else {
+      try {
+        const results = await readRecords('Steps', {
+          timeRangeFilter: {
+            operator: 'between',
+            startTime: getTodayStartDate(),
+            endTime: getKoreaEndTime(),
+          },
+        });
+        console.log('안드결과', results);
+        const totalSteps = results.records.reduce(
+          (sum, cur) => sum + cur.count,
+          0,
+        );
+        console.log('오늘의 총 걸음 수:', totalSteps);
+        setDailyStepCount(totalSteps);
         if (isRefetch) {
           setIsRefetching(false);
         }
-      },
-    );
+        return totalSteps;
+      } catch (error) {
+        console.log(error);
+        setErrorMessage(`일간 걸음수 데이터 가져오기 오류: ${error}`);
+        if (isRefetch) {
+          setIsRefetching(false);
+        }
+        return 0;
+      }
+    }
   };
 
   useEffect(() => {
@@ -75,8 +112,7 @@ export const useDailyActivityStats = (): Result => {
       burnedCalories: Number(
         ((userData.gender ? 0.055 : 0.045) * steps).toFixed(1),
       ),
-      distance:
-        Math.round(((userData.gender ? 0.77 : 0.67) * steps) / 100) / 100,
+      distance: Math.round(((userData.gender ? 7.7 : 6.7) * steps) / 100) / 100,
       walkingTime: Math.round((0.62 * steps) / 60),
     };
   };

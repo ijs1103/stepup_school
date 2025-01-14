@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Platform } from 'react-native';
 import usePermissions from '@/shared/lib/hooks/usePermissions';
 import { useAuthStore } from '@/entities/user/model/stores/useAuthStore';
 import StepupLogo from '../../assets/stepup_logo_small.svg';
@@ -17,7 +17,7 @@ import Toast from 'react-native-toast-message';
 import { matchFoodByCalories, matchTargetActivityData } from '@/features/walking/lib/utils';
 import { useWeeklyActivityStats } from '@/features/walking/\bmodel/useWeeklyActivityStats';
 import { getThisWeekMonday } from '@/shared/lib/date/getThisWeekMonday';
-import { useHealthConnectSetup } from '@/features/walking/\bmodel/useHealthConnectSetup';
+import useHealthConnectSetup from '@/features/walking/\bmodel/useHealthConnectSetup';
 import { useTargetStepCountStore } from '@/entities/user/model/stores/useTargetStepCountStore';
 
 const HomeScreen = () => {
@@ -25,7 +25,7 @@ const HomeScreen = () => {
     const { logout, userData } = useAuthStore();
     const { permissions, hasRequestedPermissions } = usePermissions();
     const { hasPermissions: hasHealthKitPermissions, hasRequestedPermissions: hasRequestedHealthKitPermissions } = useHealthKitSetup();
-    const uhc = useHealthConnectSetup();
+    const { hasPermissions: hasHealthConnectPermissions, hasRequestedPermissions: hasRequestedHealthConnectPermissions } = useHealthConnectSetup();
     const { data, refetch, isRefetching, errorMessage: dailyErrorMessage } = useDailyActivityStats();
     const { weeklyStepCountData, errorMessage: weeklyErrorMessage } = useWeeklyActivityStats({ startDate: getThisWeekMonday() });
     const { targetStepCount } = useTargetStepCountStore();
@@ -45,7 +45,14 @@ const HomeScreen = () => {
         require('../../assets/banner_example.png')];
     }, []);
 
+    const targetActivityData = useMemo(() => {
+        return matchTargetActivityData(userData?.gender ?? true, targetStepCount, data.burnedCalories, data.distance);
+    }, [data, targetStepCount, userData?.gender]);
+
     useEffect(() => {
+        if (Platform.OS !== 'ios') {
+            return;
+        }
         const allPermissionsRequested = hasRequestedHealthKitPermissions && hasRequestedPermissions;
         const allPermissionsGranted = hasHealthKitPermissions &&
             permissions.locationAlways === 'granted' &&
@@ -62,6 +69,27 @@ const HomeScreen = () => {
             });
         }
     }, [hasHealthKitPermissions, permissions, hasRequestedHealthKitPermissions, hasRequestedPermissions]);
+
+    useEffect(() => {
+        if (Platform.OS !== 'android') {
+            return;
+        }
+        const allPermissionsRequested = hasRequestedHealthConnectPermissions && hasRequestedPermissions;
+        const allPermissionsGranted = hasHealthConnectPermissions &&
+            permissions.locationAlways === 'granted' &&
+            permissions.notifications === 'granted' &&
+            permissions.photoLibrary === 'granted';
+
+        if (allPermissionsRequested && !allPermissionsGranted) {
+            Toast.show({
+                type: 'error',
+                text1: '원활한 앱사용을 위해 모든 접근권한을 허용해주세요.',
+                position: 'top',
+                autoHide: true,
+                visibilityTime: 2000,
+            });
+        }
+    }, [hasHealthConnectPermissions, permissions, hasRequestedHealthConnectPermissions, hasRequestedPermissions]);
 
     useEffect(() => {
         (dailyErrorMessage !== '') && Toast.show({
@@ -106,7 +134,7 @@ const HomeScreen = () => {
             <View style={styles.caloriesViewContainer}>
                 <DailyBurnedCaloriesView
                     food={matchFoodByCalories(data.burnedCalories)}
-                    targetActivityData={matchTargetActivityData(userData?.gender ?? true, targetStepCount, data.burnedCalories, data.distance)} />
+                    targetActivityData={targetActivityData} />
             </View>
             <Spacer size={48} />
             <View style={styles.weeklyStatisticsContainer}>

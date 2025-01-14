@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import CarIcon from '../../../../assets/car.svg';
 import { FoodItem } from '@/shared/constants';
 import { TargetActivityData } from '@/features/walking/lib/utils';
+import { Spacer } from '../Spacer';
 
 interface Props {
     food: FoodItem;
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     emoji: {
-        fontWeight: 700,
+        fontWeight: '700',
         fontSize: 16,
         lineHeight: 26,
         marginBottom: 4,
@@ -63,19 +64,19 @@ const styles = StyleSheet.create({
     burnedFoodText: {
         color: '#fff',
         fontSize: 12,
-        fontWeight: 300,
+        fontWeight: '300',
         lineHeight: 14,
     },
     foodCalorieText: {
         color: '#fff',
         fontSize: 8,
-        fontWeight: 500,
+        fontWeight: '500',
         lineHeight: 24,
     },
     boldText: {
         color: '#fff',
         fontSize: 12,
-        fontWeight: 700,
+        fontWeight: '700',
     },
     burnedCalorie: {
         paddingTop: 12,
@@ -88,19 +89,19 @@ const styles = StyleSheet.create({
     burnedCalorieText: {
         marginTop: 6,
         fontSize: 16,
-        fontWeight: 700,
-        lineHeight: 26,
+        fontWeight: '700',
+        lineHeight: 20,
         color: '#141210',
     },
     unitText: {
-        fontWeight: 700,
+        fontWeight: '700',
         fontSize: 12,
         lineHeight: 16,
         color: '#141210',
     },
     targetCalorieText: {
         fontSize: 10,
-        fontWeight: 500,
+        fontWeight: '500',
         lineHeight: 14,
         color: '#111111',
     },

@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
     },
     currentStepText: {
         fontSize: 32,
-        fontWeight: 500,
+        fontWeight: '500',
         color: '#141210',
     },
     targetStepText: {
         fontSize: 12,
-        fontWeight: 500,
+        fontWeight: '500',
         color: '#968C7E',
     },
 });
