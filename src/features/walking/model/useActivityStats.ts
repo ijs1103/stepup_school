@@ -1,5 +1,5 @@
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import AppleHealthKit from 'react-native-health';
 import {calculateStats} from '../lib/utils';
 import {ActivityStats} from './useDailyActivityStats';
@@ -20,6 +20,7 @@ interface Result {
   stepCountData: StepCountData | undefined;
   activityStats: ActivityStats;
   errorMessage: string;
+  refetch: () => void;
 }
 
 export const useActivityStats = ({
@@ -27,73 +28,72 @@ export const useActivityStats = ({
   endDate = new Date().toISOString(),
 }: Props): Result => {
   const {userData} = useAuthStore();
-  const [stepCountData, setStepCountData] = useState<
-  StepCountData | undefined
-  >(undefined);
+  const [stepCountData, setStepCountData] = useState<StepCountData | undefined>(
+    undefined,
+  );
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
-  const options = {
-    startDate,
-    endDate,
-  };
-  const getSteps = async () => {
+  const getSteps = async (startDate: string, endDate: string) => {
     if (Platform.OS === 'ios') {
-      AppleHealthKit.getDailyStepCountSamples(options, (err, results) => {
-        if (err) {
-          setErrorMessage(`특정기간 걸음수 데이터 가져오기 오류: ${err}`);
-          return;
-        }
+      AppleHealthKit.getDailyStepCountSamples(
+        {
+          startDate,
+          endDate,
+        },
+        (err, results) => {
+          if (err) {
+            setErrorMessage(`특정기간 걸음수 데이터 가져오기 오류: ${err}`);
+            return;
+          }
 
-        const totalStepsCount = Math.round(
-          results.reduce((sum, item) => sum + item.value, 0),
-        );
-        setTotalSteps(totalStepsCount);
-        console.log('총 걸음 수:', Math.round(totalStepsCount));
+          const totalStepsCount = Math.round(
+            results.reduce((sum, item) => sum + item.value, 0),
+          );
+          setTotalSteps(totalStepsCount);
+          console.log('총 걸음 수:', Math.round(totalStepsCount));
 
-        const steps = results.reduce<Record<string, number>>(
-          (acc, item) => {
+          const steps = results.reduce<Record<string, number>>((acc, item) => {
             const date = new Date(item.startDate);
             const formattedDate = `${
               date.getMonth() + 1
             }월 ${date.getDate()}일`;
             acc[formattedDate] = (acc[formattedDate] || 0) + item.value;
             return acc;
-          },
-          {},
-        );
+          }, {});
 
-        // 날짜를 오름차순으로 정렬하는 함수
-        const sortByDate = (a: string, b: string) => {
-          const [aMonth, aDay] = a
-            .replace('월', '')
-            .replace('일', '')
-            .split(' ')
-            .map(Number);
-          const [bMonth, bDay] = b
-            .replace('월', '')
-            .replace('일', '')
-            .split(' ')
-            .map(Number);
+          // 날짜를 오름차순으로 정렬하는 함수
+          const sortByDate = (a: string, b: string) => {
+            const [aMonth, aDay] = a
+              .replace('월', '')
+              .replace('일', '')
+              .split(' ')
+              .map(Number);
+            const [bMonth, bDay] = b
+              .replace('월', '')
+              .replace('일', '')
+              .split(' ')
+              .map(Number);
 
-          if (aMonth !== bMonth) {
-            return aMonth - bMonth;
-          }
-          return aDay - bDay;
-        };
+            if (aMonth !== bMonth) {
+              return aMonth - bMonth;
+            }
+            return aDay - bDay;
+          };
 
-        const sortedSteps = Object.fromEntries(
-          Object.entries(steps).sort(([a], [b]) => sortByDate(a, b)),
-        );
-        console.log('걸음 수:', sortedSteps);
-        setStepCountData(sortedSteps);
-      });
+          const sortedSteps = Object.fromEntries(
+            Object.entries(steps).sort(([a], [b]) => sortByDate(a, b)),
+          );
+          console.log('걸음 수:', sortedSteps);
+          setStepCountData(sortedSteps);
+        },
+      );
     } else {
       try {
         const results = await readRecords('Steps', {
           timeRangeFilter: {
             operator: 'between',
             startTime: startDate,
-            endTime: getKoreaEndTime(),
+            endTime: endDate,
           },
         });
         console.log('걸음 수:', results);
@@ -106,7 +106,15 @@ export const useActivityStats = ({
   };
 
   useEffect(() => {
-    getSteps();
+    getSteps(startDate, endDate);
+  }, []);
+
+  const refetch = useCallback(() => {
+    getSteps(startDate, endDate);
+  }, [startDate, endDate]);
+
+  useEffect(() => {
+    refetch();
   }, []);
 
   return {
@@ -120,5 +128,6 @@ export const useActivityStats = ({
           walkingTime: 0,
         },
     errorMessage,
+    refetch,
   };
 };

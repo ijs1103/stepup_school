@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { WeeklyProgressBar } from '../WeeklyProgressBar';
 import OptionButton from '../../../../assets/option_button.svg';
 import { Spacer } from '../Spacer';
-import { WeeklyStepCountData } from '@/features/walking/model/useActivityStats';
+import { StepCountData } from '@/features/walking/model/useActivityStats';
 import { getCurrentWeek } from '@/shared/lib/date/getCurrentWeek';
 
 interface Props {
-    data: WeeklyStepCountData | undefined;
+    data: StepCountData | undefined;
     showDateAndOptions?: boolean;
     optionButtonHandler?: () => void;
 }
