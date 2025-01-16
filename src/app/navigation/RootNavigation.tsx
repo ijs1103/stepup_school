@@ -15,6 +15,7 @@ import { useAuthStore } from '@/entities/user/model/stores/useAuthStore';
 import CustomTabBar from '@/shared/ui/CustomTabBar/CustomTabBar';
 import PedometerSettingsScreen from '@/screens/PedometerSettingsScreen';
 import RecordScreen from '@/screens/RecordScreen';
+import MonthlyRecordScreen from '@/screens/MonthlyRecordScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -119,12 +120,6 @@ export const useRecordStackRoute = <RouteName extends keyof RecordStackParams>()
 const WeeklyRecordScreen = () => {
   return (
     <Text>Profile</Text>
-  );
-};
-
-const MonthlyRecordScreen = () => {
-  return (
-    <Text>Settings</Text>
   );
 };
 

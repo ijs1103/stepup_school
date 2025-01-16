@@ -1,3 +1,5 @@
+import {ChartCategory} from '../ui/MonthlyChart/MonthlyChart';
+
 const BASE_URL = 'http://52.78.136.17:3000';
 
 const REGEX = {
@@ -37,4 +39,17 @@ const FOOD_ITEM_LIST: FoodItem[] = [
 
 const DAYS_OF_WEEK = ['월', '화', '수', '목', '금', '토', '일'];
 
-export {BASE_URL, REGEX, FORM_ERROR_MESSAGE, FOOD_ITEM_LIST, DAYS_OF_WEEK};
+const CHART_CATEGORY_UNITS: Record<ChartCategory, string> = {
+  distance: 'km',
+  stepCount: '걸음',
+  burnedCalories: 'kcal',
+} as const;
+
+export {
+  BASE_URL,
+  REGEX,
+  FORM_ERROR_MESSAGE,
+  FOOD_ITEM_LIST,
+  DAYS_OF_WEEK,
+  CHART_CATEGORY_UNITS,
+};

@@ -74,7 +74,7 @@ export const calculateStats = (
   return {
     stepCount: steps,
     burnedCalories: Number(((gender ? 0.055 : 0.045) * steps).toFixed(1)),
-    distance: Math.round(((gender ? 0.77 : 0.67) * steps) / 100) / 100,
+    distance: Math.round(((gender ? 7.7 : 6.7) * steps) / 100) / 100,
     walkingTime: Math.round((0.62 * steps) / 60),
   };
 };

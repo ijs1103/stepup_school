@@ -1,7 +1,8 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { wrapWithReanimatedMetroConfig } = require('react-native-reanimated/metro-config');
 
 const defaultConfig = getDefaultConfig(__dirname);
-const {assetExts, sourceExts} = defaultConfig.resolver;
+const { assetExts, sourceExts } = defaultConfig.resolver;
 
 /**
  * Metro configuration
@@ -21,4 +22,6 @@ const config = {
   },
 };
 
-module.exports = mergeConfig(defaultConfig, config);
+// 먼저 기본 설정과 SVG 설정을 병합한 후, Reanimated 설정으로 감싸기
+const mergedConfig = mergeConfig(defaultConfig, config);
+module.exports = wrapWithReanimatedMetroConfig(mergedConfig);

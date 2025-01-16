@@ -4,7 +4,7 @@ import { useTargetStepCountStore } from '@/entities/user/model/stores/useTargetS
 import { useDailyActivityStats } from '@/features/walking/\bmodel/useDailyActivityStats';
 import { useActivityStats } from '@/features/walking/model/useActivityStats';
 import { matchFoodByCalories, matchTargetActivityData } from '@/features/walking/lib/utils';
-import { getFirstDayOfCurrentMonth } from '@/shared/lib/date/getFirstDayOfCurrentMonth';
+import { getFirstDayOfMonth } from '@/shared/lib/date/getFirstDayOfCurrentMonth';
 import { getThisWeekMonday } from '@/shared/lib/date/getThisWeekMonday';
 import { getTodayFormatDate } from '@/shared/lib/date/getTodayFormatDate';
 import { ActivityView } from '@/shared/ui/ActivityView';
@@ -21,7 +21,7 @@ const RecordScreen = () => {
     const { userData } = useAuthStore();
     const { data, errorMessage: dailyErrorMessage } = useDailyActivityStats();
     const { stepCountData, errorMessage: weeklyErrorMessage } = useActivityStats({ startDate: getThisWeekMonday() });
-    const { activityStats: monthlyActivityStats, errorMessage: monthlyErrorMessage } = useActivityStats({ startDate: getFirstDayOfCurrentMonth() });
+    const { activityStats: monthlyActivityStats, errorMessage: monthlyErrorMessage } = useActivityStats({ startDate: getFirstDayOfMonth() });
     const { targetStepCount } = useTargetStepCountStore();
     useErrorToast(dailyErrorMessage);
     useErrorToast(weeklyErrorMessage);
