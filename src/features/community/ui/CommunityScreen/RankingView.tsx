@@ -41,7 +41,7 @@ const RankingView = ({
       </View>
       <View style={styles.rankTable}>
         {[1, 2, 3].map(item => (
-          <RankTableCell />
+          <RankTableCell key={item} />
         ))}
       </View>
     </View>

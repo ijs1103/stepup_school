@@ -8,16 +8,16 @@ import {
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {Divider} from '@/shared/ui/Divider';
-import TabMenu, {TabType} from '@/features/auth/ui/CommunityScreen/TabMenu';
+import TabMenu, {TabType} from '@/features/community/ui/CommunityScreen/TabMenu';
 import {useActivityStats} from '@/features/walking/\bmodel/useActivityStats';
 import {formatWeekDates, getWeekDates} from '@/shared/lib/date/getWeekDates';
-import WeeklyActivityView from '@/features/auth/ui/CommunityScreen/WeeklyActivityView';
-import RankingView from '@/features/auth/ui/CommunityScreen/RankingView';
+import WeeklyActivityView from '@/features/community/ui/CommunityScreen/WeeklyActivityView';
+import RankingView from '@/features/community/ui/CommunityScreen/RankingView';
 import {useCommunityStackNavigation} from '@/app/navigation/RootNavigation';
 import {Spacer} from '@/shared/ui/Spacer';
 import {ChartCategory} from '@/shared/ui/WeeklyChart/WeeklyChart';
-import FeedList from '@/features/auth/ui/CommunityScreen/FeedList';
-import WritingButton from '@/features/auth/ui/CommunityScreen/WritingButton';
+import FeedList from '@/features/community/ui/CommunityScreen/FeedList';
+import WritingButton from '@/features/community/ui/CommunityScreen/WritingButton';
 
 const IMAGE_HEIGHT = 337;
 const CommunityScreen = () => {
