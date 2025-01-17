@@ -4,7 +4,7 @@ import FireIcon from '../../../../assets/fire.svg';
 import ClockIcon from '../../../../assets/clock.svg';
 import RulerIcon from '../../../../assets/ruler.svg';
 
-interface ActivityViewData {
+export interface ActivityViewData {
     calorie: number;
     time: number;
     distance: number;

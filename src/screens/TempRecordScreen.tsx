@@ -3,8 +3,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MonthlyChart} from '@/shared/ui/MonthlyChart';
 import {useActivityStats} from '@/features/walking/\bmodel/useActivityStats';
 import {getFirstDayOfMonth} from '@/shared/lib/date/getFirstDayOfCurrentMonth';
-import ChevronLeft from '../../assets/prev_button.svg';
-import ChevronRight from '../../assets/chevron_front.svg';
 import {getLastDayOfMonth} from '@/shared/lib/date/getLastDayOfMonth';
 import {calculateStats} from '@/features/walking/lib/utils';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
@@ -17,6 +15,7 @@ import {getThisWeekMonday} from '@/shared/lib/date/getThisWeekMonday';
 import {getThisWeekSunday} from '@/shared/lib/date/getThisWeekSunday';
 import {formatWeekDates, getWeekDates} from '@/shared/lib/date/getWeekDates';
 import {WeeklyChart} from '@/shared/ui/WeeklyChart';
+import {DateNavigator} from '@/shared/ui/DateNavigator';
 
 interface CurrentWeek {
   startDate: string;
@@ -79,19 +78,11 @@ const TempRecordScreen = () => {
               <Text>{'거리'}</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.hStack}>
-            <TouchableOpacity onPress={pressPrevHandler}>
-              <ChevronLeft />
-            </TouchableOpacity>
-            <View>
-              <Text style={styles.dateText}>
-                {formatWeekDates(getWeekDates(currentWeekIndex))}
-              </Text>
-            </View>
-            <TouchableOpacity onPress={pressNextHandler}>
-              <ChevronRight />
-            </TouchableOpacity>
-          </View>
+          <DateNavigator
+            title={formatWeekDates(getWeekDates(currentWeekIndex))}
+            pressPrevHandler={pressPrevHandler}
+            pressNextHandler={pressNextHandler}
+          />
           <WeeklyChart data={parsedStepCountData} category={selectedCategory} />
         </>
       ) : (
@@ -107,20 +98,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  hStack: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  dateText: {
-    color: '#968C7E',
-    fontSize: 18,
-    lineHeight: 26,
-    fontWeight: '500',
-    textAlign: 'center',
-    verticalAlign: 'middle',
   },
   placeholderText: {
     fontSize: 18,

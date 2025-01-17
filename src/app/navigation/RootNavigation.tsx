@@ -25,6 +25,8 @@ import PedometerSettingsScreen from '@/screens/PedometerSettingsScreen';
 import RecordScreen from '@/screens/RecordScreen';
 import MonthlyRecordScreen from '@/screens/MonthlyRecordScreen';
 import TempRecordScreen from '@/screens/TempRecordScreen';
+import CommunityScreen from '@/screens/CommunityScreen';
+import WritingScreen from '@/screens/WritingScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -167,7 +169,7 @@ const MyFootstepsScreen = () => {
 
 type CommunityStackParams = {
   Community: undefined;
-  MyClass: undefined;
+  MyClassRanking: undefined;
   RankingDetail: undefined;
   Writing: undefined;
   FeedDetail: undefined;
@@ -184,7 +186,10 @@ const CommunityStacks = () => (
       gestureEnabled: false,
     }}>
     <CommunityStack.Screen name={'Community'} component={CommunityScreen} />
-    <CommunityStack.Screen name={'MyClass'} component={MyClassScreen} />
+    <CommunityStack.Screen
+      name={'MyClassRanking'}
+      component={MyClassRankingScreen}
+    />
     <CommunityStack.Screen
       name={'RankingDetail'}
       component={RankingDetailScreen}
@@ -203,19 +208,11 @@ export const useCommunityStackRoute = <
   RouteName extends keyof CommunityStackParams,
 >() => useRoute<RouteProp<CommunityStackParams, RouteName>>();
 
-const CommunityScreen = () => {
-  return <Text>Home</Text>;
-};
-
-const MyClassScreen = () => {
+const MyClassRankingScreen = () => {
   return <Text>Profile</Text>;
 };
 
 const RankingDetailScreen = () => {
-  return <Text>Profile</Text>;
-};
-
-const WritingScreen = () => {
   return <Text>Profile</Text>;
 };
 

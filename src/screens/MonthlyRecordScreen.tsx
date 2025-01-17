@@ -3,8 +3,6 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {MonthlyChart} from '@/shared/ui/MonthlyChart';
 import {useActivityStats} from '@/features/walking/\bmodel/useActivityStats';
 import {getFirstDayOfMonth} from '@/shared/lib/date/getFirstDayOfCurrentMonth';
-import ChevronLeft from '../../assets/prev_button.svg';
-import ChevronRight from '../../assets/chevron_front.svg';
 import {getLastDayOfMonth} from '@/shared/lib/date/getLastDayOfMonth';
 import {calculateStats} from '@/features/walking/lib/utils';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
@@ -13,6 +11,7 @@ import {
   DailyWalkingStats,
 } from '@/shared/ui/MonthlyChart/MonthlyChart';
 import {ActivityStats} from '@/features/walking/\bmodel/useDailyActivityStats';
+import {DateNavigator} from '@/shared/ui/DateNavigator';
 
 const MonthlyRecordScreen = () => {
   const {userData} = useAuthStore();
@@ -73,17 +72,11 @@ const MonthlyRecordScreen = () => {
               <Text>{'거리'}</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.hStack}>
-            <TouchableOpacity onPress={pressPrevHandler}>
-              <ChevronLeft />
-            </TouchableOpacity>
-            <View>
-              <Text style={styles.dateText}>{`${currentMonth}월`}</Text>
-            </View>
-            <TouchableOpacity onPress={pressNextHandler}>
-              <ChevronRight />
-            </TouchableOpacity>
-          </View>
+          <DateNavigator
+            title={`${currentMonth}월`}
+            pressPrevHandler={pressPrevHandler}
+            pressNextHandler={pressNextHandler}
+          />
           <MonthlyChart
             data={parsedStepCountData}
             category={selectedCategory}
@@ -102,21 +95,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  hStack: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '50%',
-  },
-  dateText: {
-    color: '#968C7E',
-    fontSize: 18,
-    lineHeight: 26,
-    fontWeight: '500',
-    flex: 1,
-    textAlign: 'center',
   },
   placeholderText: {
     fontSize: 18,

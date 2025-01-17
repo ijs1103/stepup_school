@@ -4,6 +4,7 @@ import {CHART_CATEGORY_UNITS} from '@/shared/constants';
 import React, {useState} from 'react';
 import {View, Text} from 'react-native';
 import {BarChart} from 'react-native-gifted-charts';
+import { ChartCategory } from '../WeeklyChart/WeeklyChart';
 
 interface Props {
   data: DailyWalkingStats[];
@@ -13,8 +14,6 @@ interface Props {
 export interface DailyWalkingStats extends ActivityStats {
   date: string;
 }
-
-export type ChartCategory = 'distance' | 'stepCount' | 'burnedCalories';
 
 const MonthlyChart = ({data, category}: Props) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
