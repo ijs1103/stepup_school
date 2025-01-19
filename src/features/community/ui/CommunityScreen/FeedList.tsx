@@ -3,15 +3,22 @@ import React from 'react';
 import FeedTableCell from './FeedTableCell';
 import {Spacer} from '@/shared/ui/Spacer';
 import ListEmptyComponent from './ListEmptyComponent';
+import {useCommunityStackNavigation} from '@/app/navigation/RootNavigation';
 
 const dataList = [1, 2, 3];
 
 const FeedList = () => {
+  const navigation = useCommunityStackNavigation();
+
   return (
     <View style={styles.container}>
       <FlatList
         data={dataList}
-        renderItem={({item}) => <FeedTableCell feedPressHandler={() => {}} />}
+        renderItem={({item}) => (
+          <FeedTableCell
+            feedPressHandler={() => navigation.navigate('FeedDetail')}
+          />
+        )}
         keyExtractor={item => item.toString()}
         ListEmptyComponent={
           <ListEmptyComponent

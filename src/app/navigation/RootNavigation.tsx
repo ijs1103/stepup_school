@@ -27,6 +27,7 @@ import MonthlyRecordScreen from '@/screens/MonthlyRecordScreen';
 import TempRecordScreen from '@/screens/TempRecordScreen';
 import CommunityScreen from '@/screens/CommunityScreen';
 import WritingScreen from '@/screens/WritingScreen';
+import FeedDetailScreen from '@/screens/FeedDetailScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -213,10 +214,6 @@ const MyClassRankingScreen = () => {
 };
 
 const RankingDetailScreen = () => {
-  return <Text>Profile</Text>;
-};
-
-const FeedDetailScreen = () => {
   return <Text>Profile</Text>;
 };
 

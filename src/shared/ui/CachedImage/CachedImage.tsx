@@ -10,7 +10,15 @@ interface Props {
 
 const CachedImage = ({uri, emptyImage, style}: Props) => {
   if (uri) {
-    return <FastImage style={style} source={{uri}} />;
+    return (
+      <FastImage
+        style={style}
+        source={{uri}}
+        onError={() => {
+          return console.log('CachedImage loading failed');
+        }}
+      />
+    );
   } else {
     return emptyImage;
   }

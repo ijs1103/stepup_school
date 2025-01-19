@@ -8,17 +8,14 @@ interface Props {
   imageCloseHandler: () => void;
 }
 
-export const ImageUploadingItem = ({
-  imageUrl,
-  imageCloseHandler,
-}: Props) => {
+export const ImageUploadingItem = ({imageUrl, imageCloseHandler}: Props) => {
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.imageContainer}>
         <CachedImage style={styles.image} uri={imageUrl} />
       </View>
       <TouchableOpacity style={styles.icon} onPress={imageCloseHandler}>
-        <Icon name={'window-close'} size={24} color={'#000'} />
+        <Icon name={'window-close'} size={24} color={'#fff'} />
       </TouchableOpacity>
     </TouchableOpacity>
   );

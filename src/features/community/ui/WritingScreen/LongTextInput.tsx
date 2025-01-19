@@ -6,6 +6,7 @@ interface Props {
   placeholder: string;
   maxLength: number;
   textChangeHandler: (text: string) => void;
+  inputAccessoryViewID?: string;
 }
 
 export const LongTextInput = ({
@@ -13,6 +14,7 @@ export const LongTextInput = ({
   placeholder,
   maxLength,
   textChangeHandler,
+  inputAccessoryViewID,
 }: Props) => {
   const [text, setText] = useState('');
 
@@ -33,6 +35,7 @@ export const LongTextInput = ({
         value={text}
         onChangeText={onChangeText}
         maxLength={maxLength}
+        inputAccessoryViewID={inputAccessoryViewID}
         multiline
       />
       <View style={styles.counterContainer}>

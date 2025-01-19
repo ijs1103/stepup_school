@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React, {useCallback, useMemo, useState, useEffect} from 'react';
 import {NavBar} from '@/shared/ui/NavBar';
 import {KeyboardAvoidingLayout} from '@/shared/ui/KeyboardAvoidingLayout';
