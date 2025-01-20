@@ -29,6 +29,7 @@ import WritingScreen from '@/screens/WritingScreen';
 import FeedDetailScreen from '@/screens/FeedDetailScreen';
 import WeeklyRecordScreen from '@/screens/WeeklyRecordScreen';
 import MyClassWeeklyChartScreen from '@/screens/MyClassWeeklyChartScreen';
+import RankingDetailScreen from '@/screens/RankingDetailScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -209,10 +210,6 @@ export const useCommunityStackNavigation = <
 export const useCommunityStackRoute = <
   RouteName extends keyof CommunityStackParams,
 >() => useRoute<RouteProp<CommunityStackParams, RouteName>>();
-
-const RankingDetailScreen = () => {
-  return <Text>Profile</Text>;
-};
 
 type DonationStackParams = {
   Challenge: undefined;

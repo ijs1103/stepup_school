@@ -26,7 +26,7 @@ const CustomTabBar = ({ state, navigation }: Props) => {
   const route = state.routes[state.index];
   const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 
-  if (['Writing', 'FeedDetail', 'WeeklyRecord', 'MonthlyRecord'].includes(routeName)) {
+  if (['Writing', 'FeedDetail', 'WeeklyRecord', 'MonthlyRecord', 'MyClassWeeklyChart', 'RankingDetail'].includes(routeName)) {
     return null;
   }
 

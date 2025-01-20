@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     },
     right: {
         flex: 1,
+        alignItems: 'flex-end',
     },
     rightItem: {
 
