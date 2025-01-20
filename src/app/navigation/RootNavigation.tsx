@@ -28,6 +28,7 @@ import CommunityScreen from '@/screens/CommunityScreen';
 import WritingScreen from '@/screens/WritingScreen';
 import FeedDetailScreen from '@/screens/FeedDetailScreen';
 import WeeklyRecordScreen from '@/screens/WeeklyRecordScreen';
+import MyClassWeeklyChartScreen from '@/screens/MyClassWeeklyChartScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -170,7 +171,7 @@ const MyFootstepsScreen = () => {
 
 type CommunityStackParams = {
   Community: undefined;
-  MyClassRanking: undefined;
+  MyClassWeeklyChart: undefined;
   RankingDetail: undefined;
   Writing: undefined;
   FeedDetail: undefined;
