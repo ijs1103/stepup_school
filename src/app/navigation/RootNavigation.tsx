@@ -9,8 +9,8 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
 import WelcomeScreen from '@/screens/WelcomeScreen';
 import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
@@ -19,15 +19,15 @@ import BodyInfoScreen from '@/screens/BodyInfoScreen';
 import TermsAgreementScreen from '@/screens/TermsAgreementScreen';
 import SignUpCompleteScreen from '@/screens/SignUpCompleteScreen';
 import HomeScreen from '@/screens/HomeScreen';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import { useAuthStore } from '@/entities/user/model/stores/useAuthStore';
 import CustomTabBar from '@/shared/ui/CustomTabBar/CustomTabBar';
 import PedometerSettingsScreen from '@/screens/PedometerSettingsScreen';
 import RecordScreen from '@/screens/RecordScreen';
 import MonthlyRecordScreen from '@/screens/MonthlyRecordScreen';
-import TempRecordScreen from '@/screens/TempRecordScreen';
 import CommunityScreen from '@/screens/CommunityScreen';
 import WritingScreen from '@/screens/WritingScreen';
 import FeedDetailScreen from '@/screens/FeedDetailScreen';
+import WeeklyRecordScreen from '@/screens/WeeklyRecordScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -118,7 +118,7 @@ const RecordStacks = () => (
       gestureEnabled: false,
     }}>
     <RecordStack.Screen name={'Record'} component={RecordScreen} />
-    <RecordStack.Screen name={'WeeklyRecord'} component={TempRecordScreen} />
+    <RecordStack.Screen name={'WeeklyRecord'} component={WeeklyRecordScreen} />
     <RecordStack.Screen
       name={'MonthlyRecord'}
       component={MonthlyRecordScreen}
@@ -188,8 +188,8 @@ const CommunityStacks = () => (
     }}>
     <CommunityStack.Screen name={'Community'} component={CommunityScreen} />
     <CommunityStack.Screen
-      name={'MyClassRanking'}
-      component={MyClassRankingScreen}
+      name={'MyClassWeeklyChart'}
+      component={MyClassWeeklyChartScreen}
     />
     <CommunityStack.Screen
       name={'RankingDetail'}
@@ -208,10 +208,6 @@ export const useCommunityStackNavigation = <
 export const useCommunityStackRoute = <
   RouteName extends keyof CommunityStackParams,
 >() => useRoute<RouteProp<CommunityStackParams, RouteName>>();
-
-const MyClassRankingScreen = () => {
-  return <Text>Profile</Text>;
-};
 
 const RankingDetailScreen = () => {
   return <Text>Profile</Text>;
@@ -258,10 +254,10 @@ const ChallengeDetailScreen = () => {
 
 const MainTabs = () => (
   <Tab.Navigator
-    tabBar={({state, navigation}) => (
+    tabBar={({ state, navigation }) => (
       <CustomTabBar state={state} navigation={navigation} />
     )}
-    screenOptions={{headerShown: false}}>
+    screenOptions={{ headerShown: false }}>
     <Tab.Screen name={'HomeTab'} component={HomeStacks} />
     <Tab.Screen name={'RecordTab'} component={RecordStacks} />
     <Tab.Screen name={'MapTab'} component={MapStacks} />
@@ -325,11 +321,11 @@ export const useRootStackNavigation = <
 >() => useNavigation<NativeStackNavigationProp<RootStackParams, RouteName>>();
 
 const RootNavigation = () => {
-  const {isLoggedIn} = useAuthStore();
+  const { isLoggedIn } = useAuthStore();
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{headerShown: false}}>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
           <RootStack.Screen name="MainTabs" component={MainTabs} />
         ) : (

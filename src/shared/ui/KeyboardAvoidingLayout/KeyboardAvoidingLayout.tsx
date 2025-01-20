@@ -11,7 +11,7 @@ interface IKeyboardAvoidingLayout {
   children: React.ReactNode;
 }
 
-const KeyboardAvoidingLayout = ({children}: IKeyboardAvoidingLayout) => {
+const KeyboardAvoidingLayout = ({ children }: IKeyboardAvoidingLayout) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

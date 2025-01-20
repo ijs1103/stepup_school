@@ -7,12 +7,13 @@ import ChevronBack from '../../../../assets/arrow_back.svg';
 
 interface INavBar {
     title?: string;
+    titleColor?: string;
     backButtonIcon: 'ArrowBackWhite' | 'ArrowBackGray' | 'ChevronBack';
     leftTitle?: string;
     rightItem?: React.ReactNode;
 }
 
-const NavBar = ({ title, backButtonIcon, leftTitle, rightItem }: INavBar) => {
+const NavBar = ({ title, titleColor = '#fff', backButtonIcon, leftTitle, rightItem }: INavBar) => {
     const { goBack, canGoBack } = useNavigation();
     const goBackHandler = useCallback(() => {
         goBack();
@@ -30,7 +31,7 @@ const NavBar = ({ title, backButtonIcon, leftTitle, rightItem }: INavBar) => {
                 }
             </View>
             <View style={styles.center}>
-                <Text style={styles.title}>
+                <Text style={[styles.title, { color: titleColor }]}>
                     {title}
                 </Text>
             </View>
@@ -64,7 +65,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        color: '#423D36',
         fontWeight: 'bold',
         fontSize: 20,
         lineHeight: 28,

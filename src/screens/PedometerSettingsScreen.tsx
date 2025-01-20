@@ -20,7 +20,7 @@ const PedometerSettingsScreen = () => {
 
     return (
         <View style={styles.container}>
-            <NavBar title={'만보기 설정'} backButtonIcon={'ArrowBackGray'} />
+            <NavBar title={'만보기 설정'} backButtonIcon={'ArrowBackGray'} titleColor={'#423D36'} />
             <View style={styles.optionBoxContainer}>
                 <Text style={styles.label}>{'걸음 목표'}</Text>
                 <TouchableOpacity onPress={openBottomSheet}>

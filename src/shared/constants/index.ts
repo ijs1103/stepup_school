@@ -45,6 +45,12 @@ const CHART_CATEGORY_UNITS: Record<ChartCategory, string> = {
   burnedCalories: 'kcal',
 } as const;
 
+const CATEGORY_BUTTON_LABEL = {
+  stepCount: '걸음 수',
+  burnedCalories: '칼로리',
+  distance: '거리',
+};
+
 export {
   BASE_URL,
   REGEX,
@@ -52,4 +58,5 @@ export {
   FOOD_ITEM_LIST,
   DAYS_OF_WEEK,
   CHART_CATEGORY_UNITS,
+  CATEGORY_BUTTON_LABEL,
 };

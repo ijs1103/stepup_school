@@ -1,19 +1,20 @@
-import {View, StyleSheet} from 'react-native';
-import React, {useCallback, useMemo, useState, useEffect} from 'react';
-import {NavBar} from '@/shared/ui/NavBar';
-import {KeyboardAvoidingLayout} from '@/shared/ui/KeyboardAvoidingLayout';
-import {ImageUploadingView} from '@/features/community/ui/WritingScreen/ImageUploadingView';
-import {LongTextInput} from '@/features/community/ui/WritingScreen/LongTextInput';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {CustomButton} from '@/shared/ui/CustomButton';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { NavBar } from '@/shared/ui/NavBar';
+import { ImageUploadingView } from '@/features/community/ui/WritingScreen/ImageUploadingView';
+import { LongTextInput } from '@/features/community/ui/WritingScreen/LongTextInput';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { CustomButton } from '@/shared/ui/CustomButton';
 import Toast from 'react-native-toast-message';
-import {useCommunityStackNavigation} from '@/app/navigation/RootNavigation';
+import { useCommunityStackNavigation } from '@/app/navigation/RootNavigation';
+import useKeyboardHeight from '@/shared/lib/hooks/useKeyboardHeight';
 
 const WritingScreen = () => {
   const navigation = useCommunityStackNavigation();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [contentsText, setContentsText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const keyboardHeight = useKeyboardHeight();
 
   const openImagePicker = useCallback(async () => {
     try {
@@ -68,16 +69,19 @@ const WritingScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [navigation]);
 
   const isValid = useMemo(() => {
     return contentsText.length > 0;
   }, [contentsText]);
 
   return (
-    <KeyboardAvoidingLayout>
-      <View style={styles.container}>
-        <NavBar title={'글쓰기'} backButtonIcon={'ArrowBackGray'} />
+    <View style={styles.container}>
+      <NavBar title={'글쓰기'} backButtonIcon={'ArrowBackGray'} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
         <View style={styles.subContainer}>
           <View style={styles.formContainer}>
             <ImageUploadingView
@@ -93,17 +97,19 @@ const WritingScreen = () => {
               textChangeHandler={setContentsText}
             />
           </View>
-          <CustomButton
-            title={'글 작성하기'}
-            textColor={'#fff'}
-            backgroundColor={'#FB970C'}
-            clickHandler={submitHandler}
-            isLoading={isLoading}
-            disabled={!isValid}
-          />
         </View>
+      </KeyboardAvoidingView>
+      <View style={[styles.buttonContainer, { bottom: keyboardHeight }]}>
+        <CustomButton
+          title={'글 작성하기'}
+          textColor={'#fff'}
+          backgroundColor={'#FB970C'}
+          clickHandler={submitHandler}
+          isLoading={isLoading}
+          disabled={!isValid}
+        />
       </View>
-    </KeyboardAvoidingLayout>
+    </View>
   );
 };
 
@@ -113,7 +119,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingBottom: 16,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   subContainer: {
     flex: 1,
@@ -122,5 +130,12 @@ const styles = StyleSheet.create({
   formContainer: {
     padding: 20,
     gap: 16,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    padding: 16,
+    backgroundColor: '#fff',
   },
 });

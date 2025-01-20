@@ -1,9 +1,8 @@
-import {StepCountData} from '@/features/walking/\bmodel/useActivityStats';
-import {ActivityStats} from '@/features/walking/\bmodel/useDailyActivityStats';
-import {CHART_CATEGORY_UNITS} from '@/shared/constants';
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
-import {BarChart} from 'react-native-gifted-charts';
+import { ActivityStats } from '@/features/walking/\bmodel/useDailyActivityStats';
+import { CHART_CATEGORY_UNITS } from '@/shared/constants';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { BarChart } from 'react-native-gifted-charts';
 import { ChartCategory } from '../WeeklyChart/WeeklyChart';
 
 interface Props {
@@ -15,9 +14,9 @@ export interface DailyWalkingStats extends ActivityStats {
   date: string;
 }
 
-const MonthlyChart = ({data, category}: Props) => {
+const MonthlyChart = ({ data, category }: Props) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const parsedData = Array.from({length: data.length}, (_, index) => ({
+  const parsedData = Array.from({ length: data.length }, (_, index) => ({
     value: data[index][category],
     label: `${index + 1}일`,
     labelTextStyle: {
@@ -51,16 +50,16 @@ const MonthlyChart = ({data, category}: Props) => {
     }
   };
   return (
-    <View style={{padding: 20}}>
+    <View style={{ padding: 20 }}>
       <BarChart
         data={parsedData}
-        height={400}
+        height={300}
         barWidth={24}
         spacing={16}
         hideRules
         xAxisThickness={0}
         yAxisThickness={0}
-        yAxisTextStyle={{color: '#C7BBAB', fontSize: 10}}
+        yAxisTextStyle={{ color: '#C7BBAB', fontSize: 10 }}
         noOfSections={3}
         maxValue={maxValue(category)}
         yAxisLabelTexts={yAxisLabelTexts(category)}
@@ -77,10 +76,10 @@ const MonthlyChart = ({data, category}: Props) => {
                 minWidth: 80,
                 alignItems: 'center',
               }}>
-              <Text style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>
+              <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
                 {`${item.value} ${CHART_CATEGORY_UNITS[category]}`}
               </Text>
-              <Text style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>
+              <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
                 {`${data[index].date}`}
               </Text>
             </View>

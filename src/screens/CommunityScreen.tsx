@@ -6,16 +6,16 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
-import {Divider} from '@/shared/ui/Divider';
-import TabMenu, {TabType} from '@/features/community/ui/CommunityScreen/TabMenu';
-import {useActivityStats} from '@/features/walking/\bmodel/useActivityStats';
-import {formatWeekDates, getWeekDates} from '@/shared/lib/date/getWeekDates';
+import React, { useCallback, useState } from 'react';
+import { Divider } from '@/shared/ui/Divider';
+import TabMenu, { TabType } from '@/features/community/ui/CommunityScreen/TabMenu';
+import { useActivityStats } from '@/features/walking/\bmodel/useActivityStats';
+import { formatWeekDates, getWeekDates } from '@/shared/lib/date/getWeekDates';
 import WeeklyActivityView from '@/features/community/ui/CommunityScreen/WeeklyActivityView';
 import RankingView from '@/features/community/ui/CommunityScreen/RankingView';
-import {useCommunityStackNavigation} from '@/app/navigation/RootNavigation';
-import {Spacer} from '@/shared/ui/Spacer';
-import {ChartCategory} from '@/shared/ui/WeeklyChart/WeeklyChart';
+import { useCommunityStackNavigation } from '@/app/navigation/RootNavigation';
+import { Spacer } from '@/shared/ui/Spacer';
+import { ChartCategory } from '@/shared/ui/WeeklyChart/WeeklyChart';
 import FeedList from '@/features/community/ui/CommunityScreen/FeedList';
 import WritingButton from '@/features/community/ui/CommunityScreen/WritingButton';
 
@@ -24,7 +24,7 @@ const CommunityScreen = () => {
   const navigation = useCommunityStackNavigation();
   const [activeTab, setActiveTab] = useState<TabType>('요약');
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
-  const {activityStats, errorMessage, refetch} = useActivityStats({
+  const { activityStats, errorMessage, refetch } = useActivityStats({
     startDate: getWeekDates(currentWeekIndex).startDate,
     endDate: getWeekDates(currentWeekIndex).endDate,
   });
@@ -39,9 +39,9 @@ const CommunityScreen = () => {
     setCurrentWeekIndex(prev => prev - 1);
   }, [currentWeekIndex]);
   //TODO: 주간 유저가 속한 학급의 걸음수 총합 데이터를 연동
-  const data = {calorie: 65.3, time: 42, distance: 2.5};
-  const navigateToMyClassRanking = useCallback(
-    () => navigation.navigate('MyClassRanking'),
+  const data = { calorie: 65.3, time: 42, distance: 2.5 };
+  const navigateToMyClassWeeklyChart = useCallback(
+    () => navigation.navigate('MyClassWeeklyChart'),
     [],
   );
   const navigateToRankingDetail = useCallback(
@@ -82,7 +82,7 @@ const CommunityScreen = () => {
           <View style={styles.subContainer}>
             {activeTab === '요약' && (
               <ScrollView showsVerticalScrollIndicator={false}>
-                <TouchableOpacity onPress={navigateToMyClassRanking}>
+                <TouchableOpacity onPress={navigateToMyClassWeeklyChart}>
                   <WeeklyActivityView
                     dateText={formatWeekDates(getWeekDates(currentWeekIndex))}
                     pressPrevHandler={pressPrevHandler}
@@ -93,11 +93,7 @@ const CommunityScreen = () => {
                 <Spacer size={42} />
                 <RankingView
                   navigateToRankingDetail={navigateToRankingDetail}
-                  stepCountPressHandler={() => setSelectedCategory('stepCount')}
-                  caloriesPressHandler={() =>
-                    setSelectedCategory('burnedCalories')
-                  }
-                  distancePressHandler={() => setSelectedCategory('distance')}
+                  categorySelectHandler={setSelectedCategory}
                 />
                 <Spacer size={70} />
               </ScrollView>
@@ -185,3 +181,4 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
 });
+
