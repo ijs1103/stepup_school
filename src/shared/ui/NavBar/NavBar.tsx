@@ -31,7 +31,7 @@ const NavBar = ({ title, titleColor = '#fff', backButtonIcon, leftTitle, rightIt
                 }
             </View>
             <View style={styles.center}>
-                <Text style={[styles.title, { color: titleColor }]}>
+                <Text numberOfLines={1} style={[styles.title, { color: titleColor }]}>
                     {title}
                 </Text>
             </View>
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     center: {
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
     },
     title: {
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         lineHeight: 28,
         textAlign: 'center',
+        flexShrink: 1,
     },
     right: {
         flex: 1,
