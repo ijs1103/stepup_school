@@ -1,5 +1,3 @@
-import {Platform} from 'react-native';
-
 export const getWeekDates = (
   weeksAgo: number,
 ): {startDate: string; endDate: string} => {
@@ -34,6 +32,38 @@ export const getWeekDates = (
   return {
     startDate: formatDate(monday),
     endDate: formatDate(lastSunday),
+  };
+};
+
+export const getWeekDatesYYYYMMDD = (
+  weeksAgo: number,
+): {startDate: string; endDate: string} => {
+  const getNowInKorea = () => {
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    return new Date(utc + 9 * 60 * 60 * 1000);
+  };
+
+  const today = getNowInKorea();
+  const dayOfWeek = today.getDay(); 
+
+  const monday = new Date(today);
+  const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  monday.setDate(today.getDate() + diff - 7 * weeksAgo);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  return {
+    startDate: formatDate(monday),
+    endDate: formatDate(sunday),
   };
 };
 

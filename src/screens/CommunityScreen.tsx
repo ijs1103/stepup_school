@@ -9,8 +9,7 @@ import {
 import React, { useCallback, useState } from 'react';
 import { Divider } from '@/shared/ui/Divider';
 import TabMenu, { TabType } from '@/features/community/ui/CommunityScreen/TabMenu';
-import { useActivityStats } from '@/features/walking/\bmodel/useActivityStats';
-import { formatWeekDates, getWeekDates } from '@/shared/lib/date/getWeekDates';
+import { formatWeekDates, getWeekDates, getWeekDatesYYYYMMDD } from '@/shared/lib/date/getWeekDates';
 import WeeklyActivityView from '@/features/community/ui/CommunityScreen/WeeklyActivityView';
 import RankingView from '@/features/community/ui/CommunityScreen/RankingView';
 import { useCommunityStackNavigation } from '@/app/navigation/RootNavigation';
@@ -18,16 +17,22 @@ import { Spacer } from '@/shared/ui/Spacer';
 import { ChartCategory } from '@/shared/ui/WeeklyChart/WeeklyChart';
 import FeedList from '@/features/community/ui/CommunityScreen/FeedList';
 import WritingButton from '@/features/community/ui/CommunityScreen/WritingButton';
+import { useActivityStatsForOurClass } from '@/features/walking/\bmodel/useActivityStatsForOurClass';
+import { useUser } from '@/features/auth/model/useUser';
+import useErrorToast from '@/shared/lib/hooks/useErrorToast';
+import { usePersonalRanking } from '@/features/ranking/model/usePersonalRanking';
 
 const IMAGE_HEIGHT = 337;
 const CommunityScreen = () => {
   const navigation = useCommunityStackNavigation();
-  const [activeTab, setActiveTab] = useState<TabType>('요약');
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
-  const { activityStats, errorMessage, refetch } = useActivityStats({
-    startDate: getWeekDates(currentWeekIndex).startDate,
-    endDate: getWeekDates(currentWeekIndex).endDate,
-  });
+  const [activeTab, setActiveTab] = useState<TabType>('요약');
+  const { data, error: useActivityStatsError } = useActivityStatsForOurClass({ startDate: getWeekDatesYYYYMMDD(currentWeekIndex).startDate, endDate: getWeekDatesYYYYMMDD(currentWeekIndex).endDate });
+  const { data: personalRankingData, error: personalRankingError } = usePersonalRanking();
+  const { data: userData, error: useUserError } = useUser();
+  useErrorToast(useActivityStatsError?.message ?? '');
+  useErrorToast(personalRankingError?.message ?? '');
+  useErrorToast(useUserError?.message ?? '');
   const pressPrevHandler = useCallback(() => {
     setCurrentWeekIndex(prev => prev + 1);
   }, []);
@@ -38,8 +43,6 @@ const CommunityScreen = () => {
     }
     setCurrentWeekIndex(prev => prev - 1);
   }, [currentWeekIndex]);
-  //TODO: 주간 유저가 속한 학급의 걸음수 총합 데이터를 연동
-  const data = { calorie: 65.3, time: 42, distance: 2.5 };
   const navigateToMyClassWeeklyChart = useCallback(
     () => navigation.navigate('MyClassWeeklyChart'),
     [],
@@ -63,15 +66,15 @@ const CommunityScreen = () => {
         <View style={styles.contentContainer}>
           <View style={styles.schoolHstack}>
             <View style={styles.schoolInfoContainer}>
-              <Text style={styles.classText}>{'1학년 3반'}</Text>
-              <Text style={styles.schoolNameText}>{'노량진초등학교'}</Text>
+              <Text style={styles.classText}>{`${userData?.class.grade}학년 ${userData?.class.class_number}반`}</Text>
+              <Text style={styles.schoolNameText}>{userData?.school.name}</Text>
             </View>
             <View style={styles.myClassButton}>
               <Text style={styles.myClassText}>{'우리 반'}</Text>
             </View>
           </View>
           <Text style={styles.schoolDescriptionText}>
-            {'노량진초등학교 (설명)'}
+            {`${userData?.school.name}(설명)`}
           </Text>
           <Divider />
           <TabMenu
@@ -87,12 +90,14 @@ const CommunityScreen = () => {
                     dateText={formatWeekDates(getWeekDates(currentWeekIndex))}
                     pressPrevHandler={pressPrevHandler}
                     pressNextHandler={pressNextHandler}
-                    data={data}
+                    data={{ calorie: data?.activityStats.burnedCalories ?? 0, time: data?.activityStats.walkingTime ?? 0, distance: data?.activityStats.distance ?? 0 }}
                   />
                 </TouchableOpacity>
                 <Spacer size={42} />
                 <RankingView
+                  data={personalRankingData ?? []}
                   navigateToRankingDetail={navigateToRankingDetail}
+                  currentCategory={selectedCategory}
                   categorySelectHandler={setSelectedCategory}
                 />
                 <Spacer size={70} />

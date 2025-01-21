@@ -21,9 +21,14 @@ const validateToken = async (accessToken: string) => {
 export const useValidateToken = (token: string) => {
   return useQuery<string, ErrorResponse>({
     queryKey: ['validateToken', token],
-    queryFn: () => validateToken(token),
+    queryFn: () => {
+      if (!token) {
+        throw new Error('인증 토큰이 없습니다.');
+      }
+      return validateToken(token);
+    },
     retry: false,
     enabled: !!token,
-    staleTime: 5 * 60 * 1000, // 5분
+    staleTime: 5 * 60 * 1000,
   });
 };

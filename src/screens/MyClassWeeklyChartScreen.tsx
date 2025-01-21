@@ -1,47 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { GradientBackgroundView } from '@/shared/ui/GradientBackgroundView';
 import { NavBar } from '@/shared/ui/NavBar';
 import { Spacer } from '@/shared/ui/Spacer';
 import { ActivityStatsBar } from '@/shared/ui/ActivityStatsBar';
 import { ActivityView } from '@/shared/ui/ActivityView';
-import { useActivityStats } from '@/features/walking/\bmodel/useActivityStats';
-import { useAuthStore } from '@/entities/user/model/stores/useAuthStore';
-import { formatWeekDates, getWeekDates } from '@/shared/lib/date/getWeekDates';
-import WeeklyChart, { ChartCategory, DailyWalkingStats } from '@/shared/ui/WeeklyChart/WeeklyChart';
-import { calculateStats } from '@/features/walking/lib/utils';
+import { formatWeekDates, getWeekDates, getWeekDatesYYYYMMDD } from '@/shared/lib/date/getWeekDates';
+import { ChartCategory } from '@/shared/ui/WeeklyChart/WeeklyChart';
 import { DateNavigator } from '@/shared/ui/DateNavigator';
+import { useActivityStatsForOurClass } from '@/features/walking/\bmodel/useActivityStatsForOurClass';
+import MyClassWeeklyChart from '@/features/community/ui/MyClassWeeklyChartScreen/MyClassWeeklyChart';
 
 const MyClassWeeklyChartScreen = () => {
-    const { userData } = useAuthStore();
     const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
-
-    //TODO: 우리반의 주간통계 데이터로 변경
-    const { activityStats, stepCountData, errorMessage, refetch } = useActivityStats({
-        startDate: getWeekDates(currentWeekIndex).startDate,
-        endDate: getWeekDates(currentWeekIndex).endDate,
-    });
-
-    useEffect(() => {
-        refetch();
-    }, [currentWeekIndex, refetch]);
-
+    const { data } = useActivityStatsForOurClass({ startDate: getWeekDatesYYYYMMDD(currentWeekIndex).startDate, endDate: getWeekDatesYYYYMMDD(currentWeekIndex).endDate });
     const [selectedCategory, setSelectedCategory] =
         useState<ChartCategory>('stepCount');
-
-    const parsedStepCountData = useMemo((): DailyWalkingStats[] => {
-        if (!stepCountData) {
-            return [];
-        }
-        return Object.entries(stepCountData).map(([date, steps]) => {
-            const stats = calculateStats(userData?.gender ?? true, steps);
-            return {
-                date,
-                ...stats,
-            };
-        });
-    }, [stepCountData, userData]);
-
     const pressPrevHandler = useCallback(() => {
         setCurrentWeekIndex(prev => prev + 1);
     }, []);
@@ -61,23 +35,17 @@ const MyClassWeeklyChartScreen = () => {
                 <View style={styles.activityContainer}>
                     <ActivityStatsBar color={'#FB970C'} pressHandler={setSelectedCategory} />
                     <View style={styles.activityViewContainer}>
-                        <ActivityView data={{ calorie: activityStats.burnedCalories, time: activityStats.walkingTime, distance: activityStats.distance }} iconColor={'#FDB44F'} textColor={'#C7BBAB'} />
+                        <ActivityView data={{ calorie: data?.activityStats.burnedCalories ?? 0, time: data?.activityStats.walkingTime ?? 0, distance: data?.activityStats.distance ?? 0 }} iconColor={'#FDB44F'} textColor={'#C7BBAB'} />
                     </View>
                 </View>
             </GradientBackgroundView>
             <View style={styles.chartContainer}>
-                {parsedStepCountData.length > 0 ? (
-                    <>
-                        <DateNavigator
-                            title={formatWeekDates(getWeekDates(currentWeekIndex))}
-                            pressPrevHandler={pressPrevHandler}
-                            pressNextHandler={pressNextHandler}
-                        />
-                        <WeeklyChart data={parsedStepCountData} category={selectedCategory} />
-                    </>
-                ) : (
-                    <Text style={styles.placeholderText}>{'걸음 데이터가 없습니다.'}</Text>
-                )}
+                <DateNavigator
+                    title={formatWeekDates(getWeekDates(currentWeekIndex))}
+                    pressPrevHandler={pressPrevHandler}
+                    pressNextHandler={pressNextHandler}
+                />
+                <MyClassWeeklyChart data={data?.stepCountData ?? []} category={selectedCategory} />
             </View>
         </ScrollView>
     );
@@ -100,6 +68,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     chartContainer: {
+        flex: 1,
         backgroundColor: '#F8F7F7',
     },
     placeholderText: {

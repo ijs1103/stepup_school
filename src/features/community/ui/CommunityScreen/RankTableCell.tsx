@@ -1,19 +1,26 @@
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import Avatar from '@/shared/ui/Avatar/Avatar';
-import {Spacer} from '@/shared/ui/Spacer';
+import { Spacer } from '@/shared/ui/Spacer';
 
-const RankTableCell = () => {
+interface Props {
+  rank: number;
+  imageUrl: string | undefined;
+  name: string;
+  stat: number;
+}
+
+const RankTableCell = ({ rank, imageUrl, name, stat }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
-        <Text style={styles.rankText}>{'1'}</Text>
+        <Text style={styles.rankText}>{rank}</Text>
         <Spacer size={12} horizontal />
-        <Avatar />
+        <Avatar source={{ uri: imageUrl }} />
         <Spacer size={18} horizontal />
-        <Text style={styles.nameText}>{'김가네'}</Text>
+        <Text style={styles.nameText}>{name}</Text>
       </View>
-      <Text style={styles.statsText}>{'13,554'}</Text>
+      <Text style={styles.statsText}>{stat.toLocaleString()}</Text>
     </View>
   );
 };

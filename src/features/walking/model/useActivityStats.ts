@@ -50,7 +50,6 @@ export const useActivityStats = ({
             results.reduce((sum, item) => sum + item.value, 0),
           );
           setTotalSteps(totalStepsCount);
-          console.log('총 걸음 수:', Math.round(totalStepsCount));
 
           const steps = results.reduce<Record<string, number>>((acc, item) => {
             const date = new Date(item.startDate);
@@ -83,7 +82,6 @@ export const useActivityStats = ({
           const sortedSteps = Object.fromEntries(
             Object.entries(steps).sort(([a], [b]) => sortByDate(a, b)),
           );
-          console.log('걸음 수:', sortedSteps);
           setStepCountData(sortedSteps);
         },
       );
@@ -96,7 +94,6 @@ export const useActivityStats = ({
             endTime: endDate,
           },
         });
-        console.log('걸음 수:', results);
         // setWeeklyStepCountData(weeklySteps);
       } catch (error) {
         console.log(error);

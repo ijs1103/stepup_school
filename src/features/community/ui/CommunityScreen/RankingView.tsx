@@ -5,14 +5,19 @@ import { Spacer } from '@/shared/ui/Spacer';
 import RankTableCell from './RankTableCell';
 import { ActivityStatsBar } from '@/shared/ui/ActivityStatsBar';
 import { ChartCategory } from '@/shared/ui/WeeklyChart/WeeklyChart';
+import { ParsedPersonalRanking } from '@/features/ranking/model/usePersonalRanking';
 
 interface Props {
+  data: ParsedPersonalRanking[];
   navigateToRankingDetail: () => void;
+  currentCategory: ChartCategory;
   categorySelectHandler: (category: ChartCategory) => void;
 }
 
 const RankingView = ({
+  data,
   navigateToRankingDetail,
+  currentCategory,
   categorySelectHandler,
 }: Props) => {
   return (
@@ -28,8 +33,8 @@ const RankingView = ({
         <ActivityStatsBar color={'#FB970C'} pressHandler={categorySelectHandler} />
       </View>
       <View style={styles.rankTable}>
-        {[1, 2, 3].map(item => (
-          <RankTableCell key={item} />
+        {data.map((item, index) => (
+          <RankTableCell key={index} rank={index + 1} imageUrl={item.avatarUrl} name={item.userName} stat={item[currentCategory]} />
         ))}
       </View>
     </View>
