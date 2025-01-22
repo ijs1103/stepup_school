@@ -67,13 +67,13 @@ const CustomTabBar = ({ state, navigation }: Props) => {
 
       <TouchableOpacity
         style={styles.tabItem}
-        onPress={() => navigation.navigate('DonationTab')}>
+        onPress={() => navigation.navigate('ChallengeTab')}>
         {state.index === 4 ? (
           <DonationIconSelected />
         ) : (
           <DonationIconUnselected />
         )}
-        <Text style={styles.tabText}>기부하기</Text>
+        <Text style={styles.tabText}>챌린지</Text>
       </TouchableOpacity>
     </View>
   );

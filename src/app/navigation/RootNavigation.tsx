@@ -30,6 +30,7 @@ import FeedDetailScreen from '@/screens/FeedDetailScreen';
 import WeeklyRecordScreen from '@/screens/WeeklyRecordScreen';
 import MyClassWeeklyChartScreen from '@/screens/MyClassWeeklyChartScreen';
 import RankingDetailScreen from '@/screens/RankingDetailScreen';
+import ChallengeScreen from '@/screens/ChallengeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -214,11 +215,12 @@ export const useCommunityStackRoute = <
 type DonationStackParams = {
   Challenge: undefined;
   ChallengeDetail: undefined;
+  ParticipationDetails: undefined;
 };
 
 export const DonationStack = createNativeStackNavigator<DonationStackParams>();
 
-const DonationStacks = () => (
+const ChallengeStacks = () => (
   <DonationStack.Navigator
     initialRouteName={'Challenge'}
     screenOptions={{
@@ -229,6 +231,10 @@ const DonationStacks = () => (
     <DonationStack.Screen
       name={'ChallengeDetail'}
       component={ChallengeDetailScreen}
+    />
+    <DonationStack.Screen
+      name={'ParticipationDetails'}
+      component={ParticipationDetailsScreen}
     />
   </DonationStack.Navigator>
 );
@@ -242,11 +248,11 @@ export const useDonationStackRoute = <
   RouteName extends keyof DonationStackParams,
 >() => useRoute<RouteProp<DonationStackParams, RouteName>>();
 
-const ChallengeScreen = () => {
-  return <Text>Home</Text>;
+const ChallengeDetailScreen = () => {
+  return <Text>Profile</Text>;
 };
 
-const ChallengeDetailScreen = () => {
+const ParticipationDetailsScreen = () => {
   return <Text>Profile</Text>;
 };
 
@@ -260,7 +266,7 @@ const MainTabs = () => (
     <Tab.Screen name={'RecordTab'} component={RecordStacks} />
     <Tab.Screen name={'MapTab'} component={MapStacks} />
     <Tab.Screen name={'CommunityTab'} component={CommunityStacks} />
-    <Tab.Screen name={'DonationTab'} component={DonationStacks} />
+    <Tab.Screen name={'ChallengeTab'} component={ChallengeStacks} />
   </Tab.Navigator>
 );
 

@@ -20,7 +20,7 @@ const WeeklyStatisticsView = ({ data, showDateAndOptions = false, optionButtonHa
                     <Text style={styles.title}>{'주간 통계'}</Text>
                     {showDateAndOptions && <Text style={styles.dateText}>{getCurrentWeek()}</Text>}
                 </View>
-                {showDateAndOptions && <TouchableOpacity onPress={optionButtonHandler}><OptionButton fill={'#FDB44F'} /></TouchableOpacity>}
+                {showDateAndOptions && <TouchableOpacity onPress={optionButtonHandler}> fill={'#FDB44F'} /></TouchableOpacity>}
             </View>
             <Spacer size={26} />
             <WeeklyProgressBar data={data} />
