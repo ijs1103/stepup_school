@@ -1,5 +1,9 @@
 import ListEmptyComponent from '@/features/community/ui/CommunityScreen/ListEmptyComponent';
+import { mapToRankingData } from '@/features/ranking/lib/utils';
+import { ParsedClassRanking, useClassRanking } from '@/features/ranking/model/useClassRanking';
+import { ParsedPersonalRanking, usePersonalRanking } from '@/features/ranking/model/usePersonalRanking';
 import RankingDetailTableCell from '@/features/ranking/ui/RankingDetailScreen/RankingDetailTableCell';
+import useErrorToast from '@/shared/lib/hooks/useErrorToast';
 import { ActivityStatsBar } from '@/shared/ui/ActivityStatsBar';
 import { GradientBackgroundView } from '@/shared/ui/GradientBackgroundView';
 import { NavBar } from '@/shared/ui/NavBar';
@@ -7,14 +11,21 @@ import { Spacer } from '@/shared/ui/Spacer';
 import { ChartCategory } from '@/shared/ui/WeeklyChart/WeeklyChart';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, FlatList } from 'react-native';
-
 const integratedRankingDataList = [{ name: '1-1', stepCount: '146,552' }, { name: '2-3', stepCount: '111,000' }, { name: '3-1', stepCount: '109,552' }, { name: '1-2', stepCount: '99,556' }];
 const myClassRankingDataList = [{ name: '김ㅇㅇ', stepCount: '146,552' }, { name: '박ㅇㅇ', stepCount: '111,000' }, { name: '최ㅇㅇ', stepCount: '109,552' }, { name: '유ㅇㅇ', stepCount: '99,556' }, { name: '김ㅇㅇ', stepCount: '146,552' }, { name: '박ㅇㅇ', stepCount: '111,000' }, { name: '최ㅇㅇ', stepCount: '109,552' }, { name: '유ㅇㅇ', stepCount: '99,556' }, { name: '김ㅇㅇ', stepCount: '146,552' }, { name: '박ㅇㅇ', stepCount: '111,000' }, { name: '최ㅇㅇ', stepCount: '109,552' }, { name: '유ㅇㅇ', stepCount: '99,556' }, { name: '김ㅇㅇ', stepCount: '146,552' }, { name: '박ㅇㅇ', stepCount: '111,000' }, { name: '최ㅇㅇ', stepCount: '109,552' }, { name: '유ㅇㅇ', stepCount: '99,556' }];
+
+const ItemSeparatorComponent = () => <Spacer size={16} />;
 
 const RankingDetailScreen = () => {
     const [isToggledOn, setIsToggledOn] = useState(false);
     const [selectedCategory, setSelectedCategory] =
         useState<ChartCategory>('stepCount');
+    const { data: personalRankingData, error: personalRankingError } = usePersonalRanking();
+    const { data: classRankingData, error: classRankingError } = useClassRanking();
+    console.log('personalRankingData', personalRankingData);
+    useErrorToast(personalRankingError?.message ?? '');
+    useErrorToast(classRankingError?.message ?? '');
+    const rankingData = mapToRankingData(isToggledOn ? classRankingData : personalRankingData, !isToggledOn);
 
     return (
         <View style={styles.container}>
@@ -35,9 +46,9 @@ const RankingDetailScreen = () => {
                         </View>
                     </GradientBackgroundView>
                 )}
-                data={isToggledOn ? integratedRankingDataList : myClassRankingDataList}
+                data={rankingData}
                 renderItem={({ item, index }) => (
-                    <RankingDetailTableCell rank={index + 1} name={item.name} stat={item.stepCount} />
+                    <RankingDetailTableCell rank={index + 1} name={item.name} stat={item[selectedCategory].toLocaleString()} />
                 )}
                 keyExtractor={(_, index) => index.toString()}
                 ListEmptyComponent={
@@ -46,7 +57,7 @@ const RankingDetailScreen = () => {
                     />
                 }
                 showsVerticalScrollIndicator={false}
-                ItemSeparatorComponent={() => <Spacer size={16} />}
+                ItemSeparatorComponent={ItemSeparatorComponent}
                 stickyHeaderIndices={[0]}
             />
         </View>

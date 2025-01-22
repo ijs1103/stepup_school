@@ -55,6 +55,7 @@ const queryFn = async (accessToken: string) => {
 export const useUser = () => {
   const {userData} = useAuthStore();
   const accessToken = userData?.access_token;
+  console.log('accessToken', accessToken);
   return useQuery<User, Error>({
     queryKey: ['/user/me', accessToken],
     queryFn: () => {

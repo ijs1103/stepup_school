@@ -4,6 +4,8 @@ import {BASE_URL} from '@/shared/constants';
 import {useQuery} from '@tanstack/react-query';
 import {CustomError} from '@/shared/lib/\bCustomError';
 import {getTodayDate} from '@/shared/lib/date/getTodayDate';
+import {ActivityStats} from '@/features/walking/\bmodel/useDailyActivityStats';
+import {calculateStats} from '@/features/walking/lib/utils';
 
 interface ClassRankingDTO {
   userId: string;
@@ -16,6 +18,10 @@ interface ClassRanking {
     class_number: number;
   };
   walk: number;
+}
+
+export interface ParsedClassRanking extends ActivityStats {
+  className: string;
 }
 
 const queryFn = async (
@@ -40,20 +46,27 @@ const queryFn = async (
 
 export const useClassRanking = () => {
   const {userData} = useAuthStore();
-  const query = useQuery<ClassRanking[], Error>({
-    queryKey: ['ClassRanking', `${userData?.userId}-`],
+  const todayDate = getTodayDate();
+  const query = useQuery<ClassRanking[], Error, ParsedClassRanking[]>({
+    queryKey: ['ClassRanking', `${userData?.userId}-${todayDate}`],
     queryFn: () => {
       if (!userData) {
         throw new Error('인증 토큰이 없습니다.');
       }
       return queryFn({
         userId: userData.userId,
-        date: getTodayDate(),
+        date: todayDate,
       });
     },
     retry: false,
     enabled: !!userData?.userId,
     staleTime: 5 * 60 * 1000,
+    select: (data): ParsedClassRanking[] => {
+      return data.map(item => ({
+        className: `${item.class.grade}-${item.class.class_number}`,
+        ...calculateStats(userData?.gender ?? true, item.walk),
+      }));
+    },
   });
   return query;
 };

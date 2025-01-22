@@ -95,7 +95,7 @@ const CommunityScreen = () => {
                 </TouchableOpacity>
                 <Spacer size={42} />
                 <RankingView
-                  data={personalRankingData ?? []}
+                  data={personalRankingData?.slice(0, 3) ?? []}
                   navigateToRankingDetail={navigateToRankingDetail}
                   currentCategory={selectedCategory}
                   categorySelectHandler={setSelectedCategory}
