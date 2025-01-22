@@ -4,37 +4,35 @@ import {
   StyleSheet,
   Image,
   Pressable,
-  ImageSourcePropType,
 } from 'react-native';
 import React from 'react';
 import Avatar from '@/shared/ui/Avatar/Avatar';
-import {Spacer} from '@/shared/ui/Spacer';
+import { Spacer } from '@/shared/ui/Spacer';
+import { ParsedFeed } from '../../model/useFeedList';
 
 interface Props {
+  data: ParsedFeed;
   feedPressHandler: () => void;
-  source?: ImageSourcePropType | undefined;
 }
 
-const FeedTableCell = ({feedPressHandler, source}: Props) => {
+const FeedTableCell = ({ data, feedPressHandler }: Props) => {
   return (
     <Pressable onPress={feedPressHandler}>
       <View style={styles.container}>
         <View style={styles.hStack}>
           <View style={styles.avatarContainer}>
-            <Avatar small />
-            <Text style={styles.nameText}>{'김가네'}</Text>
+            <Avatar source={{ uri: data.avatarUrl }} small />
+            <Text style={styles.nameText}>{data.userName}</Text>
           </View>
-          <Text style={styles.timeText}>{'10.11 14:13'}</Text>
+          <Text style={styles.timeText}>{data.createdAt}</Text>
         </View>
         <Spacer size={8} />
         <View style={styles.contentsContainer}>
           <Text style={styles.contentsText}>
-            {
-              '오늘 목표 달성 완료 ! (내용) 오늘 목표 달성 완료 ! (내용) 오늘 목표 달성 완료 ! (내용)'
-            }
+            {data.contents}
           </Text>
           <Spacer size={22} />
-          <Image source={source} style={styles.image} />
+          {data.imageUrls.length > 0 && <Image source={{ uri: data.imageUrls.at(0) }} style={styles.image} />}
         </View>
       </View>
     </Pressable>

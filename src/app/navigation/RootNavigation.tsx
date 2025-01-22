@@ -176,7 +176,7 @@ type CommunityStackParams = {
   MyClassWeeklyChart: undefined;
   RankingDetail: undefined;
   Writing: undefined;
-  FeedDetail: undefined;
+  FeedDetail: { feedId: number };
 };
 
 export const CommunityStack =

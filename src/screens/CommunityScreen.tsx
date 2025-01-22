@@ -21,6 +21,7 @@ import { useActivityStatsForOurClass } from '@/features/walking/\bmodel/useActiv
 import { useUser } from '@/features/auth/model/useUser';
 import useErrorToast from '@/shared/lib/hooks/useErrorToast';
 import { usePersonalRanking } from '@/features/ranking/model/usePersonalRanking';
+import { useFeedList } from '@/features/community/model/useFeedList';
 
 const IMAGE_HEIGHT = 337;
 const CommunityScreen = () => {
@@ -30,9 +31,11 @@ const CommunityScreen = () => {
   const { data, error: useActivityStatsError } = useActivityStatsForOurClass({ startDate: getWeekDatesYYYYMMDD(currentWeekIndex).startDate, endDate: getWeekDatesYYYYMMDD(currentWeekIndex).endDate });
   const { data: personalRankingData, error: personalRankingError } = usePersonalRanking();
   const { data: userData, error: useUserError } = useUser();
+  const { data: feedData, error: feedError } = useFeedList();
   useErrorToast(useActivityStatsError?.message ?? '');
   useErrorToast(personalRankingError?.message ?? '');
   useErrorToast(useUserError?.message ?? '');
+  useErrorToast(feedError?.message ?? '');
   const pressPrevHandler = useCallback(() => {
     setCurrentWeekIndex(prev => prev + 1);
   }, []);
@@ -55,6 +58,10 @@ const CommunityScreen = () => {
     () => navigation.navigate('Writing'),
     [],
   );
+  const feedPressHandler = useCallback((feedId: number) => {
+    navigation.navigate('FeedDetail', { feedId });
+  }, [navigation]);
+
   const [selectedCategory, setSelectedCategory] =
     useState<ChartCategory>('stepCount');
   return (
@@ -105,7 +112,7 @@ const CommunityScreen = () => {
             )}
             {activeTab === '피드' && (
               <>
-                <FeedList />
+                <FeedList data={feedData ?? []} feedPressHandler={feedPressHandler} />
                 <WritingButton pressHandler={navigateToWriting} />
               </>
             )}

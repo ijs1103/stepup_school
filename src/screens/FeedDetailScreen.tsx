@@ -8,17 +8,20 @@ import CommentTableCell from '@/features/community/ui/FeedDetailScreen/CommentTa
 import ListEmptyComponent from '@/features/community/ui/CommunityScreen/ListEmptyComponent';
 import { TouchableWithoutFeedback } from 'react-native';
 import WriteCommtentButton from '../../assets/write_comment_button.svg';
+import { useCommunityStackRoute } from '@/app/navigation/RootNavigation';
+import { useFeedDetail } from '@/features/community/model/useFeedDetail';
+import useErrorToast from '@/shared/lib/hooks/useErrorToast';
+import { useFeedComment } from '@/features/community/model/useFeedComment';
 
-const commentList = [{ id: 1 }, { id: 2 }, { id: 3 }];
-const imageUrls = [
-  'https://reactnative.dev/img/tiny_logo.png',
-  'https://reactnative.dev/img/tiny_logo.png',
-  'https://reactnative.dev/img/tiny_logo.png',
-  'https://reactnative.dev/img/tiny_logo.png',
-  'https://reactnative.dev/img/tiny_logo.png',
-];
+const ItemSeparatorComponent = () => <Spacer size={16} horizontal />;
 
 const FeedDetailScreen = () => {
+  const route = useCommunityStackRoute();
+  const { data, error } = useFeedDetail(route.params?.feedId);
+  const [commentContent, setCommentContent] = useState('');
+  //TODO: 댓글작성 api 연동
+  const { } = useFeedComment(route.params?.feedId, { content: commentContent });
+  useErrorToast(error?.message ?? '');
   const textInputRef = useRef<TextInput>(null);
 
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
@@ -38,28 +41,28 @@ const FeedDetailScreen = () => {
       style={styles.container}
       keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 25}
     >
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={setSelectedCommentIdToNull}>
           <View style={{ flex: 1 }}>
             <NavBar backButtonIcon={'ArrowBackGray'} />
             <View style={styles.avatarContainer}>
-              <Avatar />
+              <Avatar source={{ uri: data?.avatarUrl }} />
               <View style={styles.vStack}>
-                <Text style={styles.nameText}>{'김가네'}</Text>
-                <Text style={styles.dateText}>{'11.13 10:43'}</Text>
+                <Text style={styles.nameText}>{data?.userName}</Text>
+                <Text style={styles.dateText}>{data?.createdAt}</Text>
               </View>
             </View>
             <View style={styles.contentsContainer}>
               <Text>
-                {'오늘 목표 달성 완료. 사진 첨부합니다 ! 오늘 목표 달성 완료. 사진 첨부합니다 ! 오늘 목표 달성 완료. 사진 첨부합니다 ! 오늘 목표 달성 완료. 사진 첨부합니다 ! 오늘 목표 달성 완료. 사진 첨부합니다 !'}
+                {data?.contents}
               </Text>
-              {imageUrls.length > 0 && (
+              {data?.imageUrls && data.imageUrls.length > 0 && (
                 <FlatList
                   style={styles.imageList}
-                  data={imageUrls}
+                  data={data.imageUrls}
                   renderItem={({ item }) => <ImageItem imageUrl={item} />}
-                  keyExtractor={(item, index) => `${index}`}
-                  ItemSeparatorComponent={() => <Spacer size={16} horizontal />}
+                  keyExtractor={(item, index) => `${item}-${index}`}
+                  ItemSeparatorComponent={ItemSeparatorComponent}
                   showsHorizontalScrollIndicator={false}
                   horizontal
                 />
@@ -67,15 +70,15 @@ const FeedDetailScreen = () => {
             </View>
             <View style={styles.commentContainer}>
               <FlatList
-                data={commentList}
-                renderItem={({ item }) => (
+                data={data?.comments}
+                renderItem={({ item, index }) => (
                   <CommentTableCell
-                    data={item.id}
-                    isSelected={selectedCommentId === item.id}
-                    commentPressHandler={() => commentPressHandler(item.id)}
+                    data={item}
+                    isSelected={selectedCommentId === index}
+                    commentPressHandler={() => commentPressHandler(index)}
                   />
                 )}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={(item) => `${item.create_at}-${item.content}-${item.user.nickname}`}
                 ListEmptyComponent={
                   <ListEmptyComponent
                     title={`아직 댓글이 없어요\n댓글을 남겨주세요`}
@@ -83,7 +86,6 @@ const FeedDetailScreen = () => {
                 }
                 showsVerticalScrollIndicator={false}
                 ItemSeparatorComponent={() => <Spacer size={16} />}
-                contentContainerStyle={{ flexGrow: 1 }}
                 scrollEnabled={false}
               />
             </View>
@@ -96,6 +98,8 @@ const FeedDetailScreen = () => {
           style={styles.textInput}
           placeholder={'댓글을 입력해 주세요.'}
           placeholderTextColor={'#968C7E'}
+          value={commentContent}
+          onChangeText={setCommentContent}
         />
         <TouchableOpacity>
           <WriteCommtentButton />
@@ -138,16 +142,17 @@ const styles = StyleSheet.create({
   contentsContainer: {
     paddingTop: 18,
     paddingHorizontal: 28,
+    paddingBottom: 36,
   },
   imageList: {
     paddingLeft: 16,
     marginVertical: 32,
   },
   commentContainer: {
-    flex: 1,
     backgroundColor: '#F2F0EF',
     paddingHorizontal: 8,
     paddingVertical: 18,
+    flex: 1,
   },
   commentInputContainer: {
     backgroundColor: '#fff',

@@ -1,37 +1,61 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Avatar from '@/shared/ui/Avatar/Avatar';
-import {Spacer} from '@/shared/ui/Spacer';
+import { Spacer } from '@/shared/ui/Spacer';
+import { Comment } from '../../model/useFeedDetail';
+import { formatFeedDate } from '@/shared/lib/date/formatFeedDate';
+import CommentLinker from '../../../../../assets/comment_linker.svg';
 
 interface Props {
-  data: number;
+  data: Comment;
   isSelected: boolean;
   commentPressHandler: () => void;
 }
 
-const CommentTableCell = ({data, isSelected, commentPressHandler}: Props) => {
+const CommentTableCell = ({ data, isSelected, commentPressHandler }: Props) => {
   return (
     <TouchableOpacity onPress={commentPressHandler}>
       <View
         style={[
           styles.container,
-          {backgroundColor: isSelected ? '#FEDFB3' : '#fff'},
+          { backgroundColor: isSelected ? '#FEDFB3' : '#fff' },
         ]}>
         <View style={styles.hStack}>
           <View style={styles.avatarContainer}>
-            <Avatar small />
-            <Text style={styles.nameText}>{'김가네'}</Text>
+            <Avatar source={{ uri: data.user.profile_img }} small />
+            <Text style={styles.nameText}>{data.user.nickname}</Text>
           </View>
-          <Text style={styles.timeText}>{'10.11 14:13'}</Text>
+          <Text style={styles.timeText}>{formatFeedDate(data.create_at)}</Text>
         </View>
         <Spacer size={8} />
         <View style={styles.contentsContainer}>
           <Text style={styles.contentsText}>
-            {
-              '오늘 목표 달성 완료 ! (내용) 오늘 목표 달성 완료 ! (내용) 오늘 목표 달성 완료 ! (내용)'
-            }
+            {data.content}
           </Text>
         </View>
+        <View style={styles.repliesContainer}>
+          {data.replies.length > 0 && data.replies.map(item => (
+            <View key={`${item.user.nickname}-${item.create_at}`} style={styles.replyContainer}>
+              <CommentLinker />
+              <View style={styles.replyContentsContainer}>
+                <View style={styles.hStack}>
+                  <View style={styles.avatarContainer}>
+                    <Avatar source={{ uri: item.user.profile_img }} small />
+                    <Text style={styles.nameText}>{item.user.nickname}</Text>
+                  </View>
+                  <Text style={styles.timeText}>{formatFeedDate(item.create_at)}</Text>
+                </View>
+                <Spacer size={8} />
+                <View style={styles.contentsContainer}>
+                  <Text style={styles.contentsText}>
+                    {item.content}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ))}
+        </View>
+
       </View>
     </TouchableOpacity>
   );
@@ -81,5 +105,19 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     backgroundColor: '#D9D9D9',
+  },
+  repliesContainer: {
+    gap: 4,
+  },
+  replyContainer: {
+    flexDirection: 'row',
+    gap: 4,
+    alignItems: 'center',
+  },
+  replyContentsContainer: {
+    flex: 1,
+    paddingTop: 14,
+    paddingHorizontal: 16,
+    borderRadius: 16,
   },
 });

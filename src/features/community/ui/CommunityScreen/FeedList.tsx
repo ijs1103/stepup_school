@@ -1,33 +1,38 @@
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import React from 'react';
 import FeedTableCell from './FeedTableCell';
-import {Spacer} from '@/shared/ui/Spacer';
+import { Spacer } from '@/shared/ui/Spacer';
 import ListEmptyComponent from './ListEmptyComponent';
-import {useCommunityStackNavigation} from '@/app/navigation/RootNavigation';
+import { ParsedFeed } from '../../model/useFeedList';
 
-const dataList = [1, 2, 3];
+interface Props {
+  data: ParsedFeed[];
+  feedPressHandler: (feedId: number) => void;
+}
 
-const FeedList = () => {
-  const navigation = useCommunityStackNavigation();
+const ItemSeparatorComponent = () => <Spacer size={16} />
+
+const FeedList = ({ data, feedPressHandler }: Props) => {
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={dataList}
-        renderItem={({item}) => (
+        data={data}
+        renderItem={({ item }) => (
           <FeedTableCell
-            feedPressHandler={() => navigation.navigate('FeedDetail')}
+            data={item}
+            feedPressHandler={() => feedPressHandler(item.feedId)}
           />
         )}
-        keyExtractor={item => item.toString()}
+        keyExtractor={item => item.feedId.toString()}
         ListEmptyComponent={
           <ListEmptyComponent
-            title={`아직 피드가 없어요\n피드를 작성해주세요`}
+            title={'아직 피드가 없어요\n피드를 작성해주세요'}
           />
         }
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <Spacer size={16} />}
-        contentContainerStyle={{flexGrow: 1}}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        contentContainerStyle={{ flexGrow: 1 }}
       />
     </View>
   );
