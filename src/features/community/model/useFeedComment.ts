@@ -63,27 +63,32 @@ export const useFeedComment = (feedId: number | undefined) => {
         'FeedDetail',
         feedId,
       ]);
+
       if (previousFeedDetail) {
+        const newComments = previousFeedDetail.comments || [];
+        const newCommentData = {
+          id: newComments.length > 0 ? newComments[0].id + 1 : 1,
+          user:
+            newComments.length > 0
+              ? newComments[0]?.user || {nickname: '', profile_img: ''}
+              : {nickname: '', profile_img: ''},
+          content: newComment.content,
+          create_at: new Date().toISOString(),
+          replies: [],
+        };
+
         queryClient.setQueryData<ParsedFeedDetail>(
           ['FeedDetail', feedId],
           old => ({
             ...old!,
-            comments: [
-              ...old!.comments,
-              {
-                id: old!.comments[0].id,
-                user: old!.comments[0]?.user || {nickname: '', profile_img: ''},
-                content: newComment.content,
-                create_at: new Date().toISOString(),
-                replies: [],
-              },
-            ],
+            comments: [...newComments, newCommentData],
           }),
         );
       }
 
       return {previousFeedDetail} as MutationContext;
     },
+
     onError: (err, newComment, context) => {
       if (context?.previousFeedDetail) {
         queryClient.setQueryData(

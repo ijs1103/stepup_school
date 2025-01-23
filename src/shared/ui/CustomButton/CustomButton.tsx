@@ -54,7 +54,7 @@ const CustomButton = ({
         overflow: 'hidden',
       }}>
       <Pressable
-        style={{opacity: disabled ? 0.5 : 1}}
+        style={[styles.button, {opacity: disabled ? 0.5 : 1}]}
         onPress={clickHandler}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
@@ -76,10 +76,12 @@ const styles = StyleSheet.create({
     width: 300,
     alignSelf: 'center',
   },
+  button: {
+    paddingVertical: 10,
+  },
   text: {
     textAlign: 'center',
     fontSize: 16,
-    paddingVertical: 10,
     fontWeight: 'bold',
   },
 });

@@ -15,7 +15,7 @@ export const ImageUploadingItem = ({imageUrl, imageCloseHandler}: Props) => {
         <CachedImage style={styles.image} uri={imageUrl} />
       </View>
       <TouchableOpacity style={styles.icon} onPress={imageCloseHandler}>
-        <Icon name={'window-close'} size={24} color={'#fff'} />
+        <Icon name={'trash'} size={24} color={'red'} />
       </TouchableOpacity>
     </TouchableOpacity>
   );

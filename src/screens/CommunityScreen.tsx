@@ -6,32 +6,43 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
-import { Divider } from '@/shared/ui/Divider';
-import TabMenu, { TabType } from '@/features/community/ui/CommunityScreen/TabMenu';
-import { formatWeekDates, getWeekDates, getWeekDatesYYYYMMDD } from '@/shared/lib/date/getWeekDates';
+import React, {useCallback, useState} from 'react';
+import {Divider} from '@/shared/ui/Divider';
+import TabMenu, {
+  TabType,
+} from '@/features/community/ui/CommunityScreen/TabMenu';
+import {
+  formatWeekDates,
+  getWeekDates,
+  getWeekDatesYYYYMMDD,
+} from '@/shared/lib/date/getWeekDates';
 import WeeklyActivityView from '@/features/community/ui/CommunityScreen/WeeklyActivityView';
 import RankingView from '@/features/community/ui/CommunityScreen/RankingView';
-import { useCommunityStackNavigation } from '@/app/navigation/RootNavigation';
-import { Spacer } from '@/shared/ui/Spacer';
-import { ChartCategory } from '@/shared/ui/WeeklyChart/WeeklyChart';
+import {useCommunityStackNavigation} from '@/app/navigation/RootNavigation';
+import {Spacer} from '@/shared/ui/Spacer';
+import {ChartCategory} from '@/shared/ui/WeeklyChart/WeeklyChart';
 import FeedList from '@/features/community/ui/CommunityScreen/FeedList';
 import WritingButton from '@/features/community/ui/CommunityScreen/WritingButton';
-import { useActivityStatsForOurClass } from '@/features/walking/\bmodel/useActivityStatsForOurClass';
-import { useUser } from '@/features/auth/model/useUser';
+import {useActivityStatsForOurClass} from '@/features/walking/\bmodel/useActivityStatsForOurClass';
+import {useUser} from '@/features/auth/model/useUser';
 import useErrorToast from '@/shared/lib/hooks/useErrorToast';
-import { usePersonalRanking } from '@/features/ranking/model/usePersonalRanking';
-import { useFeedList } from '@/features/community/model/useFeedList';
+import {usePersonalRanking} from '@/features/ranking/model/usePersonalRanking';
+import {useFeedList} from '@/features/community/model/useFeedList';
 
 const IMAGE_HEIGHT = 337;
 const CommunityScreen = () => {
   const navigation = useCommunityStackNavigation();
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<TabType>('요약');
-  const { data, error: useActivityStatsError } = useActivityStatsForOurClass({ startDate: getWeekDatesYYYYMMDD(currentWeekIndex).startDate, endDate: getWeekDatesYYYYMMDD(currentWeekIndex).endDate });
-  const { data: personalRankingData, error: personalRankingError } = usePersonalRanking();
-  const { data: userData, error: useUserError } = useUser();
-  const { data: feedData, error: feedError } = useFeedList();
+  const {data, error: useActivityStatsError} = useActivityStatsForOurClass({
+    startDate: getWeekDatesYYYYMMDD(currentWeekIndex).startDate,
+    endDate: getWeekDatesYYYYMMDD(currentWeekIndex).endDate,
+  });
+  const {data: personalRankingData, error: personalRankingError} =
+    usePersonalRanking();
+  const {data: userData, error: useUserError} = useUser();
+  const {data: feedData, error: feedError} = useFeedList();
+  // console.log('feedData', feedData);
   useErrorToast(useActivityStatsError?.message ?? '');
   useErrorToast(personalRankingError?.message ?? '');
   useErrorToast(useUserError?.message ?? '');
@@ -58,9 +69,12 @@ const CommunityScreen = () => {
     () => navigation.navigate('Writing'),
     [],
   );
-  const feedPressHandler = useCallback((feedId: number) => {
-    navigation.navigate('FeedDetail', { feedId });
-  }, [navigation]);
+  const feedPressHandler = useCallback(
+    (feedId: number) => {
+      navigation.navigate('FeedDetail', {feedId});
+    },
+    [navigation],
+  );
 
   const [selectedCategory, setSelectedCategory] =
     useState<ChartCategory>('stepCount');
@@ -73,7 +87,10 @@ const CommunityScreen = () => {
         <View style={styles.contentContainer}>
           <View style={styles.schoolHstack}>
             <View style={styles.schoolInfoContainer}>
-              <Text style={styles.classText}>{`${userData?.class.grade}학년 ${userData?.class.class_number}반`}</Text>
+              <Text
+                style={
+                  styles.classText
+                }>{`${userData?.class.grade}학년 ${userData?.class.class_number}반`}</Text>
               <Text style={styles.schoolNameText}>{userData?.school.name}</Text>
             </View>
             <View style={styles.myClassButton}>
@@ -97,7 +114,11 @@ const CommunityScreen = () => {
                     dateText={formatWeekDates(getWeekDates(currentWeekIndex))}
                     pressPrevHandler={pressPrevHandler}
                     pressNextHandler={pressNextHandler}
-                    data={{ calorie: data?.activityStats.burnedCalories ?? 0, time: data?.activityStats.walkingTime ?? 0, distance: data?.activityStats.distance ?? 0 }}
+                    data={{
+                      calorie: data?.activityStats.burnedCalories ?? 0,
+                      time: data?.activityStats.walkingTime ?? 0,
+                      distance: data?.activityStats.distance ?? 0,
+                    }}
                   />
                 </TouchableOpacity>
                 <Spacer size={42} />
@@ -112,7 +133,10 @@ const CommunityScreen = () => {
             )}
             {activeTab === '피드' && (
               <>
-                <FeedList data={feedData ?? []} feedPressHandler={feedPressHandler} />
+                <FeedList
+                  data={feedData ?? []}
+                  feedPressHandler={feedPressHandler}
+                />
                 <WritingButton pressHandler={navigateToWriting} />
               </>
             )}
@@ -193,4 +217,3 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
 });
-

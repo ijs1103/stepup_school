@@ -49,7 +49,7 @@ export const useFeedList = () => {
   const accessToken = userData?.access_token;
 
   const query = useQuery<Feed[], Error, ParsedFeed[]>({
-    queryKey: ['FeedList', accessToken],
+    queryKey: ['FeedList'],
     queryFn: () => {
       if (!accessToken) {
         throw new CustomError('인증 토큰이 없습니다.');
