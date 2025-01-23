@@ -4,32 +4,30 @@ import {BASE_URL} from '@/shared/constants';
 import {CustomError} from '@/shared/lib/\bCustomError';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
 import {ParsedFeedDetail} from './useFeedDetail';
+import {MutationContext} from './useFeedComment';
 
-interface FeedCommentDTO {
+interface MutationVariables {
+  commentId: number;
   content: string;
 }
 
-interface Comment {
+interface CommentReply {
   id: number;
-  feedId: number;
+  commentId: number;
   user_Id: number;
   content: string;
   create_at: string;
 }
 
-export interface MutationContext {
-  previousFeedDetail: ParsedFeedDetail | undefined;
-}
-
 const mutationFn = async (
   accessToken: string,
-  feedId: number,
-  requestBody: FeedCommentDTO,
+  commentId: number,
+  content: string,
 ) => {
   try {
-    const response = await axios.post<Comment>(
-      `${BASE_URL}/feed/comment/${feedId}`,
-      requestBody,
+    const response = await axios.post<CommentReply>(
+      `${BASE_URL}/feed/commentReply/${commentId}`,
+      {content},
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -38,26 +36,34 @@ const mutationFn = async (
     );
     return response.data;
   } catch (error) {
-    console.warn(`useFeedComment 에러 - ${error}`);
-    throw new CustomError('댓글작성 에러가 발생.');
+    console.warn(`useFeedCommentReply 에러 - ${error}`);
+    throw new CustomError('대댓글작성 에러가 발생.');
   }
 };
 
-export const useFeedComment = (feedId: number | undefined) => {
+export const useFeedCommentReply = (feedId: number | undefined) => {
   const queryClient = useQueryClient();
   const {userData} = useAuthStore();
   const accessToken = userData?.access_token;
-  return useMutation<Comment, CustomError, FeedCommentDTO, MutationContext>({
-    mutationFn: (requestBody: FeedCommentDTO) => {
+  return useMutation<
+    CommentReply,
+    CustomError,
+    MutationVariables,
+    MutationContext
+  >({
+    mutationFn: ({commentId, content}) => {
       if (!accessToken) {
         throw new CustomError('인증 토큰이 없습니다.');
       }
       if (!feedId) {
         throw new CustomError('피드 아이디가 없습니다.');
       }
-      return mutationFn(accessToken, feedId, requestBody);
+      if (!commentId) {
+        throw new CustomError('댓글 아이디가 없습니다.');
+      }
+      return mutationFn(accessToken, commentId, content);
     },
-    onMutate: async newComment => {
+    onMutate: async ({commentId, content}) => {
       await queryClient.cancelQueries({queryKey: ['FeedDetail', feedId]});
       const previousFeedDetail = queryClient.getQueryData<ParsedFeedDetail>([
         'FeedDetail',
@@ -68,16 +74,24 @@ export const useFeedComment = (feedId: number | undefined) => {
           ['FeedDetail', feedId],
           old => ({
             ...old!,
-            comments: [
-              ...old!.comments,
-              {
-                id: old!.comments[0].id,
-                user: old!.comments[0]?.user || {nickname: '', profile_img: ''},
-                content: newComment.content,
-                create_at: new Date().toISOString(),
-                replies: [],
-              },
-            ],
+            comments: old!.comments.map(comment =>
+              comment.id === commentId
+                ? {
+                    ...comment,
+                    replies: [
+                      ...comment.replies,
+                      {
+                        user: comment.replies[0]?.user || {
+                          nickname: '',
+                          profile_img: '',
+                        },
+                        content: content,
+                        create_at: new Date().toISOString(),
+                      },
+                    ],
+                  }
+                : comment,
+            ),
           }),
         );
       }

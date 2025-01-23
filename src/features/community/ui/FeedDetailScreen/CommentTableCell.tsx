@@ -9,12 +9,12 @@ import CommentLinker from '../../../../../assets/comment_linker.svg';
 interface Props {
   data: Comment;
   isSelected: boolean;
-  commentPressHandler: () => void;
+  commentPressHandler: (commentId: number) => void;
 }
 
 const CommentTableCell = ({data, isSelected, commentPressHandler}: Props) => {
   return (
-    <TouchableOpacity onPress={commentPressHandler}>
+    <TouchableOpacity onPress={() => commentPressHandler(data.id)}>
       <View
         style={[
           styles.container,

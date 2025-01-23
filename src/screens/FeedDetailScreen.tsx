@@ -17,12 +17,13 @@ import {Spacer} from '@/shared/ui/Spacer';
 import CommentTableCell from '@/features/community/ui/FeedDetailScreen/CommentTableCell';
 import ListEmptyComponent from '@/features/community/ui/CommunityScreen/ListEmptyComponent';
 import {TouchableWithoutFeedback} from 'react-native';
-import WriteCommtentButton from '../../assets/write_comment_button.svg';
 import {useCommunityStackRoute} from '@/app/navigation/RootNavigation';
 import {useFeedDetail} from '@/features/community/model/useFeedDetail';
 import useErrorToast from '@/shared/lib/hooks/useErrorToast';
 import {useFeedComment} from '@/features/community/model/useFeedComment';
 import Toast from 'react-native-toast-message';
+import {useFeedCommentReply} from '@/features/community/model/useFeedCommentReply';
+import WriteCommentButton from '@/features/community/ui/FeedDetailScreen/WriteCommentButton';
 
 const ItemSeparatorComponent = () => <Spacer size={16} horizontal />;
 
@@ -31,17 +32,19 @@ const FeedDetailScreen = () => {
   const {data: feedDetailData, error: feedDetailError} = useFeedDetail(
     route.params?.feedId,
   );
-  const [commentContent, setCommentContent] = useState('');
   const {mutate: feedCommentMutate, error: feedCommentError} = useFeedComment(
     route.params?.feedId,
   );
+  const {mutate: feedCommentReplyMutate, error: feedCommentReplyError} =
+    useFeedCommentReply(route.params?.feedId);
   useErrorToast(feedDetailError?.message ?? '');
   useErrorToast(feedCommentError?.message ?? '');
+  useErrorToast(feedCommentReplyError?.message ?? '');
   const textInputRef = useRef<TextInput>(null);
-
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
     null,
   );
+  const [commentContent, setCommentContent] = useState('');
 
   const commentPressHandler = useCallback((commentId: number) => {
     setSelectedCommentId(prevId => (prevId === commentId ? null : commentId));
@@ -53,30 +56,57 @@ const FeedDetailScreen = () => {
   }, []);
 
   const writingCommentHandler = () => {
-    feedCommentMutate(
-      {content: commentContent},
-      {
-        onSuccess: result => {
-          setCommentContent('');
-          Toast.show({
-            type: 'success',
-            text1: '댓글이 게시되었습니다.',
-            position: 'top',
-            autoHide: true,
-            visibilityTime: 2000,
-          });
+    if (selectedCommentId !== null) {
+      feedCommentReplyMutate(
+        {commentId: selectedCommentId, content: commentContent},
+        {
+          onSuccess: result => {
+            setCommentContent('');
+            Toast.show({
+              type: 'success',
+              text1: '대댓글이 게시되었습니다.',
+              position: 'top',
+              autoHide: true,
+              visibilityTime: 2000,
+            });
+          },
+          onError: error => {
+            Toast.show({
+              type: 'error',
+              text1: error.message,
+              position: 'top',
+              autoHide: true,
+              visibilityTime: 2000,
+            });
+          },
         },
-        onError: error => {
-          Toast.show({
-            type: 'error',
-            text1: error.message,
-            position: 'top',
-            autoHide: true,
-            visibilityTime: 2000,
-          });
+      );
+    } else {
+      feedCommentMutate(
+        {content: commentContent},
+        {
+          onSuccess: result => {
+            setCommentContent('');
+            Toast.show({
+              type: 'success',
+              text1: '댓글이 게시되었습니다.',
+              position: 'top',
+              autoHide: true,
+              visibilityTime: 2000,
+            });
+          },
+          onError: error => {
+            Toast.show({
+              type: 'error',
+              text1: error.message,
+              position: 'top',
+              autoHide: true,
+              visibilityTime: 2000,
+            });
+          },
         },
-      },
-    );
+      );
+    }
   };
 
   return (
@@ -118,13 +148,11 @@ const FeedDetailScreen = () => {
                 renderItem={({item, index}) => (
                   <CommentTableCell
                     data={item}
-                    isSelected={selectedCommentId === index}
-                    commentPressHandler={() => commentPressHandler(index)}
+                    isSelected={selectedCommentId === item.id}
+                    commentPressHandler={commentPressHandler}
                   />
                 )}
-                keyExtractor={item =>
-                  `${item.create_at}-${item.content}-${item.user.nickname}`
-                }
+                keyExtractor={item => item.id.toString()}
                 ListEmptyComponent={
                   <ListEmptyComponent
                     title={`아직 댓글이 없어요\n댓글을 남겨주세요`}
@@ -147,9 +175,10 @@ const FeedDetailScreen = () => {
           value={commentContent}
           onChangeText={setCommentContent}
         />
-        <TouchableOpacity onPress={writingCommentHandler}>
-          <WriteCommtentButton />
-        </TouchableOpacity>
+        <WriteCommentButton
+          pressHandler={writingCommentHandler}
+          isValid={commentContent.trim() !== ''}
+        />
       </View>
     </KeyboardAvoidingView>
   );

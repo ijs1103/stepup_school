@@ -17,6 +17,7 @@ export interface Reply {
 }
 
 export interface Comment {
+  id: number;
   user: User;
   content: string;
   create_at: string;
