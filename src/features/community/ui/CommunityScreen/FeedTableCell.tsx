@@ -21,7 +21,7 @@ const FeedTableCell = ({ data, feedPressHandler }: Props) => {
       <View style={styles.container}>
         <View style={styles.hStack}>
           <View style={styles.avatarContainer}>
-            <Avatar source={{ uri: data.avatarUrl }} small />
+            <Avatar imageUrl={data.avatarUrl} small />
             <Text style={styles.nameText}>{data.userName}</Text>
           </View>
           <Text style={styles.timeText}>{data.createdAt}</Text>

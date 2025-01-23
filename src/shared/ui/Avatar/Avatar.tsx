@@ -3,10 +3,10 @@ import {View, Image, StyleSheet, ImageSourcePropType} from 'react-native';
 
 interface Props {
   small?: boolean;
-  source?: ImageSourcePropType | undefined;
+  imageUrl?: string;
 }
 
-const Avatar = ({small = false, source = undefined}: Props) => {
+const Avatar = ({small = false, imageUrl = undefined}: Props) => {
   return (
     <View
       style={[
@@ -17,7 +17,10 @@ const Avatar = ({small = false, source = undefined}: Props) => {
           borderRadius: small ? 13 : 20,
         },
       ]}>
-      <Image source={source} style={styles.avatar} />
+      <Image
+        source={imageUrl ? {uri: imageUrl} : undefined}
+        style={styles.avatar}
+      />
     </View>
   );
 };

@@ -1,30 +1,47 @@
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import React, { useCallback, useRef, useState } from 'react';
-import { NavBar } from '@/shared/ui/NavBar';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
+import React, {useCallback, useRef, useState} from 'react';
+import {NavBar} from '@/shared/ui/NavBar';
 import Avatar from '@/shared/ui/Avatar/Avatar';
 import ImageItem from '@/features/community/ui/WritingScreen/ImageItem';
-import { Spacer } from '@/shared/ui/Spacer';
+import {Spacer} from '@/shared/ui/Spacer';
 import CommentTableCell from '@/features/community/ui/FeedDetailScreen/CommentTableCell';
 import ListEmptyComponent from '@/features/community/ui/CommunityScreen/ListEmptyComponent';
-import { TouchableWithoutFeedback } from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native';
 import WriteCommtentButton from '../../assets/write_comment_button.svg';
-import { useCommunityStackRoute } from '@/app/navigation/RootNavigation';
-import { useFeedDetail } from '@/features/community/model/useFeedDetail';
+import {useCommunityStackRoute} from '@/app/navigation/RootNavigation';
+import {useFeedDetail} from '@/features/community/model/useFeedDetail';
 import useErrorToast from '@/shared/lib/hooks/useErrorToast';
-import { useFeedComment } from '@/features/community/model/useFeedComment';
+import {useFeedComment} from '@/features/community/model/useFeedComment';
+import Toast from 'react-native-toast-message';
 
 const ItemSeparatorComponent = () => <Spacer size={16} horizontal />;
 
 const FeedDetailScreen = () => {
   const route = useCommunityStackRoute();
-  const { data, error } = useFeedDetail(route.params?.feedId);
+  const {data: feedDetailData, error: feedDetailError} = useFeedDetail(
+    route.params?.feedId,
+  );
   const [commentContent, setCommentContent] = useState('');
-  //TODO: 댓글작성 api 연동
-  const { } = useFeedComment(route.params?.feedId, { content: commentContent });
-  useErrorToast(error?.message ?? '');
+  const {mutate: feedCommentMutate, error: feedCommentError} = useFeedComment(
+    route.params?.feedId,
+  );
+  useErrorToast(feedDetailError?.message ?? '');
+  useErrorToast(feedCommentError?.message ?? '');
   const textInputRef = useRef<TextInput>(null);
 
-  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
+    null,
+  );
 
   const commentPressHandler = useCallback((commentId: number) => {
     setSelectedCommentId(prevId => (prevId === commentId ? null : commentId));
@@ -35,50 +52,79 @@ const FeedDetailScreen = () => {
     setSelectedCommentId(null);
   }, []);
 
+  const writingCommentHandler = () => {
+    feedCommentMutate(
+      {content: commentContent},
+      {
+        onSuccess: result => {
+          setCommentContent('');
+          Toast.show({
+            type: 'success',
+            text1: '댓글이 게시되었습니다.',
+            position: 'top',
+            autoHide: true,
+            visibilityTime: 2000,
+          });
+        },
+        onError: error => {
+          Toast.show({
+            type: 'error',
+            text1: error.message,
+            position: 'top',
+            autoHide: true,
+            visibilityTime: 2000,
+          });
+        },
+      },
+    );
+  };
+
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 25}
-    >
-      <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 25}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={setSelectedCommentIdToNull}>
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <NavBar backButtonIcon={'ArrowBackGray'} />
             <View style={styles.avatarContainer}>
-              <Avatar source={{ uri: data?.avatarUrl }} />
+              <Avatar imageUrl={feedDetailData?.avatarUrl} />
               <View style={styles.vStack}>
-                <Text style={styles.nameText}>{data?.userName}</Text>
-                <Text style={styles.dateText}>{data?.createdAt}</Text>
+                <Text style={styles.nameText}>{feedDetailData?.userName}</Text>
+                <Text style={styles.dateText}>{feedDetailData?.createdAt}</Text>
               </View>
             </View>
             <View style={styles.contentsContainer}>
-              <Text>
-                {data?.contents}
-              </Text>
-              {data?.imageUrls && data.imageUrls.length > 0 && (
-                <FlatList
-                  style={styles.imageList}
-                  data={data.imageUrls}
-                  renderItem={({ item }) => <ImageItem imageUrl={item} />}
-                  keyExtractor={(item, index) => `${item}-${index}`}
-                  ItemSeparatorComponent={ItemSeparatorComponent}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-                />
-              )}
+              <Text>{feedDetailData?.contents}</Text>
+              {feedDetailData?.imageUrls &&
+                feedDetailData.imageUrls.length > 0 && (
+                  <FlatList
+                    style={styles.imageList}
+                    data={feedDetailData.imageUrls}
+                    renderItem={({item}) => <ImageItem imageUrl={item} />}
+                    keyExtractor={(item, index) => `${item}-${index}`}
+                    ItemSeparatorComponent={ItemSeparatorComponent}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                  />
+                )}
             </View>
             <View style={styles.commentContainer}>
               <FlatList
-                data={data?.comments}
-                renderItem={({ item, index }) => (
+                data={feedDetailData?.comments}
+                renderItem={({item, index}) => (
                   <CommentTableCell
                     data={item}
                     isSelected={selectedCommentId === index}
                     commentPressHandler={() => commentPressHandler(index)}
                   />
                 )}
-                keyExtractor={(item) => `${item.create_at}-${item.content}-${item.user.nickname}`}
+                keyExtractor={item =>
+                  `${item.create_at}-${item.content}-${item.user.nickname}`
+                }
                 ListEmptyComponent={
                   <ListEmptyComponent
                     title={`아직 댓글이 없어요\n댓글을 남겨주세요`}
@@ -101,7 +147,7 @@ const FeedDetailScreen = () => {
           value={commentContent}
           onChangeText={setCommentContent}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={writingCommentHandler}>
           <WriteCommtentButton />
         </TouchableOpacity>
       </View>

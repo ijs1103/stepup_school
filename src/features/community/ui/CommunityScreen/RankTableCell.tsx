@@ -16,7 +16,7 @@ const RankTableCell = ({ rank, imageUrl, name, stat }: Props) => {
       <View style={styles.subContainer}>
         <Text style={styles.rankText}>{rank}</Text>
         <Spacer size={12} horizontal />
-        <Avatar source={{ uri: imageUrl }} />
+        <Avatar imageUrl={imageUrl} />
         <Spacer size={18} horizontal />
         <Text style={styles.nameText}>{name}</Text>
       </View>
