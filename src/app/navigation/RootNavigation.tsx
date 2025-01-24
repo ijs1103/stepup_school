@@ -33,6 +33,7 @@ import RankingDetailScreen from '@/screens/RankingDetailScreen';
 import ChallengeScreen from '@/screens/ChallengeScreen';
 import ChallengeDetailScreen from '@/screens/ChallengeDetailScreen';
 import ParticipationDetailsScreen from '@/screens/ParticipationDetailsScreen';
+import { ParsedChallenge } from '@/features/\bchallenge/model/useChallengeList';
 
 const Tab = createBottomTabNavigator();
 
@@ -216,7 +217,7 @@ export const useCommunityStackRoute = <
 
 type ChallengeStackParams = {
   Challenge: undefined;
-  ChallengeDetail: {challengeId: number};
+  ChallengeDetail: {challenge: ParsedChallenge};
   ParticipationDetails: undefined;
 };
 

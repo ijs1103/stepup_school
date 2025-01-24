@@ -1,39 +1,54 @@
 import {ProgressBar} from '@/shared/ui/ProgressBar';
 import React from 'react';
 import {View, StyleSheet, Pressable, Image, Text} from 'react-native';
+import {ParsedChallenge} from '../../model/useChallengeList';
+import {getRemainingHours} from '@/shared/lib/date/getRemainingHours';
 
 interface Props {
+  data: ParsedChallenge;
   navigateToDetail: () => void;
   isDone?: boolean;
   imageUrl?: string;
 }
 
-const ChallengeListItem = ({navigateToDetail, isDone, imageUrl}: Props) => {
+const ChallengeListItem = ({
+  data,
+  navigateToDetail,
+  isDone,
+  imageUrl,
+}: Props) => {
   return (
     <Pressable onPress={navigateToDetail} style={styles.container}>
       <View style={styles.hStack}>
         <Image
-          source={{uri: imageUrl}}
+          source={{uri: data.imageUrl}}
           style={styles.image}
           resizeMode={'cover'}
         />
         <View style={styles.contentsContainer}>
           <View style={{gap: 6}}>
             <Text style={styles.title} numberOfLines={1}>
-              {'(설정이름) 하루 만 보 챌린지'}
+              {data.title}
             </Text>
-            <Text style={styles.date}>{'5시간 뒤 종료'}</Text>
+            <Text style={styles.date}>
+              {getRemainingHours(data.endDate) > 0
+                ? `${getRemainingHours(data.endDate)}시간 뒤 종료`
+                : '종료'}
+            </Text>
           </View>
           <View style={{gap: 6}}>
-            <Text style={styles.total}>
-              <Text style={styles.achievementRate}>{'3,444'}</Text>
-              {' / 10,000 걸음'}
+            <Text style={styles.totalStat}>
+              <Text
+                style={
+                  styles.currentStat
+                }>{`${data.currentStat.toLocaleString()}`}</Text>
+              {` / ${data.goalStat.toLocaleString()} ${data.type}`}
             </Text>
-            <ProgressBar total={3444} now={10000} />
+            <ProgressBar total={data.goalStat} now={data.currentStat} />
           </View>
         </View>
       </View>
-      {isDone && <View style={styles.overlay} />}
+      {data.isDone && <View style={styles.overlay} />}
     </Pressable>
   );
 };
@@ -80,13 +95,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#968C7E',
   },
-  achievementRate: {
+  currentStat: {
     fontWeight: '700',
     lineHeight: 14,
     fontSize: 12,
     color: '#141210',
   },
-  total: {
+  totalStat: {
     textAlign: 'right',
     fontWeight: '500',
     lineHeight: 14,

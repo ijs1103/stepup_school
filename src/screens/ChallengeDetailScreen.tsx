@@ -4,8 +4,11 @@ import {NavBar} from '@/shared/ui/NavBar';
 import {Spacer} from '@/shared/ui/Spacer';
 import ChallengeLabelStat from '@/features/\bchallenge/ui/ChallengeDetailScreen/ChallengeLabelStat';
 import {ProgressBar} from '@/shared/ui/ProgressBar';
+import {useChallengeStackRoute} from '@/app/navigation/RootNavigation';
 
 const ChallengeDetailScreen = () => {
+  const route = useChallengeStackRoute();
+
   return (
     <View style={styles.container}>
       <NavBar
@@ -20,31 +23,46 @@ const ChallengeDetailScreen = () => {
       />
       <View style={styles.contentsContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.subTitle}>{'걸음수 달성'}</Text>
-          <Text style={styles.title}>{'하루만보 챌린지'}</Text>
+          <Text style={styles.subTitle}>{`${
+            route.params?.challenge.type ?? ''
+          } 달성`}</Text>
+          <Text style={styles.title}>
+            {route.params?.challenge.title ?? ''}
+          </Text>
         </View>
         <Spacer size={10} />
         <View style={styles.cardContainer}>
           <ChallengeLabelStat
             label={'챌린지 기간'}
-            stat={'2024.11.11 ~ 11.12'}
+            stat={route.params?.challenge.duration ?? ''}
           />
-          <ChallengeLabelStat label={'목표 걸음'} stat={'10000'} />
+          <ChallengeLabelStat
+            label={'목표 걸음'}
+            stat={route.params?.challenge.goalStat.toLocaleString() ?? '0'}
+          />
           <ChallengeLabelStat
             label={'나의 걸음수'}
-            stat={'3,444'}
+            stat={route.params?.challenge.personalStat.toLocaleString() ?? '0'}
             isEmphaszied
           />
           <ChallengeLabelStat
             label={'전체 걸음수'}
-            stat={'15,000'}
+            stat={route.params?.challenge.currentStat.toLocaleString() ?? '0'}
             isEmphaszied
           />
           <View style={styles.progressBarContainer}>
-            <ProgressBar total={3444} now={15000} outerColor={'#F2F0EF'} />
+            <ProgressBar
+              total={route.params?.challenge.goalStat ?? 0}
+              now={route.params?.challenge.currentStat ?? 0}
+              outerColor={'#F2F0EF'}
+            />
             <Text style={styles.totalStat}>
-              <Text style={styles.currentStat}>{'3,444'}</Text>
-              {' / 10,000 걸음'}
+              <Text style={styles.currentStat}>
+                {route.params?.challenge.currentStat.toLocaleString() ?? '0'}
+              </Text>
+              {` / ${route.params?.challenge.goalStat.toLocaleString() ?? 0} ${
+                route.params?.challenge.type ?? ''
+              }`}
             </Text>
           </View>
         </View>

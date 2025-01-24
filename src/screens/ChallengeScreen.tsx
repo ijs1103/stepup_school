@@ -6,13 +6,18 @@ import ChallengeListItem from '@/features/\bchallenge/ui/ChallengeScreen/Challen
 import ListEmptyComponent from '@/features/community/ui/CommunityScreen/ListEmptyComponent';
 import {Spacer} from '@/shared/ui/Spacer';
 import {useChallengeStackNavigation} from '@/app/navigation/RootNavigation';
+import {
+  ParsedChallenge,
+  useChallengeList,
+} from '@/features/\bchallenge/model/useChallengeList';
 
 const ItemSeparatorComponent = () => <Spacer size={10} />;
 
 const ChallengeScreen = () => {
   const navigation = useChallengeStackNavigation();
-  const navigateToDetail = useCallback((challengeId: number) => {
-    navigation.navigate('ChallengeDetail', {challengeId});
+  const {data} = useChallengeList();
+  const navigateToDetail = useCallback((challenge: ParsedChallenge) => {
+    navigation.navigate('ChallengeDetail', {challenge});
   }, []);
   const navigateToParticipationDetails = useCallback(() => {
     navigation.navigate('ParticipationDetails');
@@ -31,15 +36,16 @@ const ChallengeScreen = () => {
       </View>
       <FlatList
         style={styles.flatList}
-        data={[1, 2, 3]}
+        data={data}
         renderItem={({item}) => (
-          <ChallengeListItem navigateToDetail={() => navigateToDetail(item)} />
-        )}
-        keyExtractor={item => item.toString()}
-        ListEmptyComponent={
-          <ListEmptyComponent
-            title={'진행중인 챌린지가 없어요'}
+          <ChallengeListItem
+            data={item}
+            navigateToDetail={() => navigateToDetail(item)}
           />
+        )}
+        keyExtractor={item => item.challengeId.toString()}
+        ListEmptyComponent={
+          <ListEmptyComponent title={'진행중인 챌린지가 없어요'} />
         }
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={ItemSeparatorComponent}

@@ -9,11 +9,18 @@ interface Props {
 
 const ProgressBar = ({total, now, outerColor = '#fff'}: Props) => {
   const progress = Math.max(0, Math.min(now, total)) / total;
-  const progressWidth = progress * 100;
 
   return (
     <View style={[styles.outer, {backgroundColor: outerColor}]}>
-      <View style={[styles.inner, {width: progressWidth}]} />
+      <View
+        style={[
+          styles.inner,
+          {
+            width: `${progress * 100}%`,
+            borderRadius: progress === 1 ? 10 : undefined,
+          },
+        ]}
+      />
     </View>
   );
 };
