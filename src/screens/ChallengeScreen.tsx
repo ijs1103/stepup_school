@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import ChallengeLogo from '../../assets/challenge_logo.svg';
 import OptionButton from '../../assets/option_button.svg';
 import ChallengeListItem from '@/features/\bchallenge/ui/ChallengeScreen/ChallengeListItem';
@@ -14,6 +14,9 @@ const ChallengeScreen = () => {
   const navigateToDetail = useCallback((challengeId: number) => {
     navigation.navigate('ChallengeDetail', {challengeId});
   }, []);
+  const navigateToParticipationDetails = useCallback(() => {
+    navigation.navigate('ParticipationDetails');
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -22,7 +25,9 @@ const ChallengeScreen = () => {
           <ChallengeLogo />
           <Text style={styles.title}>{'챌린지'}</Text>
         </View>
-        <OptionButton fill={'#FB970C'} />
+        <TouchableOpacity onPress={navigateToParticipationDetails}>
+          <OptionButton fill={'#FB970C'} />
+        </TouchableOpacity>
       </View>
       <FlatList
         style={styles.flatList}
@@ -33,12 +38,12 @@ const ChallengeScreen = () => {
         keyExtractor={item => item.toString()}
         ListEmptyComponent={
           <ListEmptyComponent
-            title={'아직 피드가 없어요\n피드를 작성해주세요'}
+            title={'진행중인 챌린지가 없어요'}
           />
         }
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        contentContainerStyle={{flexGrow: 1}}
+        contentContainerStyle={{flexGrow: 1, paddingBottom: 40}}
       />
     </View>
   );
@@ -70,6 +75,6 @@ const styles = StyleSheet.create({
     color: '#423D36',
   },
   flatList: {
-    marginHorizontal: 16,
+    paddingHorizontal: 16,
   },
 });
