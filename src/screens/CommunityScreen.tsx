@@ -42,7 +42,6 @@ const CommunityScreen = () => {
     usePersonalRanking();
   const {data: userData, error: useUserError} = useUser();
   const {data: feedData, error: feedError} = useFeedList();
-  // console.log('feedData', feedData);
   useErrorToast(useActivityStatsError?.message ?? '');
   useErrorToast(personalRankingError?.message ?? '');
   useErrorToast(useUserError?.message ?? '');

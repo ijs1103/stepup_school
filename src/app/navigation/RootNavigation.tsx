@@ -31,6 +31,7 @@ import WeeklyRecordScreen from '@/screens/WeeklyRecordScreen';
 import MyClassWeeklyChartScreen from '@/screens/MyClassWeeklyChartScreen';
 import RankingDetailScreen from '@/screens/RankingDetailScreen';
 import ChallengeScreen from '@/screens/ChallengeScreen';
+import ChallengeDetailScreen from '@/screens/ChallengeDetailScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -212,45 +213,41 @@ export const useCommunityStackRoute = <
   RouteName extends keyof CommunityStackParams,
 >() => useRoute<RouteProp<CommunityStackParams, RouteName>>();
 
-type DonationStackParams = {
+type ChallengeStackParams = {
   Challenge: undefined;
-  ChallengeDetail: undefined;
+  ChallengeDetail: { challengeId: number };
   ParticipationDetails: undefined;
 };
 
-export const DonationStack = createNativeStackNavigator<DonationStackParams>();
+export const ChallengeStack = createNativeStackNavigator<ChallengeStackParams>();
 
 const ChallengeStacks = () => (
-  <DonationStack.Navigator
+  <ChallengeStack.Navigator
     initialRouteName={'Challenge'}
     screenOptions={{
       headerShown: false,
       gestureEnabled: false,
     }}>
-    <DonationStack.Screen name={'Challenge'} component={ChallengeScreen} />
-    <DonationStack.Screen
+    <ChallengeStack.Screen name={'Challenge'} component={ChallengeScreen} />
+    <ChallengeStack.Screen
       name={'ChallengeDetail'}
       component={ChallengeDetailScreen}
     />
-    <DonationStack.Screen
+    <ChallengeStack.Screen
       name={'ParticipationDetails'}
       component={ParticipationDetailsScreen}
     />
-  </DonationStack.Navigator>
+  </ChallengeStack.Navigator>
 );
 
-export const useDonationStackNavigation = <
-  RouteName extends keyof DonationStackParams,
+export const useChallengeStackNavigation = <
+  RouteName extends keyof ChallengeStackParams,
 >() =>
-  useNavigation<NativeStackNavigationProp<DonationStackParams, RouteName>>();
+  useNavigation<NativeStackNavigationProp<ChallengeStackParams, RouteName>>();
 
-export const useDonationStackRoute = <
-  RouteName extends keyof DonationStackParams,
->() => useRoute<RouteProp<DonationStackParams, RouteName>>();
-
-const ChallengeDetailScreen = () => {
-  return <Text>Profile</Text>;
-};
+export const useChallengeStackRoute = <
+  RouteName extends keyof ChallengeStackParams,
+>() => useRoute<RouteProp<ChallengeStackParams, RouteName>>();
 
 const ParticipationDetailsScreen = () => {
   return <Text>Profile</Text>;
