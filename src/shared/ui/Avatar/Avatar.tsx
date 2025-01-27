@@ -2,19 +2,20 @@ import React from 'react';
 import {View, Image, StyleSheet, ImageSourcePropType} from 'react-native';
 
 interface Props {
+  big?: boolean;
   small?: boolean;
   imageUrl?: string;
 }
 
-const Avatar = ({small = false, imageUrl = undefined}: Props) => {
+const Avatar = ({big = false, small = false, imageUrl = undefined}: Props) => {
   return (
     <View
       style={[
         styles.container,
         {
-          width: small ? 26 : 40,
-          height: small ? 26 : 40,
-          borderRadius: small ? 13 : 20,
+          width: small ? 26 : big ? 120 : 40,
+          height: small ? 26 : big ? 120 : 40,
+          borderRadius: small ? 13 : big ? 60 : 20,
         },
       ]}>
       <Image

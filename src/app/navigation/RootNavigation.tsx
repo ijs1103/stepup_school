@@ -33,7 +33,8 @@ import RankingDetailScreen from '@/screens/RankingDetailScreen';
 import ChallengeScreen from '@/screens/ChallengeScreen';
 import ChallengeDetailScreen from '@/screens/ChallengeDetailScreen';
 import ParticipationDetailsScreen from '@/screens/ParticipationDetailsScreen';
-import { ParsedChallenge } from '@/features/\bchallenge/model/useChallengeList';
+import {ParsedChallenge} from '@/features/\bchallenge/model/useChallengeList';
+import SettingsMainScreen from '@/screens/SettingsMainScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -83,10 +84,6 @@ export const useHomeStackNavigation = <
 
 export const useHomeStackRoute = <RouteName extends keyof HomeStackParams>() =>
   useRoute<RouteProp<HomeStackParams, RouteName>>();
-
-const SettingsMainScreen = () => {
-  return <Text>Settings</Text>;
-};
 
 const AccountScreen = () => {
   return <Text>Settings</Text>;
