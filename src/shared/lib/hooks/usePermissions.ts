@@ -17,6 +17,7 @@ type PermissionStatuses = {
   locationAlways: PermissionStatus | undefined;
   notifications: PermissionStatus | undefined;
   photoLibrary: PermissionStatus | undefined;
+  activityRecognition: PermissionStatus | undefined;
 };
 
 const usePermissions = () => {
@@ -24,6 +25,7 @@ const usePermissions = () => {
     locationAlways: undefined,
     notifications: undefined,
     photoLibrary: undefined,
+    activityRecognition: undefined,
   });
   const [hasRequestedPermissions, setHasRequestedPermissions] = useState(false);
   const appState = useRef(AppState.currentState);
@@ -31,7 +33,8 @@ const usePermissions = () => {
   const requestPermissions = useCallback(async () => {
     let locationAlways: PermissionStatus | undefined,
       notifications: PermissionStatus | undefined,
-      photoLibrary: PermissionStatus | undefined;
+      photoLibrary: PermissionStatus | undefined,
+      activityRecognition: PermissionStatus | undefined;
 
     if (Platform.OS === 'ios') {
       locationAlways = await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
@@ -77,12 +80,24 @@ const usePermissions = () => {
             PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
           )) as PermissionStatus;
         }
+
+        // 활동 인식 권한 요청
+        activityRecognition = (await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION,
+          {
+            title: '활동 인식 권한',
+            message: '걸음 수를 측정하기 위해 활동 인식 권한이 필요합니다.',
+            buttonNeutral: '나중에',
+            buttonNegative: '거부',
+            buttonPositive: '허용',
+          },
+        )) as PermissionStatus;
       } catch (err) {
-        console.warn(err);
+        console.log('권한요청 에러발생 -', err);
       }
     }
 
-    setPermissions({locationAlways, notifications, photoLibrary});
+    setPermissions({locationAlways, notifications, photoLibrary, activityRecognition});
     setHasRequestedPermissions(true);
   }, []);
 

@@ -3,8 +3,7 @@ import {Platform} from 'react-native';
 import AppleHealthKit, {HealthInputOptions} from 'react-native-health';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
 import {getTodayStartDate} from '@/shared/lib/date/getTodayStartDate';
-import {readRecords} from 'react-native-health-connect';
-import {getKoreaEndTime} from '@/shared/lib/date/getKoreaEndtime';
+import GoogleFit, {Scopes} from 'react-native-google-fit';
 
 interface HealthValue {
   value: number;
@@ -50,10 +49,9 @@ export const useDailyActivityStats = (): Result => {
           options,
           (err: string | null, results: HealthValue) => {
             if (err) {
-              setErrorMessage(`일간 걸음수 데이터 가져오기 오류: ${err}`);
+              setErrorMessage(`ios 일간 걸음수 데이터 가져오기 오류: ${err}`);
               reject(err);
             } else {
-              console.log('걸음수데이터: ', results);
               setDailyStepCount(results.value);
               resolve(results.value);
             }
@@ -65,31 +63,26 @@ export const useDailyActivityStats = (): Result => {
       });
     } else {
       try {
-        const results = await readRecords('Steps', {
-          timeRangeFilter: {
-            operator: 'between',
-            startTime: getTodayStartDate(),
-            endTime: getKoreaEndTime(),
-          },
+        await GoogleFit.authorize({
+          scopes: [
+            Scopes.FITNESS_ACTIVITY_READ,
+            Scopes.FITNESS_BODY_READ,
+            Scopes.FITNESS_LOCATION_READ,
+          ],
         });
-        console.log('안드결과', results);
-        const totalSteps = results.records.reduce(
-          (sum, cur) => sum + cur.count,
-          0,
+        const results = await GoogleFit.getDailySteps(
+          getTodayStartDate() as Date,
         );
-        console.log('오늘의 총 걸음 수:', totalSteps);
-        setDailyStepCount(totalSteps);
-        if (isRefetch) {
-          setIsRefetching(false);
-        }
-        return totalSteps;
+        const stepCount = results[2].steps[0].value;
+        setDailyStepCount(stepCount);
       } catch (error) {
-        console.log(error);
+        console.log('안드로이드 일간 걸음수 데이터 에러 - ', error);
         setErrorMessage(`일간 걸음수 데이터 가져오기 오류: ${error}`);
+        setDailyStepCount(0);
+      } finally {
         if (isRefetch) {
           setIsRefetching(false);
         }
-        return 0;
       }
     }
   };

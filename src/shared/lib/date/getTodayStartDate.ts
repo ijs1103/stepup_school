@@ -18,6 +18,6 @@ export const getTodayStartDate = () => {
     return todayStartDate.toISOString().replace('Z', '+0900');
   } else {
     const koreaTime = new Date(todayStartDate.getTime() + 9 * 60 * 60 * 1000);
-    return koreaTime.toISOString();
+    return koreaTime;
   }
 };

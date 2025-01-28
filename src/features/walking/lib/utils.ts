@@ -1,5 +1,6 @@
 import {FOOD_ITEM_LIST, FoodItem} from '@/shared/constants';
 import {ActivityStats} from '../\bmodel/useDailyActivityStats';
+import {StepCountData} from '../\bmodel/useActivityStats';
 
 export const matchFoodByCalories = (calories: number): FoodItem => {
   const sortedFoods = [...FOOD_ITEM_LIST].sort(
@@ -77,4 +78,53 @@ export const calculateStats = (
     distance: Math.round(((gender ? 7.7 : 6.7) * steps) / 100) / 100,
     walkingTime: Math.round((0.62 * steps) / 60),
   };
+};
+
+interface DateValue {
+  date: string;
+  value: number;
+}
+
+export const convertGoogleFitToStepcountData = (
+  input: DateValue[],
+): StepCountData => {
+  return input.reduce((acc, {date, value}) => {
+    const [year, month, day] = date.split('-');
+    const formattedDate = `${parseInt(month)}월 ${parseInt(day)}일`;
+    return {...acc, [formattedDate]: value};
+  }, {});
+};
+
+export const fillMissingDates = (
+  steps: DateValue[],
+  startDateIso: string,
+  endDateIso: string,
+): DateValue[] => {
+  const formatDate = (isoString: string): string => {
+    const date = new Date(isoString);
+    const koreaDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+    return koreaDate.toISOString().split('T')[0];
+  };
+
+  const startDate = formatDate(startDateIso);
+  const endDate = formatDate(endDateIso);
+
+  const generateDateRange = (start: string, end: string): string[] => {
+    const dates: string[] = [];
+    const current = new Date(start);
+    const last = new Date(end);
+
+    while (current <= last) {
+      dates.push(current.toISOString().split('T')[0]);
+      current.setDate(current.getDate() + 1);
+    }
+    return dates;
+  };
+
+  const stepsMap = new Map(steps.map(item => [item.date, item.value]));
+
+  return generateDateRange(startDate, endDate).map(date => ({
+    date,
+    value: stepsMap.get(date) || 0,
+  }));
 };

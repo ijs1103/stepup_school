@@ -1,11 +1,14 @@
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
 import {useCallback, useEffect, useState} from 'react';
 import AppleHealthKit from 'react-native-health';
-import {calculateStats} from '../lib/utils';
+import {
+  calculateStats,
+  convertGoogleFitToStepcountData,
+  fillMissingDates,
+} from '../lib/utils';
 import {ActivityStats} from './useDailyActivityStats';
 import {Platform} from 'react-native';
-import {readRecords} from 'react-native-health-connect';
-import {getKoreaEndTime} from '@/shared/lib/date/getKoreaEndtime';
+import GoogleFit, {BucketUnit, Scopes} from 'react-native-google-fit';
 
 interface Props {
   startDate: string;
@@ -37,12 +40,12 @@ export const useActivityStats = ({
     if (Platform.OS === 'ios') {
       AppleHealthKit.getDailyStepCountSamples(
         {
-          startDate,
+          startDate: startDate as string,
           endDate,
         },
         (err, results) => {
           if (err) {
-            setErrorMessage(`특정기간 걸음수 데이터 가져오기 오류: ${err}`);
+            setErrorMessage(`ios 특정기간 걸음수 데이터 가져오기 오류: ${err}`);
             return;
           }
 
@@ -87,16 +90,34 @@ export const useActivityStats = ({
       );
     } else {
       try {
-        const results = await readRecords('Steps', {
-          timeRangeFilter: {
-            operator: 'between',
-            startTime: startDate,
-            endTime: endDate,
-          },
+        await GoogleFit.authorize({
+          scopes: [
+            Scopes.FITNESS_ACTIVITY_READ,
+            Scopes.FITNESS_BODY_READ,
+            Scopes.FITNESS_LOCATION_READ,
+          ],
         });
-        // setWeeklyStepCountData(weeklySteps);
+        const results = await GoogleFit.getDailyStepCountSamples({
+          startDate,
+          endDate,
+          bucketUnit: BucketUnit.DAY,
+          bucketInterval: 1,
+        });
+        console.log('google Fit results', results[2].steps);
+        const filledDatas = fillMissingDates(
+          results[2].steps,
+          startDate,
+          endDate,
+        );
+        const totalStepsCount = Math.round(
+          results[2].steps.reduce((sum, item) => sum + item.value, 0),
+        );
+        setTotalSteps(totalStepsCount);
+        const stepcountData = convertGoogleFitToStepcountData(filledDatas);
+        console.log('parsed results', stepcountData);
+        setStepCountData(stepcountData);
       } catch (error) {
-        console.log(error);
+        console.log('안드로이드 특정기간 걸음수 데이터 에러 - ', error);
         setErrorMessage(`특정기간 걸음수 데이터 가져오기 오류: ${error}`);
       }
     }
