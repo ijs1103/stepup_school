@@ -5,46 +5,46 @@ import {CustomError} from '@/shared/lib/\bCustomError';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
 
 interface MutationVariables {
-  requestBody: FormData;
+  imageKey: string;
 }
 interface AxiosFnVariables extends MutationVariables {
   accessToken: string;
 }
-interface ImageUpload {
-  keys: string[];
+interface UpdateAvatar {
+  success: boolean;
+  message: string;
 }
 
 const axiosFn = async ({
   accessToken,
-  requestBody,
-}: AxiosFnVariables): Promise<ImageUpload> => {
+  imageKey,
+}: AxiosFnVariables): Promise<UpdateAvatar> => {
   try {
-    const response = await axios.post<ImageUpload>(
-      `${BASE_URL}/s3/upload`,
-      requestBody,
+    const response = await axios.patch<UpdateAvatar>(
+      `${BASE_URL}/user/profile-img`,
+      {profile_img: imageKey},
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${accessToken}`,
         },
       },
     );
     return response.data;
   } catch (error) {
-    console.log(`useImageUpload 에러 - ${error}`);
-    throw new CustomError('이미지 업로드 에러가 발생.');
+    console.log(`useUpdateAvatar 에러 - ${error}`);
+    throw new CustomError('아바타 업데이트 에러가 발생.');
   }
 };
 
-export const useImageUpload = () => {
+export const useUpdateAvatar = () => {
   const {userData} = useAuthStore();
   const accessToken = userData?.access_token;
-  return useMutation<ImageUpload, CustomError, MutationVariables>({
-    mutationFn: ({requestBody}) => {
+  return useMutation<UpdateAvatar, CustomError, MutationVariables>({
+    mutationFn: ({imageKey}) => {
       if (!accessToken) {
         throw new CustomError('인증 토큰이 없습니다.');
       }
-      return axiosFn({accessToken, requestBody});
+      return axiosFn({accessToken, imageKey});
     },
   });
 };

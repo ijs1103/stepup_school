@@ -1,19 +1,29 @@
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Avatar from '@/shared/ui/Avatar/Avatar';
 import EditIcon from '../../assets/edit_Icon.svg';
 import SettingListItem, {
   SettingListItemProps,
 } from '@/features/setting/ui/SettingListItem';
-import {useHomeStackNavigation} from '@/app/navigation/RootNavigation';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { useHomeStackNavigation } from '@/app/navigation/RootNavigation';
+import { launchImageLibrary } from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
+import { useImageUpload } from '@/features/community/model/useImageUpload';
+import { useUpdateAvatar } from '@/features/setting/model/useUpdateAvatar';
+import { useUser } from '@/features/auth/model/useUser';
 
 const SettingsMainScreen = () => {
   const navigation = useHomeStackNavigation();
-  const [newImageUrls, setNewImageUrls] = useState<string[]>([]);
   const [formData, setFormData] = useState(new FormData());
-
+  const { data } = useUser();
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const { mutate: imageUploadMutate } = useImageUpload();
+  const { mutate: updateAvatarMutate } = useUpdateAvatar();
+  useEffect(() => {
+    if (data?.profile_img) {
+      setImageUrl(data.profile_img);
+    }
+  }, [data?.profile_img]);
   const settingListData: SettingListItemProps[] = useMemo(
     () => [
       {
@@ -39,26 +49,81 @@ const SettingsMainScreen = () => {
     ],
     [],
   );
+  const showYesOrNoAlert = useCallback(
+    () =>
+      Alert.alert('이미지를 저장하시겠습니까?', undefined, [
+        {
+          text: '아니오',
+          style: 'cancel',
+          onPress: () => {
+            setImageUrl(data?.profile_img ?? '');
+          },
+        },
+        {
+          text: '네', onPress: () => {
+            imageUploadMutate(
+              { requestBody: formData },
+              {
+                onSuccess: result => {
+                  updateAvatarMutate({
+                    imageKey: result.keys.at(0) ?? '',
+                  }, {
+                    onSuccess: () => {
+                      Toast.show({
+                        type: 'success',
+                        text1: '프로필 이미지를 업데이트 하였습니다',
+                        position: 'top',
+                        autoHide: true,
+                        visibilityTime: 2000,
+                      });
+                    }, onError: error => {
+                      Toast.show({
+                        type: 'error',
+                        text1: `프로필 이미지 업데이트 실패 - ${error.message}`,
+                        position: 'top',
+                        autoHide: true,
+                        visibilityTime: 2000,
+                      });
+                    },
+                  });
+                },
+                onError: error => {
+                  Toast.show({
+                    type: 'error',
+                    text1: `이미지 업로드 실패 - ${error.message}`,
+                    position: 'top',
+                    autoHide: true,
+                    visibilityTime: 2000,
+                  });
+                },
+              },
+            );
+          }
+        },
+      ]),
+    [data?.profile_img, formData],
+  );
 
   const openImagePicker = useCallback(async () => {
     try {
-      const albumResults = await launchImageLibrary({
+      const { assets, didCancel } = await launchImageLibrary({
         mediaType: 'photo',
         maxWidth: 120,
         maxHeight: 120,
         quality: 1,
         selectionLimit: 1,
       });
-      // 이미지를 선택했다면 저장하시겠냐고 팝업메시지 yes or no
-      showTwoButtonAlert();
-      setNewImageUrls(
-        albumResults.assets
+      if (didCancel) {
+        return;
+      }
+      setImageUrl(
+        assets
           ?.map(item => item.uri)
-          .filter((uri): uri is string => uri !== undefined) ?? [],
+          .filter((uri): uri is string => uri !== undefined).at(0) ?? '',
       );
       const newFormData = new FormData();
-      if (albumResults.assets) {
-        for (const item of albumResults.assets) {
+      if (assets) {
+        for (const item of assets) {
           newFormData.append('files', {
             uri: item.uri,
             type: item.type,
@@ -67,6 +132,7 @@ const SettingsMainScreen = () => {
         }
       }
       setFormData(newFormData);
+      showYesOrNoAlert();
     } catch {
       Toast.show({
         type: 'error',
@@ -76,27 +142,13 @@ const SettingsMainScreen = () => {
         visibilityTime: 2000,
       });
     }
-  }, []);
+  }, [showYesOrNoAlert]);
 
-  const showTwoButtonAlert = useCallback(
-    () =>
-      Alert.alert('이미지를 저장하시겠습니까?', undefined, [
-        {
-          text: '아니오',
-          onPress: () => {},
-          style: 'cancel',
-        },
-        {text: '네', onPress: () => {
-            //TODO: 이미지 업로드 && 프로픨 업데이트 api 
-        }},
-      ]),
-    [],
-  );
   return (
     <View style={styles.container}>
       <View style={styles.myInfoContainer}>
         <View style={styles.avatarContainer}>
-          <Avatar imageUrl={newImageUrls.at(0)} big />
+          <Avatar imageUrl={imageUrl} big />
           <TouchableOpacity
             onPress={openImagePicker}
             style={styles.editIconContainer}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet, ImageSourcePropType} from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 
 interface Props {
   big?: boolean;
@@ -7,7 +7,7 @@ interface Props {
   imageUrl?: string;
 }
 
-const Avatar = ({big = false, small = false, imageUrl = undefined}: Props) => {
+const Avatar = ({ big = false, small = false, imageUrl = undefined }: Props) => {
   return (
     <View
       style={[
@@ -19,7 +19,7 @@ const Avatar = ({big = false, small = false, imageUrl = undefined}: Props) => {
         },
       ]}>
       <Image
-        source={imageUrl ? {uri: imageUrl} : undefined}
+        source={imageUrl ? { uri: imageUrl } : undefined}
         style={styles.avatar}
       />
     </View>

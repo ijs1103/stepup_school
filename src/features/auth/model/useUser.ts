@@ -47,7 +47,7 @@ const queryFn = async (accessToken: string) => {
     });
     return response.data;
   } catch (error) {
-    console.warn(`useUser 에러 - ${error}`);
+    console.log(`useUser 에러 - ${error}`);
     throw new CustomError('내 정보 조회에 에러가 발생하였습니다.');
   }
 };
@@ -57,7 +57,7 @@ export const useUser = () => {
   const accessToken = userData?.access_token;
   console.log('accessToken', accessToken);
   return useQuery<User, Error>({
-    queryKey: ['/user/me', accessToken],
+    queryKey: ['/user/me', userData?.userId ?? ''],
     queryFn: () => {
       if (!accessToken) {
         throw new CustomError('인증 토큰이 없습니다.');

@@ -9,8 +9,8 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
 import WelcomeScreen from '@/screens/WelcomeScreen';
 import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
@@ -19,7 +19,7 @@ import BodyInfoScreen from '@/screens/BodyInfoScreen';
 import TermsAgreementScreen from '@/screens/TermsAgreementScreen';
 import SignUpCompleteScreen from '@/screens/SignUpCompleteScreen';
 import HomeScreen from '@/screens/HomeScreen';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import { useAuthStore } from '@/entities/user/model/stores/useAuthStore';
 import CustomTabBar from '@/shared/ui/CustomTabBar/CustomTabBar';
 import PedometerSettingsScreen from '@/screens/PedometerSettingsScreen';
 import RecordScreen from '@/screens/RecordScreen';
@@ -33,7 +33,7 @@ import RankingDetailScreen from '@/screens/RankingDetailScreen';
 import ChallengeScreen from '@/screens/ChallengeScreen';
 import ChallengeDetailScreen from '@/screens/ChallengeDetailScreen';
 import ParticipationDetailsScreen from '@/screens/ParticipationDetailsScreen';
-import {ParsedChallenge} from '@/features/\bchallenge/model/useChallengeList';
+import { ParsedChallenge } from '@/features/\bchallenge/model/useChallengeList';
 import SettingsMainScreen from '@/screens/SettingsMainScreen';
 
 const Tab = createBottomTabNavigator();
@@ -53,7 +53,7 @@ export const HomeStack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStacks = () => (
   <HomeStack.Navigator
-    initialRouteName={'Home'}
+    initialRouteName={'SettingsMain'}
     screenOptions={{
       headerShown: false,
       gestureEnabled: false,
@@ -176,7 +176,7 @@ type CommunityStackParams = {
   MyClassWeeklyChart: undefined;
   RankingDetail: undefined;
   Writing: undefined;
-  FeedDetail: {feedId: number};
+  FeedDetail: { feedId: number };
 };
 
 export const CommunityStack =
@@ -214,7 +214,7 @@ export const useCommunityStackRoute = <
 
 type ChallengeStackParams = {
   Challenge: undefined;
-  ChallengeDetail: {challenge: ParsedChallenge};
+  ChallengeDetail: { challenge: ParsedChallenge };
   ParticipationDetails: undefined;
 };
 
@@ -251,10 +251,10 @@ export const useChallengeStackRoute = <
 
 const MainTabs = () => (
   <Tab.Navigator
-    tabBar={({state, navigation}) => (
+    tabBar={({ state, navigation }) => (
       <CustomTabBar state={state} navigation={navigation} />
     )}
-    screenOptions={{headerShown: false}}>
+    screenOptions={{ headerShown: false }}>
     <Tab.Screen name={'HomeTab'} component={HomeStacks} />
     <Tab.Screen name={'RecordTab'} component={RecordStacks} />
     <Tab.Screen name={'MapTab'} component={MapStacks} />
@@ -318,11 +318,11 @@ export const useRootStackNavigation = <
 >() => useNavigation<NativeStackNavigationProp<RootStackParams, RouteName>>();
 
 const RootNavigation = () => {
-  const {isLoggedIn} = useAuthStore();
+  const { isLoggedIn } = useAuthStore();
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{headerShown: false}}>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
           <RootStack.Screen name="MainTabs" component={MainTabs} />
         ) : (
