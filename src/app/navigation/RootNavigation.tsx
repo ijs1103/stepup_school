@@ -53,7 +53,7 @@ export const HomeStack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStacks = () => (
   <HomeStack.Navigator
-    initialRouteName={'SettingsMain'}
+    initialRouteName={'Home'}
     screenOptions={{
       headerShown: false,
       gestureEnabled: false,

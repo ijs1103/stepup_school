@@ -1,10 +1,8 @@
-import {it} from '@jest/globals';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
 import {BASE_URL} from '@/shared/constants';
 import {CustomError} from '@/shared/lib/\bCustomError';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import {getTodayFormatDate} from '@/shared/lib/date/getTodayFormatDate';
 
 interface AxiosFnVariables {
   accessToken: string;

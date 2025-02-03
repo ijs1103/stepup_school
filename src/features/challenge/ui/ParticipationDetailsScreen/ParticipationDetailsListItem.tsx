@@ -1,21 +1,24 @@
-import {ProgressBar} from '@/shared/ui/ProgressBar';
-import {Spacer} from '@/shared/ui/Spacer';
+import { ProgressBar } from '@/shared/ui/ProgressBar';
+import { Spacer } from '@/shared/ui/Spacer';
 import React from 'react';
-import {View, StyleSheet, Image, Text} from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
+import { ParsedChallenge } from '../../model/useChallengeList';
 
-interface Props {}
+interface Props {
+  data: ParsedChallenge;
+}
 
-const ParticipationDetailsListItem = ({}: Props) => {
+const ParticipationDetailsListItem = ({ data }: Props) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{'하루만보 챌린지'}</Text>
-      <Text style={styles.date}>{'2024.11.11'}</Text>
+      <Text style={styles.title}>{data.title}</Text>
+      <Text style={styles.date}>{data.endDate}</Text>
       <Text style={styles.totalStat}>
-        <Text style={styles.currentStat}>{'3,444'}</Text>
-        {' / 10,000 걸음'}
+        <Text style={styles.currentStat}>{data.currentStat}</Text>
+        {` / ${data.goalStat} 걸음`}
       </Text>
       <Spacer size={10} />
-      <ProgressBar total={3444} now={15000} />
+      <ProgressBar total={data.goalStat} now={data.currentStat} />
     </View>
   );
 };

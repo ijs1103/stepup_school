@@ -1,32 +1,28 @@
-import {ProgressBar} from '@/shared/ui/ProgressBar';
+import { ProgressBar } from '@/shared/ui/ProgressBar';
 import React from 'react';
-import {View, StyleSheet, Pressable, Image, Text} from 'react-native';
-import {ParsedChallenge} from '../../model/useChallengeList';
-import {getRemainingHours} from '@/shared/lib/date/getRemainingHours';
+import { View, StyleSheet, Pressable, Image, Text } from 'react-native';
+import { ParsedChallenge } from '../../model/useChallengeList';
+import { getRemainingHours } from '@/shared/lib/date/getRemainingHours';
 
 interface Props {
   data: ParsedChallenge;
   navigateToDetail: () => void;
-  isDone?: boolean;
-  imageUrl?: string;
 }
 
 const ChallengeListItem = ({
   data,
   navigateToDetail,
-  isDone,
-  imageUrl,
 }: Props) => {
   return (
     <Pressable onPress={navigateToDetail} style={styles.container}>
       <View style={styles.hStack}>
         <Image
-          source={{uri: data.imageUrl}}
+          source={{ uri: data.imageUrl }}
           style={styles.image}
           resizeMode={'cover'}
         />
         <View style={styles.contentsContainer}>
-          <View style={{gap: 6}}>
+          <View style={{ gap: 6 }}>
             <Text style={styles.title} numberOfLines={1}>
               {data.title}
             </Text>
@@ -36,7 +32,7 @@ const ChallengeListItem = ({
                 : '종료'}
             </Text>
           </View>
-          <View style={{gap: 6}}>
+          <View style={{ gap: 6 }}>
             <Text style={styles.totalStat}>
               <Text
                 style={
