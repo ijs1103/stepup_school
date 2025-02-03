@@ -35,6 +35,8 @@ import ChallengeDetailScreen from '@/screens/ChallengeDetailScreen';
 import ParticipationDetailsScreen from '@/screens/ParticipationDetailsScreen';
 import { ParsedChallenge } from '@/features/\bchallenge/model/useChallengeList';
 import SettingsMainScreen from '@/screens/SettingsMainScreen';
+import AccountScreen from '@/screens/AccountScreen';
+import PasswordChangeScreen from '@/screens/PasswordChangeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,6 +46,7 @@ type HomeStackParams = {
   SettingsMain: undefined;
   Account: undefined;
   Notification: undefined;
+  PasswordChange: undefined;
   PersonalInfoChange: undefined;
   Achievement: undefined;
   AchievementDetail: undefined;
@@ -53,7 +56,7 @@ export const HomeStack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStacks = () => (
   <HomeStack.Navigator
-    initialRouteName={'Home'}
+    initialRouteName={'SettingsMain'}
     screenOptions={{
       headerShown: false,
       gestureEnabled: false,
@@ -66,6 +69,10 @@ const HomeStacks = () => (
     <HomeStack.Screen name={'SettingsMain'} component={SettingsMainScreen} />
     <HomeStack.Screen name={'Account'} component={AccountScreen} />
     <HomeStack.Screen name={'Notification'} component={NotificationScreen} />
+    <HomeStack.Screen
+      name={'PasswordChange'}
+      component={PasswordChangeScreen}
+    />
     <HomeStack.Screen
       name={'PersonalInfoChange'}
       component={PersonalInfoChangeScreen}
@@ -84,10 +91,6 @@ export const useHomeStackNavigation = <
 
 export const useHomeStackRoute = <RouteName extends keyof HomeStackParams>() =>
   useRoute<RouteProp<HomeStackParams, RouteName>>();
-
-const AccountScreen = () => {
-  return <Text>Settings</Text>;
-};
 
 const NotificationScreen = () => {
   return <Text>Settings</Text>;

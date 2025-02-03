@@ -1,4 +1,4 @@
-import {ChartCategory} from '../ui/MonthlyChart/MonthlyChart';
+import {ChartCategory} from '../ui/WeeklyChart/WeeklyChart';
 
 const BASE_URL = 'http://52.78.136.17:3000';
 
@@ -17,6 +17,7 @@ const FORM_ERROR_MESSAGE = {
   NICKNAME: '별명은 한글 2~10자까지 입력.',
   REQUIRED: '해당란을 입력해주세요.',
   PASSWORD_CHECK: '비밀번호가 일치하지 않습니다.',
+  PASSWORD_SAME: '현재 비밀번호와 다르게 설정하세요.',
 } as const;
 
 export interface FoodItem {
