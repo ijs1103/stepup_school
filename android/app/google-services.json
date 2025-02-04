@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "556506251818",
+    "project_id": "stepupschool-727d8",
+    "storage_bucket": "stepupschool-727d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556506251818:android:f42ee322ee59fe874b7953",
+        "android_client_info": {
+          "package_name": "com.stepupschool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXO1u5q2A_sA-NL3pv1E5xbEMss3OV5I8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

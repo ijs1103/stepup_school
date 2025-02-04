@@ -37,6 +37,7 @@ import { ParsedChallenge } from '@/features/\bchallenge/model/useChallengeList';
 import SettingsMainScreen from '@/screens/SettingsMainScreen';
 import AccountScreen from '@/screens/AccountScreen';
 import PasswordChangeScreen from '@/screens/PasswordChangeScreen';
+import PersonalInfoChangeScreen from '@/screens/PersonalInfoChangeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -93,10 +94,6 @@ export const useHomeStackRoute = <RouteName extends keyof HomeStackParams>() =>
   useRoute<RouteProp<HomeStackParams, RouteName>>();
 
 const NotificationScreen = () => {
-  return <Text>Settings</Text>;
-};
-
-const PersonalInfoChangeScreen = () => {
   return <Text>Settings</Text>;
 };
 
