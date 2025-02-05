@@ -57,7 +57,6 @@ const HomeScreen = () => {
   useErrorToast(weeklyErrorMessage);
 
   const myInfoHandler = useCallback(() => {
-    logout();
     navigation.navigate('SettingsMain');
   }, []);
 
