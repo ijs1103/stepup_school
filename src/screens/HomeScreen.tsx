@@ -45,11 +45,15 @@ const HomeScreen = () => {
   } = useGoogleFitSetup();
   const {
     data,
-    refetch,
+    refetch: dailyDataRefetch,
     isRefetching,
     errorMessage: dailyErrorMessage,
   } = useDailyActivityStats();
-  const {stepCountData, errorMessage: weeklyErrorMessage} = useActivityStats({
+  const {
+    stepCountData,
+    errorMessage: weeklyErrorMessage,
+    refetch: weeklyDataRefetch,
+  } = useActivityStats({
     startDate: getThisWeekMonday(),
   });
   const {targetStepCount} = useTargetStepCountStore();
@@ -145,7 +149,10 @@ const HomeScreen = () => {
       refreshControl={
         <RefreshControl
           refreshing={isRefetching}
-          onRefresh={refetch}
+          onRefresh={() => {
+            dailyDataRefetch();
+            weeklyDataRefetch();
+          }}
           tintColor={'#FB970C'}
           colors={['#FB970C']}
         />

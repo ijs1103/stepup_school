@@ -166,7 +166,9 @@ const SettingsMainScreen = () => {
           <TouchableOpacity
             onPress={openImagePicker}
             style={styles.editIconContainer}>
-            <EditIcon width={52} height={52} />
+            <View style={styles.iconWrapper}>
+              <EditIcon width={52} height={52} />
+            </View>
           </TouchableOpacity>
         </View>
         <Text style={styles.userName}>{'김철수'}</Text>
@@ -197,8 +199,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: -20,
-    borderRadius: 12,
-    padding: 4,
+  },
+  iconWrapper: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 26,
+    padding: 0,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
