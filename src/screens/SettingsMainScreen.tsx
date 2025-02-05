@@ -1,24 +1,25 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import Avatar from '@/shared/ui/Avatar/Avatar';
 import EditIcon from '../../assets/edit_Icon.svg';
 import SettingListItem, {
   SettingListItemProps,
 } from '@/features/setting/ui/SettingListItem';
-import { useHomeStackNavigation } from '@/app/navigation/RootNavigation';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {useHomeStackNavigation} from '@/app/navigation/RootNavigation';
+import {launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
-import { useImageUpload } from '@/features/community/model/useImageUpload';
-import { useUpdateAvatar } from '@/features/setting/model/useUpdateAvatar';
-import { useUser } from '@/features/auth/model/useUser';
+import {useImageUpload} from '@/features/community/model/useImageUpload';
+import {useUpdateAvatar} from '@/features/setting/model/useUpdateAvatar';
+import {useUser} from '@/features/auth/model/useUser';
+import {NavBar} from '@/shared/ui/NavBar';
 
 const SettingsMainScreen = () => {
   const navigation = useHomeStackNavigation();
   const [formData, setFormData] = useState(new FormData());
-  const { data } = useUser();
+  const {data} = useUser();
   const [imageUrl, setImageUrl] = useState<string>('');
-  const { mutate: imageUploadMutate } = useImageUpload();
-  const { mutate: updateAvatarMutate } = useUpdateAvatar();
+  const {mutate: imageUploadMutate} = useImageUpload();
+  const {mutate: updateAvatarMutate} = useUpdateAvatar();
   useEffect(() => {
     if (data?.profile_img) {
       setImageUrl(data.profile_img);
@@ -60,32 +61,37 @@ const SettingsMainScreen = () => {
           },
         },
         {
-          text: '네', onPress: () => {
+          text: '네',
+          onPress: () => {
             imageUploadMutate(
-              { requestBody: formData },
+              {requestBody: formData},
               {
                 onSuccess: result => {
-                  updateAvatarMutate({
-                    imageKey: result.keys.at(0) ?? '',
-                  }, {
-                    onSuccess: () => {
-                      Toast.show({
-                        type: 'success',
-                        text1: '프로필 이미지를 업데이트 하였습니다',
-                        position: 'top',
-                        autoHide: true,
-                        visibilityTime: 2000,
-                      });
-                    }, onError: error => {
-                      Toast.show({
-                        type: 'error',
-                        text1: `프로필 이미지 업데이트 실패 - ${error.message}`,
-                        position: 'top',
-                        autoHide: true,
-                        visibilityTime: 2000,
-                      });
+                  updateAvatarMutate(
+                    {
+                      imageKey: result.keys.at(0) ?? '',
                     },
-                  });
+                    {
+                      onSuccess: () => {
+                        Toast.show({
+                          type: 'success',
+                          text1: '프로필 이미지를 업데이트 하였습니다',
+                          position: 'top',
+                          autoHide: true,
+                          visibilityTime: 2000,
+                        });
+                      },
+                      onError: error => {
+                        Toast.show({
+                          type: 'error',
+                          text1: `프로필 이미지 업데이트 실패 - ${error.message}`,
+                          position: 'top',
+                          autoHide: true,
+                          visibilityTime: 2000,
+                        });
+                      },
+                    },
+                  );
                 },
                 onError: error => {
                   Toast.show({
@@ -98,7 +104,7 @@ const SettingsMainScreen = () => {
                 },
               },
             );
-          }
+          },
         },
       ]),
     [data?.profile_img, formData],
@@ -106,7 +112,7 @@ const SettingsMainScreen = () => {
 
   const openImagePicker = useCallback(async () => {
     try {
-      const { assets, didCancel } = await launchImageLibrary({
+      const {assets, didCancel} = await launchImageLibrary({
         mediaType: 'photo',
         maxWidth: 120,
         maxHeight: 120,
@@ -119,7 +125,8 @@ const SettingsMainScreen = () => {
       setImageUrl(
         assets
           ?.map(item => item.uri)
-          .filter((uri): uri is string => uri !== undefined).at(0) ?? '',
+          .filter((uri): uri is string => uri !== undefined)
+          .at(0) ?? '',
       );
       const newFormData = new FormData();
       if (assets) {
@@ -146,6 +153,7 @@ const SettingsMainScreen = () => {
 
   return (
     <View style={styles.container}>
+      <NavBar backButtonIcon={'ArrowBackGray'} />
       <View style={styles.myInfoContainer}>
         <View style={styles.avatarContainer}>
           <Avatar imageUrl={imageUrl} big />
