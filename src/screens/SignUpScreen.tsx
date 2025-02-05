@@ -10,12 +10,18 @@ import {useUserSignupStore} from '@/entities/user/model/stores';
 import {useAuthStackNavigation} from '@/app/navigation/RootNavigation';
 import {KeyboardAvoidingLayout} from '@/shared/ui/KeyboardAvoidingLayout';
 import {ISignUpForm} from '@/features/auth/model/types';
+import {useCheckUserId} from '@/features/auth/model/useCheckUserId';
+import {useCheckNickname} from '@/features/setting/model/useCheckNickname';
+import Toast from 'react-native-toast-message';
 
 const SignUpScreen = () => {
   const navigation = useAuthStackNavigation();
   const nicknameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
+  const {mutate: CheckUserIdMutate} = useCheckUserId();
+  const {mutate: CheckNickNameMutate} = useCheckNickname();
+
   const {
     control,
     handleSubmit,
@@ -23,14 +29,83 @@ const SignUpScreen = () => {
   } = useForm<ISignUpForm>({mode: 'onChange'});
   const {setAuthInfo} = useUserSignupStore();
   const onValid = useCallback(
-    ({USERID, NAME, NICKNAME, PASSWORD}: ISignUpForm) => {
-      setAuthInfo({
-        userId: USERID,
-        name: NAME,
-        nickname: NICKNAME,
-        password: PASSWORD,
-      });
-      navigation.navigate('SchoolInfo');
+    async ({USERID, NAME, NICKNAME, PASSWORD}: ISignUpForm) => {
+      try {
+        await new Promise<void>((resolve, reject) => {
+          CheckUserIdMutate(
+            {userId: USERID},
+            {
+              onSuccess: result => {
+                if (result.available) {
+                  resolve();
+                } else {
+                  Toast.show({
+                    type: 'error',
+                    text1: '아이디가 중복됩니다.',
+                    position: 'top',
+                    autoHide: true,
+                    visibilityTime: 2000,
+                  });
+                  reject(new Error('아이디 중복'));
+                }
+              },
+              onError: error => {
+                Toast.show({
+                  type: 'error',
+                  text1: `아이디 중복 검증 에러 -${error}`,
+                  position: 'top',
+                  autoHide: true,
+                  visibilityTime: 2000,
+                });
+                reject(new Error('아이디 중복 검증 에러'));
+              },
+            },
+          );
+        });
+
+        await new Promise<void>((resolve, reject) => {
+          CheckNickNameMutate(
+            {nickname: NICKNAME},
+            {
+              onSuccess: result => {
+                if (result.available) {
+                  resolve();
+                } else {
+                  Toast.show({
+                    type: 'error',
+                    text1: '닉네임이 중복됩니다.',
+                    position: 'top',
+                    autoHide: true,
+                    visibilityTime: 2000,
+                  });
+                  reject(new Error('닉네임 중복'));
+                }
+              },
+              onError: error => {
+                Toast.show({
+                  type: 'error',
+                  text1: `닉네임 중복 검증 에러 -${error}`,
+                  position: 'top',
+                  autoHide: true,
+                  visibilityTime: 2000,
+                });
+                reject(new Error('닉네임 중복 검증 에러'));
+              },
+            },
+          );
+        });
+
+        setAuthInfo({
+          userId: USERID,
+          name: NAME,
+          nickname: NICKNAME,
+          password: PASSWORD,
+        });
+        navigation.navigate('SchoolInfo');
+      } catch (error) {
+        console.log(error);
+        return;
+      }
     },
     [navigation, setAuthInfo],
   );

@@ -1,5 +1,6 @@
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import Avatar from '@/shared/ui/Avatar/Avatar';
 import EditIcon from '../../assets/edit_Icon.svg';
 import SettingListItem, {
@@ -16,10 +17,15 @@ import {NavBar} from '@/shared/ui/NavBar';
 const SettingsMainScreen = () => {
   const navigation = useHomeStackNavigation();
   const [formData, setFormData] = useState(new FormData());
-  const {data} = useUser();
+  const {data, refetch} = useUser();
   const [imageUrl, setImageUrl] = useState<string>('');
   const {mutate: imageUploadMutate} = useImageUpload();
   const {mutate: updateAvatarMutate} = useUpdateAvatar();
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
   useEffect(() => {
     if (data?.profile_img) {
       setImageUrl(data.profile_img);
