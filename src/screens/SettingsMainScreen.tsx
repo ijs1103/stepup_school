@@ -19,6 +19,7 @@ const SettingsMainScreen = () => {
   const [formData, setFormData] = useState(new FormData());
   const {data, refetch} = useUser();
   const [imageUrl, setImageUrl] = useState<string>('');
+  const [shouldShowAlert, setShouldShowAlert] = useState(false);
   const {mutate: imageUploadMutate} = useImageUpload();
   const {mutate: updateAvatarMutate} = useUpdateAvatar();
   useFocusEffect(
@@ -145,7 +146,7 @@ const SettingsMainScreen = () => {
         }
       }
       setFormData(newFormData);
-      showYesOrNoAlert();
+      setShouldShowAlert(true);
     } catch {
       Toast.show({
         type: 'error',
@@ -155,7 +156,14 @@ const SettingsMainScreen = () => {
         visibilityTime: 2000,
       });
     }
-  }, [showYesOrNoAlert]);
+  }, []);
+
+  useEffect(() => {
+    if (shouldShowAlert) {
+      showYesOrNoAlert();
+      setShouldShowAlert(false);
+    }
+  }, [shouldShowAlert, showYesOrNoAlert]);
 
   return (
     <View style={styles.container}>
@@ -171,9 +179,12 @@ const SettingsMainScreen = () => {
             </View>
           </TouchableOpacity>
         </View>
-        <Text style={styles.userName}>{'김철수'}</Text>
-        <Text style={styles.schoolName}>{'제물포고등학교'}</Text>
-        <Text style={styles.gradeClassName}>{'2학년 1반'}</Text>
+        <Text style={styles.userName}>{data?.name}</Text>
+        <Text style={styles.schoolName}>{data?.school.name}</Text>
+        <Text
+          style={
+            styles.gradeClassName
+          }>{`${data?.class.class_number}학년 ${data?.grade}반`}</Text>
       </View>
       {settingListData.map(item => {
         return <SettingListItem key={item.title} {...item} />;
