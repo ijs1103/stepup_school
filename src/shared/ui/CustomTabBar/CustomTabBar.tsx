@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import HomeIconSelected from '../../../../assets/tab_home_selected.svg';
 import HomeIconUnselected from '../../../../assets/tab_home_unselected.svg';
 import RecordIconSelected from '../../../../assets/tab_record_selected.svg';
@@ -15,18 +15,30 @@ import {
   ParamListBase,
   TabNavigationState,
 } from '@react-navigation/native';
-import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs';
+import {BottomTabNavigationEventMap} from '@react-navigation/bottom-tabs';
 
 interface Props {
   state: TabNavigationState<ParamListBase>;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
 }
 
-const CustomTabBar = ({ state, navigation }: Props) => {
+const CustomTabBar = ({state, navigation}: Props) => {
   const route = state.routes[state.index];
   const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 
-  if (['Writing', 'FeedDetail', 'WeeklyRecord', 'MonthlyRecord', 'MyClassWeeklyChart', 'RankingDetail', 'PasswordChange', 'PersonalInfoChange'].includes(routeName)) {
+  if (
+    [
+      'Writing',
+      'FeedDetail',
+      'WeeklyRecord',
+      'MonthlyRecord',
+      'MyClassWeeklyChart',
+      'RankingDetail',
+      'PasswordChange',
+      'PersonalInfoChange',
+      'BodyInfoChange',
+    ].includes(routeName)
+  ) {
     return null;
   }
 

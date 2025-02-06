@@ -25,7 +25,7 @@ interface Class {
   year: number;
 }
 
-interface User {
+export interface UserMe {
   id: number;
   userId: string;
   name: string;
@@ -56,7 +56,7 @@ export const useUser = () => {
   const {userData} = useAuthStore();
   const accessToken = userData?.access_token;
   console.log('accessToken', accessToken);
-  return useQuery<User, Error>({
+  return useQuery<UserMe, Error>({
     queryKey: ['/user/me', userData?.userId ?? ''],
     queryFn: () => {
       if (!accessToken) {

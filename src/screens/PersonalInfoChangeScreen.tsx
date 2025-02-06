@@ -1,7 +1,6 @@
 import {useHomeStackNavigation} from '@/app/navigation/RootNavigation';
 import {useCheckNickname} from '@/features/setting/model/useCheckNickname';
 import {useUpdateNickname} from '@/features/setting/model/useUpdateNickname';
-import {useUpdateUser} from '@/features/setting/model/useUpdateUser';
 import {FORM_ERROR_MESSAGE, REGEX} from '@/shared/constants';
 import {CustomButton} from '@/shared/ui/CustomButton';
 import {NavBar} from '@/shared/ui/NavBar';
@@ -30,8 +29,8 @@ const PersonalInfoChangeScreen = () => {
   } = useForm<IForm>({mode: 'onChange'});
   const {mutate: checkNicknameMutate} = useCheckNickname();
   const {mutate: updateNicknameMutate} = useUpdateNickname();
-  const navigateToPersonalInfoChange = useCallback(() => {
-    navigation.navigate('PersonalInfoChange');
+  const navigateToBodyInfoChange = useCallback(() => {
+    navigation.navigate('BodyInfoChange');
   }, []);
   const onValid = ({nickname}: IForm) => {
     checkNicknameMutate(
@@ -112,7 +111,7 @@ const PersonalInfoChangeScreen = () => {
           )}
           <Spacer size={34} />
           <TouchableOpacity
-            onPress={navigateToPersonalInfoChange}
+            onPress={navigateToBodyInfoChange}
             style={styles.bodyInfoChangeButton}>
             <Text>{'신체 정보 수정'}</Text>
           </TouchableOpacity>
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   label: {
-    fontWeight: 500,
+    fontWeight: '500',
     fontSize: 16,
     lineHeight: 19,
     color: '#423836',

@@ -38,6 +38,7 @@ import SettingsMainScreen from '@/screens/SettingsMainScreen';
 import AccountScreen from '@/screens/AccountScreen';
 import PasswordChangeScreen from '@/screens/PasswordChangeScreen';
 import PersonalInfoChangeScreen from '@/screens/PersonalInfoChangeScreen';
+import BodyInfoChangeScreen from '@/screens/BodyInfoChangeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +50,7 @@ type HomeStackParams = {
   Notification: undefined;
   PasswordChange: undefined;
   PersonalInfoChange: undefined;
+  BodyInfoChange: undefined;
   Achievement: undefined;
   AchievementDetail: undefined;
 };
@@ -77,6 +79,10 @@ const HomeStacks = () => (
     <HomeStack.Screen
       name={'PersonalInfoChange'}
       component={PersonalInfoChangeScreen}
+    />
+    <HomeStack.Screen
+      name={'BodyInfoChange'}
+      component={BodyInfoChangeScreen}
     />
     <HomeStack.Screen name={'Achievement'} component={AchievementScreen} />
     <HomeStack.Screen

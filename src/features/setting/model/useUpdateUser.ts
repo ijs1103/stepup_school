@@ -1,8 +1,9 @@
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import axios from 'axios';
 import {BASE_URL} from '@/shared/constants';
 import {CustomError} from '@/shared/lib/\bCustomError';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {UserMe} from '@/features/auth/model/useUser';
 
 interface MutationVariables {
   height: number;
@@ -29,6 +30,9 @@ interface User {
   profile_img: string;
   donatable_walk: number;
 }
+interface MutationContext {
+  previousUserInfo?: UserMe;
+}
 
 const axiosFn = async ({
   accessToken,
@@ -37,7 +41,7 @@ const axiosFn = async ({
 }: AxiosFnVariables): Promise<User> => {
   try {
     const response = await axios.patch<User>(
-      `${BASE_URL}/user/password`,
+      `${BASE_URL}/user`,
       {height, weight},
       {
         headers: {
@@ -53,14 +57,51 @@ const axiosFn = async ({
 };
 
 export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
   const {userData} = useAuthStore();
   const accessToken = userData?.access_token;
-  return useMutation<User, CustomError, MutationVariables>({
+  return useMutation<User, CustomError, MutationVariables, MutationContext>({
     mutationFn: ({height, weight}) => {
       if (!accessToken) {
         throw new CustomError('인증 토큰이 없습니다.');
       }
       return axiosFn({accessToken, height, weight});
+    },
+    onMutate: async newUserInfo => {
+      await queryClient.cancelQueries({
+        queryKey: ['/user/me', userData?.userId ?? ''],
+      });
+
+      const previousUserInfo = queryClient.getQueryData<UserMe>([
+        '/user/me',
+        userData?.userId ?? '',
+      ]);
+
+      if (previousUserInfo) {
+        const updatedUserInfo = {
+          ...previousUserInfo,
+          height: newUserInfo.height ?? previousUserInfo.height,
+          weight: newUserInfo.weight ?? previousUserInfo.weight,
+        };
+        queryClient.setQueryData<UserMe>(
+          ['/user/me', userData?.userId ?? ''],
+          updatedUserInfo,
+        );
+      }
+      return {previousUserInfo};
+    },
+    onError: (err, newUserInfo, context) => {
+      if (context?.previousUserInfo) {
+        queryClient.setQueryData(
+          ['/user/me', userData?.userId ?? ''],
+          context.previousUserInfo,
+        );
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['/user/me', userData?.userId ?? ''],
+      });
     },
   });
 };
