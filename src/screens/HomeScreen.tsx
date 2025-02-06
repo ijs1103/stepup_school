@@ -59,7 +59,6 @@ const HomeScreen = () => {
   const {targetStepCount} = useTargetStepCountStore();
   useErrorToast(dailyErrorMessage);
   useErrorToast(weeklyErrorMessage);
-
   const myInfoHandler = useCallback(() => {
     navigation.navigate('SettingsMain');
   }, []);

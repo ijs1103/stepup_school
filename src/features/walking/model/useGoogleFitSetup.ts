@@ -29,11 +29,26 @@ const useGoogleFitSetup = (): GoogleFitSetupResult => {
       hasRequestedPermissions: false,
     };
   }
-
   const [hasPermissions, setHasPermissions] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const hasRequestedPermissions = useRef(false);
   const appState = useRef(AppState.currentState);
+
+  const googleFitRecording = async () => {
+    return new Promise((resolve, reject) => {
+      GoogleFit.startRecording(
+        callback => {
+          if (callback.recording) {
+            console.log('Google Fit recording started successfully');
+            resolve(callback);
+          } else {
+            reject(new Error('Failed to start Google Fit recording'));
+          }
+        },
+        ['step'],
+      );
+    });
+  };
 
   const authorizeGoogleFit = async () => {
     const authorized = await GoogleFit.authorize(GOOGLE_FIT_OPTIONS);
@@ -62,10 +77,11 @@ const useGoogleFitSetup = (): GoogleFitSetupResult => {
           'change',
           handleAppStateChange,
         );
+        await googleFitRecording();
         return () => subscription.remove();
       } catch (error) {
         setErrorMessage(ERROR_MESSAGES.SETUP_ERROR);
-        console.log('google fit 초기설정 에러 - ', error);
+        console.log(error);
       }
     };
 

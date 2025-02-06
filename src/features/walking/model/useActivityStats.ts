@@ -24,6 +24,7 @@ interface Result {
   activityStats: ActivityStats;
   errorMessage: string;
   refetch: () => void;
+  isRefetching: boolean;
 }
 
 export const useActivityStats = ({
@@ -36,7 +37,15 @@ export const useActivityStats = ({
   );
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
-  const getSteps = async (startDate: string, endDate: string) => {
+  const [isRefetching, setIsRefetching] = useState(false);
+  const getSteps = async (
+    startDate: string,
+    endDate: string,
+    isRefetch: boolean = false,
+  ) => {
+    if (isRefetch) {
+      setIsRefetching(true);
+    }
     if (Platform.OS === 'ios') {
       AppleHealthKit.getDailyStepCountSamples(
         {
@@ -86,6 +95,9 @@ export const useActivityStats = ({
             Object.entries(steps).sort(([a], [b]) => sortByDate(a, b)),
           );
           setStepCountData(sortedSteps);
+          if (isRefetch) {
+            setIsRefetching(false);
+          }
         },
       );
     } else {
@@ -103,7 +115,6 @@ export const useActivityStats = ({
           bucketUnit: BucketUnit.DAY,
           bucketInterval: 1,
         });
-        console.log('google Fit results', results[2].steps);
         const filledDatas = fillMissingDates(
           results[2].steps,
           startDate,
@@ -114,11 +125,14 @@ export const useActivityStats = ({
         );
         setTotalSteps(totalStepsCount);
         const stepcountData = convertGoogleFitToStepcountData(filledDatas);
-        console.log('parsed results', stepcountData);
         setStepCountData(stepcountData);
       } catch (error) {
-        console.log('안드로이드 특정기간 걸음수 데이터 에러 - ', error);
-        setErrorMessage(`특정기간 걸음수 데이터 가져오기 오류: ${error}`);
+        console.log('안드로이드 특정기간 걸음수 데이터 에러');
+        // setErrorMessage('특정기간 걸음수 데이터 가져오기 오류');
+      } finally {
+        if (isRefetch) {
+          setIsRefetching(false);
+        }
       }
     }
   };
@@ -128,12 +142,8 @@ export const useActivityStats = ({
   }, []);
 
   const refetch = useCallback(() => {
-    getSteps(startDate, endDate);
+    getSteps(startDate, endDate, true);
   }, [startDate, endDate]);
-
-  useEffect(() => {
-    refetch();
-  }, []);
 
   return {
     stepCountData,
@@ -147,5 +157,6 @@ export const useActivityStats = ({
         },
     errorMessage,
     refetch,
+    isRefetching,
   };
 };

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AppState, AppStateStatus, Platform} from 'react-native';
+import {Alert, AppState, AppStateStatus, Platform} from 'react-native';
 import {initialize, requestPermission} from 'react-native-health-connect';
 
 const useHealthConnectSetup = () => {

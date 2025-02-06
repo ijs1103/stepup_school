@@ -39,6 +39,7 @@ import AccountScreen from '@/screens/AccountScreen';
 import PasswordChangeScreen from '@/screens/PasswordChangeScreen';
 import PersonalInfoChangeScreen from '@/screens/PersonalInfoChangeScreen';
 import BodyInfoChangeScreen from '@/screens/BodyInfoChangeScreen';
+import AchievementScreen from '@/screens/AchievementScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -100,10 +101,6 @@ export const useHomeStackRoute = <RouteName extends keyof HomeStackParams>() =>
   useRoute<RouteProp<HomeStackParams, RouteName>>();
 
 const NotificationScreen = () => {
-  return <Text>Settings</Text>;
-};
-
-const AchievementScreen = () => {
   return <Text>Settings</Text>;
 };
 

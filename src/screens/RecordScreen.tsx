@@ -1,7 +1,6 @@
 import {useRecordStackNavigation} from '@/app/navigation/RootNavigation';
 import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
 import {useTargetStepCountStore} from '@/entities/user/model/stores/useTargetStepCountStore';
-import {useDailyActivityStats} from '@/features/walking/\bmodel/useDailyActivityStats';
 import {useActivityStats} from '@/features/walking/model/useActivityStats';
 import {
   matchFoodByCalories,
@@ -21,6 +20,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import OptionButton from '../../assets/option_button.svg';
 import useErrorToast from '@/shared/lib/hooks/useErrorToast';
@@ -28,27 +28,32 @@ import useErrorToast from '@/shared/lib/hooks/useErrorToast';
 const RecordScreen = () => {
   const navigation = useRecordStackNavigation();
   const {userData} = useAuthStore();
-  const {data, errorMessage: dailyErrorMessage} = useDailyActivityStats();
-  const {stepCountData, errorMessage: weeklyErrorMessage} = useActivityStats({
+  const {
+    stepCountData,
+    activityStats: weeklyActivityStats,
+    errorMessage: weeklyErrorMessage,
+    refetch: weeklyDataRefetch,
+    isRefetching,
+  } = useActivityStats({
     startDate: getThisWeekMonday(),
   });
   const {
     activityStats: monthlyActivityStats,
     errorMessage: monthlyErrorMessage,
+    refetch: monthlyDataRefetch,
   } = useActivityStats({startDate: getFirstDayOfMonth()});
   const {targetStepCount} = useTargetStepCountStore();
-  useErrorToast(dailyErrorMessage);
   useErrorToast(weeklyErrorMessage);
   useErrorToast(monthlyErrorMessage);
 
   const targetActivityData = useMemo(() => {
     return matchTargetActivityData(
       userData?.gender ?? true,
-      targetStepCount,
-      data.burnedCalories,
-      data.distance,
+      targetStepCount * 7,
+      weeklyActivityStats?.burnedCalories ?? 0,
+      weeklyActivityStats?.distance ?? 0,
     );
-  }, [data, targetStepCount, userData?.gender]);
+  }, [weeklyActivityStats, targetStepCount, userData?.gender]);
 
   const navigateToWeeklyRecord = useCallback(() => {
     navigation.navigate('WeeklyRecord');
@@ -59,7 +64,19 @@ const RecordScreen = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetching}
+          onRefresh={() => {
+            weeklyDataRefetch();
+            monthlyDataRefetch();
+          }}
+          tintColor={'#FB970C'}
+          colors={['#FB970C']}
+        />
+      }>
       <View style={styles.header}>
         <Text style={styles.title}>{'기록'}</Text>
         <Text style={styles.todayText}>{getTodayFormatDate(new Date())}</Text>
@@ -67,9 +84,9 @@ const RecordScreen = () => {
       <View style={styles.activityViewContainer}>
         <ActivityView
           data={{
-            calorie: data.burnedCalories,
-            time: data.walkingTime,
-            distance: data.distance,
+            calorie: weeklyActivityStats?.burnedCalories ?? 0,
+            time: weeklyActivityStats?.walkingTime ?? 0,
+            distance: weeklyActivityStats?.distance ?? 0,
           }}
           iconColor={'#fff'}
           textColor={'#FDCA81'}
@@ -85,8 +102,9 @@ const RecordScreen = () => {
       </View>
       <View style={styles.dailyBurnedCaloriesViewContainer}>
         <DailyBurnedCaloriesView
-          food={matchFoodByCalories(data.burnedCalories)}
+          food={matchFoodByCalories(stepCountData?.burnedCalories ?? 0)}
           targetActivityData={targetActivityData}
+          isWeekly
         />
       </View>
       <View style={styles.monthlyStatisticsViewContainer}>

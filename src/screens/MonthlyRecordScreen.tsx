@@ -32,11 +32,10 @@ const MonthlyRecordScreen = () => {
       ? new Date().toISOString()
       : getLastDayOfMonth(currentMonth),
   });
-  console.log('activityStats', activityStats);
 
   useEffect(() => {
     refetch();
-  }, [isCurrentMonth, refetch]);
+  }, [currentMonth]);
 
   const [selectedCategory, setSelectedCategory] =
     useState<ChartCategory>('stepCount');

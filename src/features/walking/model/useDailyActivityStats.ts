@@ -76,8 +76,8 @@ export const useDailyActivityStats = (): Result => {
         const stepCount = results[2].steps[0].value;
         setDailyStepCount(stepCount);
       } catch (error) {
-        console.log('안드로이드 일간 걸음수 데이터 에러 - ', error);
-        setErrorMessage(`일간 걸음수 데이터 가져오기 오류: ${error}`);
+        console.log('안드로이드 일간 걸음수 데이터 에러');
+        // setErrorMessage('일간 걸음수 데이터 가져오기 오류');
         setDailyStepCount(0);
       } finally {
         if (isRefetch) {
