@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ArrowBackWhite from '../../../../assets/arrow_back.svg';
 import ArrowBackGray from '../../../../assets/arrow_back_gray.svg';
@@ -20,24 +20,26 @@ const NavBar = ({ title, titleColor = '#fff', backButtonIcon, leftTitle, rightIt
     }, [goBack]);
 
     return (
-        <View style={styles.header}>
-            <View style={styles.left}>
-                {canGoBack() && <TouchableOpacity onPress={goBackHandler}>
-                    {backButtonIcon === 'ArrowBackGray' && <ArrowBackGray />}
-                    {backButtonIcon === 'ArrowBackWhite' && <ArrowBackWhite />}
-                    {backButtonIcon === 'ChevronBack' && <ChevronBack />}
-                </TouchableOpacity>}
-                {leftTitle && <Text style={styles.leftTitle}>leftTitle</Text>
-                }
-            </View>
-            <View style={styles.center}>
-                <Text numberOfLines={1} style={[styles.title, { color: titleColor }]}>
-                    {title}
-                </Text>
-            </View>
-            <View style={styles.right}>
-                <View style={styles.rightItem}>
-                    {rightItem}
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" />
+            <View style={styles.header}>
+                <View style={styles.left}>
+                    {canGoBack() && <TouchableOpacity onPress={goBackHandler}>
+                        {backButtonIcon === 'ArrowBackGray' && <ArrowBackGray />}
+                        {backButtonIcon === 'ArrowBackWhite' && <ArrowBackWhite />}
+                        {backButtonIcon === 'ChevronBack' && <ChevronBack />}
+                    </TouchableOpacity>}
+                    {leftTitle && <Text style={styles.leftTitle}>leftTitle</Text>}
+                </View>
+                <View style={styles.center}>
+                    <Text numberOfLines={1} style={[styles.title, { color: titleColor }]}>
+                        {title}
+                    </Text>
+                </View>
+                <View style={styles.right}>
+                    <View>
+                        {rightItem}
+                    </View>
                 </View>
             </View>
         </View>
@@ -47,6 +49,9 @@ const NavBar = ({ title, titleColor = '#fff', backButtonIcon, leftTitle, rightIt
 export default NavBar;
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'transparent',
+    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -74,8 +79,5 @@ const styles = StyleSheet.create({
     right: {
         flex: 1,
         alignItems: 'flex-end',
-    },
-    rightItem: {
-
     },
 });
