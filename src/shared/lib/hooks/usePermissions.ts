@@ -1,10 +1,5 @@
-import {useState, useEffect, useRef, useCallback} from 'react';
-import {
-  Platform,
-  PermissionsAndroid,
-  AppState,
-  AppStateStatus,
-} from 'react-native';
+import {useState, useEffect, useCallback} from 'react';
+import {Platform, PermissionsAndroid} from 'react-native';
 import {
   request,
   PERMISSIONS,
@@ -18,23 +13,25 @@ type PermissionStatuses = {
   notifications: PermissionStatus | undefined;
   photoLibrary: PermissionStatus | undefined;
   activityRecognition: PermissionStatus | undefined;
+  bodySensors: PermissionStatus | undefined;
 };
 
 const usePermissions = () => {
+  const [isCompleted, setIsCompleted] = useState(false);
   const [permissions, setPermissions] = useState<PermissionStatuses>({
     locationAlways: undefined,
     notifications: undefined,
     photoLibrary: undefined,
     activityRecognition: undefined,
+    bodySensors: undefined,
   });
-  const [hasRequestedPermissions, setHasRequestedPermissions] = useState(false);
-  const appState = useRef(AppState.currentState);
 
   const requestPermissions = useCallback(async () => {
     let locationAlways: PermissionStatus | undefined,
       notifications: PermissionStatus | undefined,
       photoLibrary: PermissionStatus | undefined,
-      activityRecognition: PermissionStatus | undefined;
+      activityRecognition: PermissionStatus | undefined,
+      bodySensors: PermissionStatus | undefined;
 
     if (Platform.OS === 'ios') {
       locationAlways = await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
@@ -92,37 +89,33 @@ const usePermissions = () => {
             buttonPositive: '허용',
           },
         )) as PermissionStatus;
+
+        bodySensors = (await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
+        )) as PermissionStatus;
       } catch (err) {
         console.log('권한요청 에러발생 -', err);
       }
     }
 
-    setPermissions({locationAlways, notifications, photoLibrary, activityRecognition});
-    setHasRequestedPermissions(true);
+    setPermissions({
+      locationAlways,
+      notifications,
+      photoLibrary,
+      activityRecognition,
+      bodySensors,
+    });
   }, []);
 
   useEffect(() => {
-    requestPermissions();
-    const subscription = AppState.addEventListener(
-      'change',
-      (nextAppState: AppStateStatus) => {
-        if (
-          appState.current.match(/inactive|background/) &&
-          nextAppState === 'active'
-        ) {
-          console.log('App has come to the foreground!');
-          requestPermissions();
-        }
-        appState.current = nextAppState;
-      },
-    );
-
-    return () => {
-      subscription.remove();
+    const initializePermissions = async () => {
+      await requestPermissions();
+      setIsCompleted(true);
     };
-  }, [requestPermissions]);
+    initializePermissions();
+  }, []);
 
-  return {permissions, hasRequestedPermissions};
+  return {permissions, isCompleted};
 };
 
 export default usePermissions;

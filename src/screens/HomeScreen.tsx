@@ -1,48 +1,47 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Platform,
 } from 'react-native';
 import usePermissions from '@/shared/lib/hooks/usePermissions';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import { useAuthStore } from '@/entities/user/model/stores/useAuthStore';
 import StepupLogo from '../../assets/stepup_logo_small.svg';
 import MyInfo from '../../assets/my_info.svg';
-import {useHomeStackNavigation} from '@/app/navigation/RootNavigation';
-import {Spacer} from '@/shared/ui/Spacer';
+import { useHomeStackNavigation } from '@/app/navigation/RootNavigation';
+import { Spacer } from '@/shared/ui/Spacer';
 import DailyActivityCard from '@/features/walking/ui/HomeScreen/DailyActivityCard';
-import {DailyBurnedCaloriesView} from '@/shared/ui/DailyBurnedCaloriesView';
-import {Carousel} from '@/shared/ui/Carousel';
+import { DailyBurnedCaloriesView } from '@/shared/ui/DailyBurnedCaloriesView';
+import { Carousel } from '@/shared/ui/Carousel';
 import WeeklyStatisticsView from '@/shared/ui/WeeklyStatisticsView/WeeklyStatisticsView';
-import {Divider} from '@/shared/ui/Divider';
+import { Divider } from '@/shared/ui/Divider';
 import useHealthKitSetup from '@/features/walking/\bmodel/useHealthKitSetup';
-import {useDailyActivityStats} from '@/features/walking/\bmodel/useDailyActivityStats';
-import Toast from 'react-native-toast-message';
+import { useDailyActivityStats } from '@/features/walking/\bmodel/useDailyActivityStats';
 import {
   matchFoodByCalories,
   matchTargetActivityData,
 } from '@/features/walking/lib/utils';
-import {useActivityStats} from '@/features/walking/model/useActivityStats';
-import {getThisWeekMonday} from '@/shared/lib/date/getThisWeekMonday';
-import {useTargetStepCountStore} from '@/entities/user/model/stores/useTargetStepCountStore';
+import { useActivityStats } from '@/features/walking/model/useActivityStats';
+import { getThisWeekMonday } from '@/shared/lib/date/getThisWeekMonday';
+import { useTargetStepCountStore } from '@/entities/user/model/stores/useTargetStepCountStore';
 import useErrorToast from '@/shared/lib/hooks/useErrorToast';
-import useGoogleFitSetup from '@/features/walking/\bmodel/useGoogleFitSetup';
+import setupGoogleFit from '@/features/walking/\bmodel/useGoogleFitSetup';
 
 const HomeScreen = () => {
   const navigation = useHomeStackNavigation();
-  const {logout, userData} = useAuthStore();
-  const {permissions, hasRequestedPermissions} = usePermissions();
+  const { logout, userData } = useAuthStore();
+  const { permissions, isCompleted: isPermssionsCompleted } = usePermissions();
+  useEffect(() => {
+    if (isPermssionsCompleted) {
+      setupGoogleFit();
+    }
+  }, [isPermssionsCompleted]);
   const {
     hasPermissions: hasHealthKitPermissions,
     hasRequestedPermissions: hasRequestedHealthKitPermissions,
   } = useHealthKitSetup();
-  const {
-    hasPermissions: hasGoogleFitPermissions,
-    hasRequestedPermissions: hasRequestedGoogleFitPermissions,
-  } = useGoogleFitSetup();
   const {
     data,
     refetch: dailyDataRefetch,
@@ -56,7 +55,7 @@ const HomeScreen = () => {
   } = useActivityStats({
     startDate: getThisWeekMonday(),
   });
-  const {targetStepCount} = useTargetStepCountStore();
+  const { targetStepCount } = useTargetStepCountStore();
   useErrorToast(dailyErrorMessage);
   useErrorToast(weeklyErrorMessage);
   const myInfoHandler = useCallback(() => {
@@ -84,69 +83,12 @@ const HomeScreen = () => {
     );
   }, [data, targetStepCount, userData?.gender]);
 
-  useEffect(() => {
-    if (Platform.OS !== 'ios') {
-      return;
-    }
-    const allPermissionsRequested =
-      hasRequestedHealthKitPermissions && hasRequestedPermissions;
-    const allPermissionsGranted =
-      hasHealthKitPermissions &&
-      permissions.locationAlways === 'granted' &&
-      permissions.notifications === 'granted' &&
-      permissions.photoLibrary === 'granted';
-
-    if (allPermissionsRequested && !allPermissionsGranted) {
-      Toast.show({
-        type: 'error',
-        text1: '원활한 앱사용을 위해 모든 접근권한을 허용해주세요.',
-        position: 'top',
-        autoHide: true,
-        visibilityTime: 2000,
-      });
-    }
-  }, [
-    hasHealthKitPermissions,
-    permissions,
-    hasRequestedHealthKitPermissions,
-    hasRequestedPermissions,
-  ]);
-
-  useEffect(() => {
-    if (Platform.OS !== 'android') {
-      return;
-    }
-    const allPermissionsRequested =
-      hasRequestedGoogleFitPermissions && hasRequestedPermissions;
-    const allPermissionsGranted =
-      hasGoogleFitPermissions &&
-      permissions.locationAlways === 'granted' &&
-      permissions.notifications === 'granted' &&
-      permissions.photoLibrary === 'granted' &&
-      permissions.activityRecognition === 'granted';
-
-    if (allPermissionsRequested && !allPermissionsGranted) {
-      Toast.show({
-        type: 'error',
-        text1: '원활한 앱사용을 위해 모든 접근권한을 허용해주세요.',
-        position: 'top',
-        autoHide: true,
-        visibilityTime: 2000,
-      });
-    }
-  }, [
-    hasGoogleFitPermissions,
-    permissions,
-    hasRequestedGoogleFitPermissions,
-    hasRequestedPermissions,
-  ]);
-
   return (
     <ScrollView
       style={styles.container}
       showsVerticalScrollIndicator={false}
       refreshControl={
-        <RefreshControl
+        < RefreshControl
           refreshing={isRefetching}
           onRefresh={() => {
             dailyDataRefetch();
@@ -155,7 +97,8 @@ const HomeScreen = () => {
           tintColor={'#FB970C'}
           colors={['#FB970C']}
         />
-      }>
+      }
+    >
       <View style={styles.navBar}>
         <StepupLogo />
         <TouchableOpacity onPress={myInfoHandler}>

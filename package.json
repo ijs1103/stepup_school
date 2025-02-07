@@ -36,7 +36,6 @@
     "react-native-permissions": "^5.2.2",
     "react-native-reanimated": "^3.16.7",
     "react-native-safe-area-context": "^5.1.0",
-    "react-native-samsung-health-android": "^0.3.0",
     "react-native-screens": "^4.5.0",
     "react-native-skeleton-loading": "^1.0.12",
     "react-native-svg": "^15.11.1",
