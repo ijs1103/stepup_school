@@ -2,7 +2,7 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 import {NavBar} from '@/shared/ui/NavBar';
 import {Spacer} from '@/shared/ui/Spacer';
-import ChallengeLabelStat from '@/features/\bchallenge/ui/ChallengeDetailScreen/ChallengeLabelStat';
+import ChallengeLabelStat from '@/features/challenge/ui/ChallengeDetailScreen/ChallengeLabelStat';
 import {ProgressBar} from '@/shared/ui/ProgressBar';
 import {useChallengeStackRoute} from '@/app/navigation/RootNavigation';
 

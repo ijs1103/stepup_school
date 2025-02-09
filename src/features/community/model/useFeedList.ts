@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import {BASE_URL} from '@/shared/constants';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {CustomError} from '@/shared/lib/\bCustomError';
 import {formatFeedDate} from '@/shared/lib/date/formatFeedDate';
 

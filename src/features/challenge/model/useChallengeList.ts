@@ -1,4 +1,4 @@
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {BASE_URL} from '@/shared/constants';
 import {CustomError} from '@/shared/lib/\bCustomError';
 import {useQuery} from '@tanstack/react-query';
@@ -27,7 +27,7 @@ interface Challenge {
 
 export interface ParsedChallenge {
   challengeId: number;
-  type: '걸음' | '칼로리' | '거리';
+  type: '걸음' | 'Kcal' | 'km';
   schoolName: string;
   title: string;
   content: string;
@@ -73,13 +73,13 @@ export const useChallengeList = () => {
     select: (data): ParsedChallenge[] => {
       return data.map(item => ({
         challengeId: item.id,
-        type: (item.type === 1) ? '걸음' : (item.type === 2) ? '칼로리' : '거리',
+        type: item.type === 1 ? '걸음' : item.type === 2 ? 'Kcal' : 'km',
         schoolName: item.school_name,
         title: item.title,
         content: item.content,
         goalStat: item.goal_steps,
         currentStat: item.current_steps,
-        duration: `${item.start_date}-${item.end_date}`,
+        duration: `${item.start_date} ~ ${item.end_date}`,
         endDate: item.end_date,
         imageUrl: item.photoUrl,
         isDone: item.valid !== 'valid',

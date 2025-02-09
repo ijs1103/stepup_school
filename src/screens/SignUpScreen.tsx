@@ -6,7 +6,7 @@ import {SignupLabel} from '@/features/auth/ui';
 import {FormInput} from '@/shared/ui/FormInput';
 import {useForm} from 'react-hook-form';
 import {CustomButton} from '@/shared/ui/CustomButton';
-import {useUserSignupStore} from '@/entities/user/model/stores';
+import {useUserSignupStore} from '@/features/user/model/stores';
 import {useAuthStackNavigation} from '@/app/navigation/RootNavigation';
 import {KeyboardAvoidingLayout} from '@/shared/ui/KeyboardAvoidingLayout';
 import {ISignUpForm} from '@/features/auth/model/types';

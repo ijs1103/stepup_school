@@ -1,4 +1,4 @@
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {calculateStats} from '../lib/utils';
 import {ActivityStats} from './useDailyActivityStats';
 import axios from 'axios';

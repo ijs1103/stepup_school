@@ -1,4 +1,4 @@
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {useCallback, useEffect, useState} from 'react';
 import AppleHealthKit from 'react-native-health';
 import {

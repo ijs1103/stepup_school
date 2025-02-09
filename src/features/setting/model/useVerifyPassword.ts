@@ -2,7 +2,7 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import {BASE_URL} from '@/shared/constants';
 import {CustomError} from '@/shared/lib/\bCustomError';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 
 interface MutationVariables {
   password: string;

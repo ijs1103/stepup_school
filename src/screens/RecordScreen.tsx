@@ -1,6 +1,6 @@
 import {useRecordStackNavigation} from '@/app/navigation/RootNavigation';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
-import {useTargetStepCountStore} from '@/entities/user/model/stores/useTargetStepCountStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
+import {useTargetStepCountStore} from '@/features/user/model/stores/useTargetStepCountStore';
 import {useActivityStats} from '@/features/walking/model/useActivityStats';
 import {
   matchFoodByCalories,
@@ -49,7 +49,7 @@ const RecordScreen = () => {
   const targetActivityData = useMemo(() => {
     return matchTargetActivityData(
       userData?.gender ?? true,
-      targetStepCount * 7,
+      targetStepCount,
       weeklyActivityStats?.burnedCalories ?? 0,
       weeklyActivityStats?.distance ?? 0,
     );
@@ -102,7 +102,7 @@ const RecordScreen = () => {
       </View>
       <View style={styles.dailyBurnedCaloriesViewContainer}>
         <DailyBurnedCaloriesView
-          food={matchFoodByCalories(stepCountData?.burnedCalories ?? 0)}
+          food={matchFoodByCalories(weeklyActivityStats?.burnedCalories ?? 0)}
           targetActivityData={targetActivityData}
           isWeekly
         />

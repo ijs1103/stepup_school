@@ -1,4 +1,4 @@
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {useEffect, useRef} from 'react';
 import {AppState} from 'react-native';
 import {useRefreshToken} from './useRefreshToken';

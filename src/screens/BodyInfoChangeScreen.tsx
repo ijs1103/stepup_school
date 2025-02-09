@@ -4,7 +4,7 @@ import {NavBar} from '@/shared/ui/NavBar';
 import {InfoInputButton} from '@/shared/ui/InfoInputButton';
 import {useUser} from '@/features/auth/model/useUser';
 import {CustomButton} from '@/shared/ui/CustomButton';
-import {BodyInfo as CurrentBodyInfo} from '@/entities/user/model/stores/useUserSignupStore';
+import {BodyInfo as CurrentBodyInfo} from '@/features/user/model/stores/useUserSignupStore';
 import {CustomSheet} from '@/shared/ui/CustomSheet';
 import HeightInput from '@/features/auth/ui/BodyInfoScreen/HeightInput';
 import WeightInput from '@/features/auth/ui/BodyInfoScreen/WeightInput';

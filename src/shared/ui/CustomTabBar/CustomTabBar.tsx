@@ -37,6 +37,7 @@ const CustomTabBar = ({state, navigation}: Props) => {
       'PasswordChange',
       'PersonalInfoChange',
       'BodyInfoChange',
+      'PedometerSettings',
     ].includes(routeName)
   ) {
     return null;

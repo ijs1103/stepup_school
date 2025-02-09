@@ -1,4 +1,4 @@
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import axios from 'axios';
 import {BASE_URL} from '@/shared/constants';
 import {useQuery} from '@tanstack/react-query';

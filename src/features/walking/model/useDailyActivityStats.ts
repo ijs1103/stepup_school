@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Platform} from 'react-native';
 import AppleHealthKit, {HealthInputOptions} from 'react-native-health';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {getTodayStartDate} from '@/shared/lib/date/getTodayStartDate';
 import GoogleFit, {Scopes} from 'react-native-google-fit';
 

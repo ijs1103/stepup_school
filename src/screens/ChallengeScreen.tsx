@@ -2,14 +2,14 @@ import React, {useCallback} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import ChallengeLogo from '../../assets/challenge_logo.svg';
 import OptionButton from '../../assets/option_button.svg';
-import ChallengeListItem from '@/features/\bchallenge/ui/ChallengeScreen/ChallengeListItem';
+import ChallengeListItem from '@/features/challenge/ui/ChallengeScreen/ChallengeListItem';
 import ListEmptyComponent from '@/features/community/ui/CommunityScreen/ListEmptyComponent';
 import {Spacer} from '@/shared/ui/Spacer';
 import {useChallengeStackNavigation} from '@/app/navigation/RootNavigation';
 import {
   ParsedChallenge,
   useChallengeList,
-} from '@/features/\bchallenge/model/useChallengeList';
+} from '@/features/challenge/model/useChallengeList';
 
 const ItemSeparatorComponent = () => <Spacer size={10} />;
 

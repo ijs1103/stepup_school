@@ -2,7 +2,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import axios from 'axios';
 import {BASE_URL} from '@/shared/constants';
 import {CustomError} from '@/shared/lib/\bCustomError';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {ParsedFeed} from './useFeedList';
 import {formatFeedDate} from '@/shared/lib/date/formatFeedDate';
 

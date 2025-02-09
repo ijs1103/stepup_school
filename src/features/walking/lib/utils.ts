@@ -27,7 +27,8 @@ export const matchTargetActivityData = (
   burnedCalories: number,
   walkedDistance: number,
 ): TargetActivityData => {
-  const validTargetStepCount = Number(String(targetStepCount).replace(',', ''));
+  const validTargetStepCount =
+    Number(String(targetStepCount).replace(',', '')) * 7;
   const validBurnedCalories = Number(burnedCalories);
   const validWalkedDistance = Number(walkedDistance);
 
@@ -36,7 +37,7 @@ export const matchTargetActivityData = (
     isNaN(validBurnedCalories) ||
     isNaN(validWalkedDistance)
   ) {
-    console.error('Invalid input values');
+    console.log('Invalid input values');
     return {
       targetCalories: 0,
       leftCalories: 0,

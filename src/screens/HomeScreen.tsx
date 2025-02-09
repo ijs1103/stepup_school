@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,32 +7,32 @@ import {
   RefreshControl,
 } from 'react-native';
 import usePermissions from '@/shared/lib/hooks/usePermissions';
-import { useAuthStore } from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import StepupLogo from '../../assets/stepup_logo_small.svg';
 import MyInfo from '../../assets/my_info.svg';
-import { useHomeStackNavigation } from '@/app/navigation/RootNavigation';
-import { Spacer } from '@/shared/ui/Spacer';
+import {useHomeStackNavigation} from '@/app/navigation/RootNavigation';
+import {Spacer} from '@/shared/ui/Spacer';
 import DailyActivityCard from '@/features/walking/ui/HomeScreen/DailyActivityCard';
-import { DailyBurnedCaloriesView } from '@/shared/ui/DailyBurnedCaloriesView';
-import { Carousel } from '@/shared/ui/Carousel';
+import {DailyBurnedCaloriesView} from '@/shared/ui/DailyBurnedCaloriesView';
+import {Carousel} from '@/shared/ui/Carousel';
 import WeeklyStatisticsView from '@/shared/ui/WeeklyStatisticsView/WeeklyStatisticsView';
-import { Divider } from '@/shared/ui/Divider';
+import {Divider} from '@/shared/ui/Divider';
 import useHealthKitSetup from '@/features/walking/\bmodel/useHealthKitSetup';
-import { useDailyActivityStats } from '@/features/walking/\bmodel/useDailyActivityStats';
+import {useDailyActivityStats} from '@/features/walking/\bmodel/useDailyActivityStats';
 import {
   matchFoodByCalories,
   matchTargetActivityData,
 } from '@/features/walking/lib/utils';
-import { useActivityStats } from '@/features/walking/model/useActivityStats';
-import { getThisWeekMonday } from '@/shared/lib/date/getThisWeekMonday';
-import { useTargetStepCountStore } from '@/entities/user/model/stores/useTargetStepCountStore';
+import {useActivityStats} from '@/features/walking/model/useActivityStats';
+import {getThisWeekMonday} from '@/shared/lib/date/getThisWeekMonday';
+import {useTargetStepCountStore} from '@/features/user/model/stores/useTargetStepCountStore';
 import useErrorToast from '@/shared/lib/hooks/useErrorToast';
 import setupGoogleFit from '@/features/walking/\bmodel/useGoogleFitSetup';
 
 const HomeScreen = () => {
   const navigation = useHomeStackNavigation();
-  const { logout, userData } = useAuthStore();
-  const { permissions, isCompleted: isPermssionsCompleted } = usePermissions();
+  const {logout, userData} = useAuthStore();
+  const {permissions, isCompleted: isPermssionsCompleted} = usePermissions();
   useEffect(() => {
     if (isPermssionsCompleted) {
       setupGoogleFit();
@@ -55,7 +55,7 @@ const HomeScreen = () => {
   } = useActivityStats({
     startDate: getThisWeekMonday(),
   });
-  const { targetStepCount } = useTargetStepCountStore();
+  const {targetStepCount} = useTargetStepCountStore();
   useErrorToast(dailyErrorMessage);
   useErrorToast(weeklyErrorMessage);
   const myInfoHandler = useCallback(() => {
@@ -88,7 +88,7 @@ const HomeScreen = () => {
       style={styles.container}
       showsVerticalScrollIndicator={false}
       refreshControl={
-        < RefreshControl
+        <RefreshControl
           refreshing={isRefetching}
           onRefresh={() => {
             dailyDataRefetch();
@@ -97,8 +97,7 @@ const HomeScreen = () => {
           tintColor={'#FB970C'}
           colors={['#FB970C']}
         />
-      }
-    >
+      }>
       <View style={styles.navBar}>
         <StepupLogo />
         <TouchableOpacity onPress={myInfoHandler}>

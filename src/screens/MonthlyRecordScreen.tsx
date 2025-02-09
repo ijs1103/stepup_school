@@ -5,7 +5,7 @@ import {useActivityStats} from '@/features/walking/\bmodel/useActivityStats';
 import {getFirstDayOfMonth} from '@/shared/lib/date/getFirstDayOfCurrentMonth';
 import {getLastDayOfMonth} from '@/shared/lib/date/getLastDayOfMonth';
 import {calculateStats} from '@/features/walking/lib/utils';
-import {useAuthStore} from '@/entities/user/model/stores/useAuthStore';
+import {useAuthStore} from '@/features/user/model/stores/useAuthStore';
 import {DailyWalkingStats} from '@/shared/ui/MonthlyChart/MonthlyChart';
 import {DateNavigator} from '@/shared/ui/DateNavigator';
 import {GradientBackgroundView} from '@/shared/ui/GradientBackgroundView';
@@ -68,7 +68,10 @@ const MonthlyRecordScreen = () => {
     setCurrentMonth(prev => prev + 1);
   }, [currentMonth, isCurrentMonth]);
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{flexGrow: 1}}
+      showsVerticalScrollIndicator={false}>
       <GradientBackgroundView colors={['#FD4F97', '#F8F7F7']}>
         <NavBar title={'월간 통계'} backButtonIcon={'ArrowBackWhite'} />
         <Spacer size={48} />
@@ -132,6 +135,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   chartContainer: {
+    flex: 1,
     backgroundColor: '#F8F7F7',
   },
   placeholderText: {
